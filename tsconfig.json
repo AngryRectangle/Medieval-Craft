@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+      "target": "ES5",
+      "lib": [
+        "ES6"
+      ]
+    },
+    "exclude": [
+      "typedoc"
+    ],
+    "include": [
+      "main.ts"
+    ]
+  }
