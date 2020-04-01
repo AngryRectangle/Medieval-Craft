@@ -115,7 +115,7 @@ click:function(){
 }
 });
 
-EnergyTileRegistry.addEnergyTypeForId(BlockID.flywheel, energyKineticEnergy);
+TileEntityRegistry.addEnergyTypeForId(BlockID.flywheel, energyKineticEnergy);
 
 Callback.addCallback("ItemUse",function(coords, item, block){
 	if(item.id==ItemID.smallHammer&&block.id==BlockID.flywheel){

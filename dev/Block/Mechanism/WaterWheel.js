@@ -119,7 +119,7 @@ energyTick: function(type, src) {
 },
 });
 //TODO пофикситть работу колеса в океане
-EnergyTileRegistry.addEnergyTypeForId(BlockID.waterWheel, energyKineticEnergy);
+TileEntityRegistry.addEnergyTypeForId(BlockID.waterWheel, energyKineticEnergy);
 
 Callback.addCallback("ItemUse",function(coords, item, block){
 	if(item.id==ItemID.smallHammer&&block.id==BlockID.waterWheel){

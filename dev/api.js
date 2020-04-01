@@ -193,7 +193,7 @@ var ae_interface = {
 var ae_tileentity = {
 	registerPrototype: function (id, Prototype) {
 		TileEntity.registerPrototype (id, Prototype);
-		EnergyTileRegistry.addEnergyTypeForId (id, Prototype.energyType);
+		TileEntityRegistry.addEnergyTypeForId (id, Prototype.energyType);
 		ICRenderLib.addConnectionBlock (Prototype.energyName, id);
 	}
 };

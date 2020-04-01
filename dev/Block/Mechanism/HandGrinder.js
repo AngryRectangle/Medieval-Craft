@@ -250,7 +250,7 @@ getGuiScreen: function(){
 	return grinderGui;
 }
 });
-EnergyTileRegistry.addEnergyTypeForId(BlockID.grinderTable, energyKineticEnergy);
+TileEntityRegistry.addEnergyTypeForId(BlockID.grinderTable, energyKineticEnergy);
 Callback.addCallback("ItemUse",function(coords, item, block){
 	if(item.id==ItemID.smallHammer&&block.id==BlockID.grinderTable&&multiBlock.getLevel(coords.x, coords.y, coords.z, grinderConstruction).Level==1){
 			World.getTileEntity(coords.x, coords.y, coords.z).data.construction=multiBlock.getLevel(coords.x, coords.y, coords.z, grinderConstruction).Level;

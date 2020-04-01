@@ -447,6 +447,8 @@ declare namespace Block {
     namespace idSource {}
     namespace dropFunctions {}
 
+    function createBlock(id: string, array: any[]):any;
+
     function getNumericId(id: number): any;
 
     function createBlock(namedID: any, defineData: any, blockType: any): any;

@@ -2160,7 +2160,7 @@ var ae_interface = {};
 var ae_tileentity = {
     registerPrototype: function (id, Prototype) {
         TileEntity.registerPrototype(id, Prototype);
-        EnergyTileRegistry.addEnergyTypeForId(id, Prototype.energyType);
+        TileEntityRegistry.addEnergyTypeForId(id, Prototype.energyType);
         ICRenderLib.addConnectionBlock(Prototype.energyName, id);
     }
 };
@@ -2215,7 +2215,6 @@ var barrelGui = new UI.StandartWindow({
                 text: "Бочка"
             },
         },
-        minHeight: 700,
         inventory: {
             standart: true
         },
@@ -2224,40 +2223,38 @@ var barrelGui = new UI.StandartWindow({
         }
     },
     drawing: [
-        { type: "bitmap", x: 850, y: 120, bitmap: "bar", scale: 4 }
+        { type: "bitmap", x: 850, y: 60, bitmap: "bar", scale: 4 }
     ],
     elements: {
-        "woodbarrelslot1": { type: "slot", x: 400, y: 100, size: 160 },
-        "woodbarrelslot2": { type: "slot", x: 400, y: 300, size: 160 },
-        "woodbarrelScale": { type: "scale", x: 850, y: 120, direction: 1, scale: 4, value: 1, bitmap: "bar", overlay: "bars", overlay_scale: 4 },
-        "FillText": { type: "text", x: 400, y: 470, text: "Вёдер 0/16", height: 60, width: 400, font: { color: android.graphics.Color.rgb(255, 255, 255), size: 30, shadow: 0.5 } },
+        "woodbarrelslot1": { type: "slot", x: 400, y: 100, size: 120 },
+        "woodbarrelslot2": { type: "slot", x: 400, y: 250, size: 120 },
+        "woodbarrelScale": { type: "scale", x: 850, y: 60, direction: 1, scale: 4, value: 1, bitmap: "bar", overlay: "bars", overlay_scale: 4 },
+        "FillText": { type: "text", x: 400, y: 420, text: "Вёдер 0/16", height: 60, width: 400, font: { color: android.graphics.Color.rgb(255, 255, 255), size: 30, shadow: 0.5 } },
         "FillText2": { type: "text", x: 400, y: 40, text: "мB 0/16000", height: 60, width: 400, font: { color: android.graphics.Color.rgb(255, 255, 255), size: 30, shadow: 0.5 } }
     }
 });
-TileEntity.registerPrototype(BlockID.barrel, {
+TileEntity.registerPrototype(BlockID["barrel_wooden"], {
     defaultValues: {
         type: "water"
+    },
+    init: function () {
+        this.inputSlot = this.container.getSlot("woodbarrelslot1");
+        this.outputSlot = this.container.getSlot("woodbarrelslot2");
     },
     tick: function () {
         var content = this.container.getGuiContent();
         this.liquidStorage.updateUiScale("woodbarrelScale", this.data.type);
         this.container.validateAll();
-        var id1 = this.container.getSlot("woodbarrelslot1").id;
-        var data1 = this.container.getSlot("woodbarrelslot1").data;
-        var count1 = this.container.getSlot("woodbarrelslot1").count;
-        var id2 = this.container.getSlot("woodbarrelslot2").id;
-        var data2 = this.container.getSlot("woodbarrelslot2").data;
-        var count2 = this.container.getSlot("woodbarrelslot2").count;
-        if (this.liquidStorage.getAmount(LiquidRegistry.getItemLiquid(this.container.getSlot("woodbarrelslot1").id, this.container.getSlot("woodbarrelslot1").data)) < 16 && LiquidRegistry.getEmptyItem(id1, data1) != null) {
-            if (this.liquidStorage.getAmount(LiquidRegistry.getItemLiquid(this.container.getSlot("woodbarrelslot1").id, this.container.getSlot("woodbarrelslot1").data)) > 0 || this.liquidStorage.isEmpty() == true) {
-                if (this.container.getSlot("woodbarrelslot2").id == LiquidRegistry.getEmptyItem(this.container.getSlot("woodbarrelslot1").id, this.container.getSlot("woodbarrelslot1").data).id || this.container.getSlot("woodbarrelslot2").id == 0) {
-                    this.data.type = LiquidRegistry.getItemLiquid(this.container.getSlot("woodbarrelslot1").id, this.container.getSlot("woodbarrelslot1").data);
-                    this.liquidStorage.setLimit(LiquidRegistry.getItemLiquid(this.container.getSlot("woodbarrelslot1").id, this.container.getSlot("woodbarrelslot1").data), 16);
-                    this.liquidStorage.addLiquid(LiquidRegistry.getItemLiquid(this.container.getSlot("woodbarrelslot1").id, this.container.getSlot("woodbarrelslot1").data), 1);
-                    this.container.getSlot("woodbarrelslot2").id = LiquidRegistry.getEmptyItem(this.container.getSlot("woodbarrelslot1").id, this.container.getSlot("woodbarrelslot1").data).id;
-                    this.container.getSlot("woodbarrelslot2").data = LiquidRegistry.getEmptyItem(this.container.getSlot("woodbarrelslot1").id, this.container.getSlot("woodbarrelslot1").data).data;
-                    this.container.getSlot("woodbarrelslot2").count++;
-                    this.container.getSlot("woodbarrelslot1").count--;
+        if (this.liquidStorage.getAmount(LiquidRegistry.getItemLiquid(this.inputSlot.id, this.inputSlot.data)) < 16 && LiquidRegistry.getEmptyItem(this.inputSlot.id, this.inputSlot.data) != null) {
+            if (this.liquidStorage.getAmount(LiquidRegistry.getItemLiquid(this.inputSlot.id, this.inputSlot.data)) > 0 || this.liquidStorage.isEmpty() == true) {
+                if (this.outputSlot.id == LiquidRegistry.getEmptyItem(this.inputSlot.id, this.inputSlot.data).id || this.outputSlot.id == 0) {
+                    this.data.type = LiquidRegistry.getItemLiquid(this.inputSlot.id, this.inputSlot.data);
+                    this.liquidStorage.setLimit(LiquidRegistry.getItemLiquid(this.inputSlot.id, this.inputSlot.data), 16);
+                    this.liquidStorage.addLiquid(LiquidRegistry.getItemLiquid(this.inputSlot.id, this.inputSlot.data), 1);
+                    this.outputSlot.id = LiquidRegistry.getEmptyItem(this.inputSlot.id, this.inputSlot.data).id;
+                    this.outputSlot.data = LiquidRegistry.getEmptyItem(this.inputSlot.id, this.inputSlot.data).data;
+                    this.outputSlot.count++;
+                    this.inputSlot.count--;
                     if (content) {
                         this.container.setText("FillText2", "mB " + (this.liquidStorage.getAmount(this.liquidStorage.getLiquidStored()) * 1000 + "/" + this.liquidStorage.getLimit(this.data.type) * 1000));
                         this.container.setText("FillText2", "Bucket " + this.liquidStorage.getAmount(this.liquidStorage.getLiquidStored()) + "/" + this.liquidStorage.getLimit(this.data.type));
@@ -2265,12 +2262,12 @@ TileEntity.registerPrototype(BlockID.barrel, {
                 }
             }
         }
-        if (LiquidRegistry.getFullItem(id1, data1, this.data.type) != null && this.liquidStorage.getAmount(this.data.type) > 0) {
-            if (this.container.getSlot("woodbarrelslot2").id == LiquidRegistry.getFullItem(id1, data1, this.data.type).id && this.container.getSlot("woodbarrelslot2").data == LiquidRegistry.getFullItem(id1, data1, this.data.type).data || id2 == 0) {
-                this.container.getSlot("woodbarrelslot2").id = LiquidRegistry.getFullItem(id1, data1, this.data.type).id;
-                this.container.getSlot("woodbarrelslot2").data = LiquidRegistry.getFullItem(id1, data1, this.data.type).data;
-                this.container.getSlot("woodbarrelslot2").count++;
-                this.container.getSlot("woodbarrelslot1").count--;
+        if (LiquidRegistry.getFullItem(this.inputSlot.id, this.inputSlot.data, this.data.type) != null && this.liquidStorage.getAmount(this.data.type) > 0) {
+            if (this.outputSlot.id == LiquidRegistry.getFullItem(this.inputSlot.id, this.inputSlot.data, this.data.type).id && this.outputSlot.data == LiquidRegistry.getFullItem(this.inputSlot.id, this.inputSlot.data, this.data.type).data || this.outputSlot.id == 0) {
+                this.outputSlot.id = LiquidRegistry.getFullItem(this.inputSlot.id, this.inputSlot.data, this.data.type).id;
+                this.outputSlot.data = LiquidRegistry.getFullItem(this.inputSlot.id, this.inputSlot.data, this.data.type).data;
+                this.outputSlot.count++;
+                this.inputSlot.count--;
                 this.liquidStorage.getLiquid(this.data.type, 1);
                 if (content) {
                     this.container.setText("FillText1", "mB " + (this.liquidStorage.getAmount(this.liquidStorage.getLiquidStored()) * 1000 + "/" + this.liquidStorage.getLimit(this.data.type) * 1000));
@@ -2279,14 +2276,20 @@ TileEntity.registerPrototype(BlockID.barrel, {
             }
         }
     },
-    click: function (id, count, data, coords) {
-    },
     getGuiScreen: function () {
         return barrelGui;
     }
 });
-Recipes.addShaped({ id: BlockID.barrel_wooden, count: 1, data: 0 }, ["pap", "gug", "pgp"], ["g", 5, -1, "p", 265, -1, "a", 17, -1, "u", 102, -1]);
-Recipes.addShaped({ id: BlockID.barrel_wooden, count: 1, data: 0 }, ["pap", "gug", "pgp"], ["g", 5, -1, "p", 265, -1, "a", 162, -1, "u", 102, -1]);
+Recipes.addShaped({
+    id: BlockID["barrel_wooden"],
+    count: 1,
+    data: 0
+}, ["pap", "gug", "pgp"], ["g", 5, -1, "p", 265, -1, "a", 17, -1, "u", 102, -1]);
+Recipes.addShaped({
+    id: BlockID["barrel_wooden"],
+    count: 1,
+    data: 0
+}, ["pap", "gug", "pgp"], ["g", 5, -1, "p", 265, -1, "a", 162, -1, "u", 102, -1]);
 var renderStick = new Render();
 var partObj = [{
         type: "box",
@@ -2398,7 +2401,7 @@ TileEntity.registerPrototype(BlockID.flywheel, {
         }
     }
 });
-EnergyTileRegistry.addEnergyTypeForId(BlockID.flywheel, energyKineticEnergy);
+TileEntityRegistry.addEnergyTypeForId(BlockID.flywheel, energyKineticEnergy);
 Callback.addCallback("ItemUse", function (coords, item, block) {
     if (item.id == ItemID.smallHammer && block.id == BlockID.flywheel) {
         if (World.getTileEntity(coords.x, coords.y, coords.z).data.id) {
@@ -2664,7 +2667,7 @@ TileEntity.registerPrototype(BlockID.grinderTable, {
         return grinderGui;
     }
 });
-EnergyTileRegistry.addEnergyTypeForId(BlockID.grinderTable, energyKineticEnergy);
+TileEntityRegistry.addEnergyTypeForId(BlockID.grinderTable, energyKineticEnergy);
 Callback.addCallback("ItemUse", function (coords, item, block) {
     if (item.id == ItemID.smallHammer && block.id == BlockID.grinderTable && multiBlock.getLevel(coords.x, coords.y, coords.z, grinderConstruction).Level == 1) {
         World.getTileEntity(coords.x, coords.y, coords.z).data.construction = multiBlock.getLevel(coords.x, coords.y, coords.z, grinderConstruction).Level;
@@ -2741,13 +2744,33 @@ var windMap = [
     { id: 39, modifier: 0.8 }
 ];
 IDRegistry.genBlockID("woodenMill");
-Block.createBlockWithRotation("woodenMill", [
-    { name: "Mill", texture: [["log_oak", 0], ["log_oak", 0], ["log_oak_top", 0], ["mill_side", 1], ["log_oak", 0], ["log_oak", 0]], inCreative: true }
-]);
-Recipes.addShaped({ id: BlockID.woodenMill, count: 1, data: 0 }, ["ppp", "pop", "ppp"], ["p", 5, -1, "o", 288, 0]);
+Block.createBlockWithRotation("woodenMill", [{
+        name: "Mill",
+        texture: [
+            ["log_oak", 0],
+            ["log_oak", 0],
+            ["log_oak_top", 0],
+            ["mill_side", 1],
+            ["log_oak", 0],
+            ["log_oak", 0]
+        ],
+        inCreative: true
+    }]);
+Recipes.addShaped({
+    id: BlockID.woodenMill,
+    count: 1,
+    data: 0
+}, ["ppp", "pop", "ppp"], ["p", 5, -1, "o", 288, 0]);
 ICRender.getGroup("kineticMachine").add(BlockID.woodenMill, -1);
-Translation.addTranslation("Mill", { ru: "Мельница" });
+Translation.addTranslation("Mill", {
+    ru: "Мельница"
+});
 var getRainLevel = ModAPI.requireGlobal("Level.getRainLevel");
+var windmill_render = new Render();
+var wind_millTexture = new Texture("res/model/small_windmill.png").setResolution(16, 16);
+var mesh = new RenderMesh(__dir__ + "model/small_windmill.obj", "obj", { scale: [16, 16, 16], translate: [0, -16, 0] });
+var bodyPart = windmill_render.getPart("head");
+bodyPart.setMesh(mesh);
 TileEntity.registerPrototype(BlockID.woodenMill, {
     defaultValues: {
         wheelLevel: 0,
@@ -2758,6 +2781,14 @@ TileEntity.registerPrototype(BlockID.woodenMill, {
     },
     isGenerator: function () {
         return true;
+    },
+    init: function () {
+        this.animation = new Animation.Base(this.x + .5, this.y, this.z + 17 / 16);
+        this.animation.describe({
+            render: windmill_render.getId(),
+            skin: "model/small_windmill.png"
+        });
+        this.animation.load();
     },
     tick: function () {
         if (World.getWorldTime() % 20 == 0) {
@@ -2808,7 +2839,7 @@ TileEntity.registerPrototype(BlockID.woodenMill, {
         }
     },
 });
-EnergyTileRegistry.addEnergyTypeForId(BlockID.woodenMill, energyKineticEnergy);
+TileEntityRegistry.addEnergyTypeForId(BlockID.woodenMill, energyKineticEnergy);
 Callback.addCallback("ItemUse", function (coords, item, block) {
     if (item.id == ItemID.smallHammer && block.id == BlockID.woodenMill) {
         if (!World.getTileEntity(coords.x, coords.y, coords.z).data.wheelLevel) {
@@ -3099,7 +3130,7 @@ TileEntity.registerPrototype(BlockID.sawmill, {
         return sawmillGui;
     }
 });
-EnergyTileRegistry.addEnergyTypeForId(BlockID.sawmill, energyKineticEnergy);
+TileEntityRegistry.addEnergyTypeForId(BlockID.sawmill, energyKineticEnergy);
 IDRegistry.genBlockID("wodenShaft");
 Block.createBlock("wodenShaft", [
     { name: "Woden Shaft", texture: [["shaft", 0]], inCreative: true }
@@ -3402,7 +3433,7 @@ TileEntity.registerPrototype(BlockID.waterWheel, {
         }
     },
 });
-EnergyTileRegistry.addEnergyTypeForId(BlockID.waterWheel, energyKineticEnergy);
+TileEntityRegistry.addEnergyTypeForId(BlockID.waterWheel, energyKineticEnergy);
 Callback.addCallback("ItemUse", function (coords, item, block) {
     if (item.id == ItemID.smallHammer && block.id == BlockID.waterWheel) {
         if (World.getTileEntity(coords.x, coords.y, coords.z).data.wheelLevel) {

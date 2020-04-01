@@ -240,4 +240,4 @@ getGuiScreen: function(){
 	return sawmillGui;
 }
 });
-EnergyTileRegistry.addEnergyTypeForId(BlockID.sawmill, energyKineticEnergy);
+TileEntityRegistry.addEnergyTypeForId(BlockID.sawmill, energyKineticEnergy);
