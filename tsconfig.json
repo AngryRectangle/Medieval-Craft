@@ -1,14 +1,28 @@
 {
-    "compilerOptions": {
-      "target": "ES5",
-      "lib": [
-        "ES6"
-      ]
-    },
-    "exclude": [
-      "typedoc"
-    ],
-    "include": [
-      "main.ts"
-    ]
-  }
+  "compileOnSave": true,
+  "compilerOptions": {
+    "target": "ES5",
+    "lib": ["es2018"],
+    "outFile":"build/main.js",
+    "removeComments": true,
+    "allowJs": true
+  },
+  "exclude": [
+    "typedoc",
+    "node_modules",
+    "**/node_modules/*",
+    "dom"
+  ],
+  "include": [
+    "lib/*",
+    "header.js",
+    "dev/Core/stringConfigure.js",
+    "dev/Core/*",
+    "dev/**/*"
+  ],
+  "files": [
+    "./declarations/core-engine.d.ts",
+    "./declarations/android-declarations.d.ts",
+    "./declarations/android-platform-21.d.ts"
+  ]
+}

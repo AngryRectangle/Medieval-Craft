@@ -229,24 +229,3 @@ var ae_player = {
 		}
 	}
 };
-
-var ae_ritual = {
-	
-};
-
-var ae_plant = {
-	addTree: function (sapling, x, y, z, params) {
-		ae_block.add ("sapling", [{
-			name: "Sapling", inCreative: true,
-			texture: [["magical_stone"]]
-		}], {
-			renderlayer: 1
-		});
-	}
-};
-
-var ae_genetation = {
-	
-};
-
-ae_plant.addTree ();

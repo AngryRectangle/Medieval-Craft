@@ -1,0 +1,614 @@
+[
+	{
+		"item": {
+			"id": 280,
+			"data": 0
+		},
+		"timeBurn": 100,
+		"energy": 10,
+		"temperature": {
+			"min": -30,
+			"max": 500
+		}
+	},
+	{
+		"item": {
+			"id": 263,
+			"data": 0
+		},
+		"timeBurn": 1600,
+		"energy": 160,
+		"temperature": {
+			"min": 400,
+			"max": 2100
+		}
+	},
+	{
+		"item": {
+			"id": 173,
+			"data": 0
+		},
+		"timeBurn": 16000,
+		"energy": 1600,
+		"temperature": {
+			"min": 400,
+			"max": 2100
+		}
+	},
+	{
+		"item": {
+			"id": 369,
+			"data": 0
+		},
+		"timeBurn": 2400,
+		"energy": 580,
+		"temperature": {
+			"min": 50,
+			"max": 2500
+		}
+	},
+	{
+		"item": {
+			"id": 263,
+			"data": 1
+		},
+		"timeBurn": 1600,
+		"energy": 200,
+		"temperature": {
+			"min": 300,
+			"max": 2100
+		}
+	},
+	{
+		"item": {
+			"id": 5,
+			"data": -1
+		},
+		"timeBurn": 300,
+		"energy": 30,
+		"temperature": {
+			"min": 0,
+			"max": 800
+		}
+	},
+	{
+		"item": {
+			"id": 158,
+			"data": -1
+		},
+		"timeBurn": 150,
+		"energy": 15,
+		"temperature": {
+			"min": 0,
+			"max": 800
+		}
+	},
+	{
+		"item": {
+			"id": 6,
+			"data": -1
+		},
+		"timeBurn": 100,
+		"energy": 10,
+		"temperature": {
+			"min": 100,
+			"max": 800
+		}
+	},
+	{
+		"item": {
+			"id": 85,
+			"data": -1
+		},
+		"timeBurn": 300,
+		"energy": 30,
+		"temperature": {
+			"min": 0,
+			"max": 800
+		}
+	},
+	{
+		"item": {
+			"id": 17,
+			"data": -1
+		},
+		"timeBurn": 300,
+		"energy": 30,
+		"temperature": {
+			"min": 0,
+			"max": 800
+		}
+	},
+	{
+		"item": {
+			"id": 162,
+			"data": -1
+		},
+		"timeBurn": 300,
+		"energy": 30,
+		"temperature": {
+			"min": 0,
+			"max": 800
+		}
+	},
+	{
+		"item": {
+			"id": 162,
+			"data": -1
+		},
+		"timeBurn": 300,
+		"energy": 30,
+		"temperature": {
+			"min": 0,
+			"max": 800
+		}
+	},
+	{
+		"item": {
+			"id": 53,
+			"data": 0
+		},
+		"timeBurn": 300,
+		"energy": 30,
+		"temperature": {
+			"min": 0,
+			"max": 800
+		}
+	},
+	{
+		"item": {
+			"id": 134,
+			"data": 0
+		},
+		"timeBurn": 300,
+		"energy": 30,
+		"temperature": {
+			"min": 0,
+			"max": 800
+		}
+	},
+	{
+		"item": {
+			"id": 135,
+			"data": 0
+		},
+		"timeBurn": 300,
+		"energy": 30,
+		"temperature": {
+			"min": 0,
+			"max": 800
+		}
+	},
+	{
+		"item": {
+			"id": 136,
+			"data": 0
+		},
+		"timeBurn": 300,
+		"energy": 30,
+		"temperature": {
+			"min": 0,
+			"max": 800
+		}
+	},
+	{
+		"item": {
+			"id": 163,
+			"data": 0
+		},
+		"timeBurn": 300,
+		"energy": 30,
+		"temperature": {
+			"min": 0,
+			"max": 800
+		}
+	},
+	{
+		"item": {
+			"id": 164,
+			"data": 0
+		},
+		"timeBurn": 300,
+		"energy": 30,
+		"temperature": {
+			"min": 0,
+			"max": 800
+		}
+	},
+	{
+		"item": {
+			"id": 96,
+			"data": 0
+		},
+		"timeBurn": 300,
+		"energy": 30,
+		"temperature": {
+			"min": 0,
+			"max": 800
+		}
+	},
+	{
+		"item": {
+			"id": 58,
+			"data": 0
+		},
+		"timeBurn": 300,
+		"energy": 30,
+		"temperature": {
+			"min": 0,
+			"max": 800
+		}
+	},
+	{
+		"item": {
+			"id": 47,
+			"data": 0
+		},
+		"timeBurn": 300,
+		"energy": 30,
+		"temperature": {
+			"min": 0,
+			"max": 800
+		}
+	},
+	{
+		"item": {
+			"id": 54,
+			"data": 0
+		},
+		"timeBurn": 300,
+		"energy": 30,
+		"temperature": {
+			"min": 0,
+			"max": 800
+		}
+	},
+	{
+		"item": {
+			"id": 146,
+			"data": 0
+		},
+		"timeBurn": 300,
+		"energy": 30,
+		"temperature": {
+			"min": 0,
+			"max": 800
+		}
+	},
+	{
+		"item": {
+			"id": 25,
+			"data": 0
+		},
+		"timeBurn": 300,
+		"energy": 30,
+		"temperature": {
+			"min": 0,
+			"max": 800
+		}
+	},
+	{
+		"item": {
+			"id": 99,
+			"data": 0
+		},
+		"timeBurn": 300,
+		"energy": 30,
+		"temperature": {
+			"min": 0,
+			"max": 800
+		}
+	},
+	{
+		"item": {
+			"id": 10,
+			"data": 0
+		},
+		"timeBurn": 300,
+		"energy": 30,
+		"temperature": {
+			"min": 0,
+			"max": 800
+		}
+	},
+	{
+		"item": {
+			"id": 35,
+			"data": -1
+		},
+		"timeBurn": 100,
+		"energy": 10,
+		"temperature": {
+			"min": 100,
+			"max": 800
+		}
+	},
+	{
+		"item": {
+			"id": 171,
+			"data": -1
+		},
+		"timeBurn": 60,
+		"energy": 6,
+		"temperature": {
+			"min": 100,
+			"max": 800
+		}
+	},
+	{
+		"item": {
+			"id": 65,
+			"data": 0
+		},
+		"timeBurn": 300,
+		"energy": 30,
+		"temperature": {
+			"min": 0,
+			"max": 800
+		}
+	},
+	{
+		"item": {
+			"id": 143,
+			"data": 0
+		},
+		"timeBurn": 100,
+		"energy": 10,
+		"temperature": {
+			"min": 0,
+			"max": 800
+		}
+	},
+	{
+		"item": {
+			"id": 323,
+			"data": 0
+		},
+		"timeBurn": 200,
+		"energy": 20,
+		"temperature": {
+			"min": 0,
+			"max": 800
+		}
+	},
+	{
+		"item": {
+			"id": 261,
+			"data": -1
+		},
+		"timeBurn": 300,
+		"energy": 30,
+		"temperature": {
+			"min": 0,
+			"max": 800
+		}
+	},
+	{
+		"item": {
+			"id": 346,
+			"data": -1
+		},
+		"timeBurn": 300,
+		"energy": 30,
+		"temperature": {
+			"min": 0,
+			"max": 800
+		}
+	},
+	{
+		"item": {
+			"id": 381,
+			"data": 0
+		},
+		"timeBurn": 100,
+		"energy": 10,
+		"temperature": {
+			"min": 0,
+			"max": 800
+		}
+	},
+	{
+		"item": {
+			"id": 64,
+			"data": 0
+		},
+		"timeBurn": 200,
+		"energy": 20,
+		"temperature": {
+			"min": 0,
+			"max": 800
+		}
+	},
+	{
+		"item": {
+			"id": 193,
+			"data": 0
+		},
+		"timeBurn": 200,
+		"energy": 20,
+		"temperature": {
+			"min": 0,
+			"max": 800
+		}
+	},
+	{
+		"item": {
+			"id": 194,
+			"data": 0
+		},
+		"timeBurn": 200,
+		"energy": 20,
+		"temperature": {
+			"min": 0,
+			"max": 800
+		}
+	},
+	{
+		"item": {
+			"id": 196,
+			"data": 0
+		},
+		"timeBurn": 200,
+		"energy": 20,
+		"temperature": {
+			"min": 0,
+			"max": 800
+		}
+	},
+	{
+		"item": {
+			"id": 195,
+			"data": 0
+		},
+		"timeBurn": 200,
+		"energy": 20,
+		"temperature": {
+			"min": 0,
+			"max": 800
+		}
+	},
+	{
+		"item": {
+			"id": 197,
+			"data": 0
+		},
+		"timeBurn": 200,
+		"energy": 20,
+		"temperature": {
+			"min": 0,
+			"max": 800
+		}
+	},
+	{
+		"item": {
+			"id": 333,
+			"data": 0
+		},
+		"timeBurn": 400,
+		"energy": 40,
+		"temperature": {
+			"min": 0,
+			"max": 800
+		}
+	},
+	{
+		"item": {
+			"id": 444,
+			"data": 0
+		},
+		"timeBurn": 400,
+		"energy": 40,
+		"temperature": {
+			"min": 0,
+			"max": 800
+		}
+	},
+	{
+		"item": {
+			"id": 445,
+			"data": 0
+		},
+		"timeBurn": 400,
+		"energy": 40,
+		"temperature": {
+			"min": 0,
+			"max": 800
+		}
+	},
+	{
+		"item": {
+			"id": 446,
+			"data": 0
+		},
+		"timeBurn": 400,
+		"energy": 40,
+		"temperature": {
+			"min": 0,
+			"max": 800
+		}
+	},
+	{
+		"item": {
+			"id": 447,
+			"data": 0
+		},
+		"timeBurn": 400,
+		"energy": 40,
+		"temperature": {
+			"min": 0,
+			"max": 800
+		}
+	},
+	{
+		"item": {
+			"id": 448,
+			"data": 0
+		},
+		"timeBurn": 400,
+		"energy": 40,
+		"temperature": {
+			"min": 0,
+			"max": 800
+		}
+	},
+	{
+		"item": {
+			"id": 271,
+			"data": -1
+		},
+		"timeBurn": 300,
+		"energy": 30,
+		"temperature": {
+			"min": 0,
+			"max": 800
+		}
+	},
+	{
+		"item": {
+			"id": 268,
+			"data": -1
+		},
+		"timeBurn": 300,
+		"energy": 30,
+		"temperature": {
+			"min": 0,
+			"max": 800
+		}
+	},
+	{
+		"item": {
+			"id": 269,
+			"data": -1
+		},
+		"timeBurn": 300,
+		"energy": 30,
+		"temperature": {
+			"min": 0,
+			"max": 800
+		}
+	},
+	{
+		"item": {
+			"id": 270,
+			"data": -1
+		},
+		"timeBurn": 300,
+		"energy": 30,
+		"temperature": {
+			"min": 0,
+			"max": 800
+		}
+	},
+	{
+		"item": {
+			"id": 290,
+			"data": -1
+		},
+		"timeBurn": 300,
+		"energy": 30,
+		"temperature": {
+			"min": 0,
+			"max": 800
+		}
+	}
+]

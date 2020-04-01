@@ -1,0 +1,11 @@
+{
+  "enabled":true,
+  "show_resource_errors":true,
+  "fuel":{
+    "BurnTime":1
+  },
+  "stoneFurnace":{
+    "RecipeSpeed":1,
+    "CoolingSpeed":0.2
+  }
+}

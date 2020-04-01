@@ -69,6 +69,7 @@ var Theme = {
 	},
 	openTheme: function(name, page) {
 		page = page||0;
+		alert(name+"_"+page);
 		if(openThemeArray.length==0||name!=openThemeArray[openThemeArray.length-1].link)openThemeArray.push({link:name, page:page});
 		var theme = this.getThemeByName(name);
 		if(theme) {
@@ -76,16 +77,7 @@ var Theme = {
 			if(theme.pages.length>page+1){
 				elements["nextPage"] = {type: "button", x: 850, y: 420, bitmap: "next_page", scale: 3, page:page, link:name, clicker: {
                         onClick: function (container) {
-                           var link;
-							var page;
-					for(var i in container.getGuiContent().elements){
-						var e = container.getGuiContent().elements[i];
-						if(Math.floor(e.x)==850&&Math.floor(e.y)==550){
-							link = e.link;
-							page = e.page;
-						}
-					}
-					Theme.openTheme(link, page+1);
+					Theme.openTheme(name, page+1);
 					MC.addTimer(
 					Theme.themeCloser,
 					20,
@@ -157,7 +149,7 @@ var Theme = {
 			var gui = new UI.StandartWindow({
 					standart: {
 						background: {
-							bitmap: "guide_background",
+							bitmap: "paper_background",
                       		color: android.graphics.Color.argb(256, 0, 0, 0),
 						}
 					},
