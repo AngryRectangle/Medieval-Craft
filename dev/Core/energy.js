@@ -1,1 +1,1 @@
-var energyKineticEnergy=EnergyTypeRegistry.assureEnergyType("Kimetic Energy", 12);
+var energyKineticEnergy=EnergyRegistry.assureEnergyType("Kimetic Energy", 12);

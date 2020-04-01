@@ -100,7 +100,6 @@ var Tool = {
         Tool.add(id, blocks, properties);
     }
 };
-registerAPIUnit('Tool', Tool);
 var libconfig = new Config(FileTools.workdir + "config-energylib.json");
 libconfig.checkAndRestore({
     performance: {
@@ -525,9 +524,6 @@ function EnergyWeb(energyType) {
         this.retreivedAmount = 0;
     };
 }
-registerAPIUnit("EnergyLibCore", EnergyLib);
-registerAPIUnit("EnergyTypeRegistry", EnergyRegistry);
-registerAPIUnit("EnergyTileRegistry", TileEntityRegistry);
 var stringPath = {
     imagePath: {
         grinderBar: "grinder_bar_background",
@@ -1704,7 +1700,7 @@ Medieval.Recipe = {
         return null;
     }
 };
-var energyKineticEnergy = EnergyTypeRegistry.assureEnergyType("Kimetic Energy", 12);
+var energyKineticEnergy = EnergyRegistry.assureEnergyType("Kimetic Energy", 12);
 function rotationArray(array) {
     for (var i in array) {
         var between = array[i].z;

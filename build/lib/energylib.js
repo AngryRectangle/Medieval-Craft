@@ -557,11 +557,3 @@ function EnergyWeb(energyType) {
         this.retreivedAmount = 0;
     }
 }
-
-registerAPIUnit("EnergyLibCore", EnergyLib);
-registerAPIUnit("EnergyTypeRegistry", EnergyRegistry);
-registerAPIUnit("EnergyTileRegistry", TileEntityRegistry);
-
-
-
-
