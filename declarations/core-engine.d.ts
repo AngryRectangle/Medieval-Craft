@@ -819,7 +819,9 @@ interface Weather {
  * Class representing TileEntity in the worls
  */
 declare class TileEntity {
-
+    x: number;
+    y: number;
+    z: number;
 }
 
 declare class NativeTileEntity {
