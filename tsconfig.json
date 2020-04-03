@@ -14,7 +14,7 @@
     "dom"
   ],
   "include": [
-    "lib/*",
+    "lib/**/*",
     "header.js",
     "dev/Core/stringConfigure.js",
     "dev/Core/*",
