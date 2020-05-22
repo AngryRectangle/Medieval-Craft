@@ -1,16 +1,16 @@
 namespace Geometry.Shapes {
     export class Box {
-        private start: Point
-        private end: Point
+        public start: Vector
+        public end: Vector
 
-        constructor(private f: Point, private s: Point) {
+        constructor(f: Vector, s: Vector) {
             let min = Math.min;
             let max = Math.max;
-            this.start = Point.from(min(f.x, s.x), min(f.y, s.y), min(f.x, s.z));
-            this.end = Point.from(max(f.x, s.x), max(f.y, s.y), max(f.x, s.z));
+            this.start = Vector.from(min(f.x, s.x), min(f.y, s.y), min(f.x, s.z));
+            this.end = Vector.from(max(f.x, s.x), max(f.y, s.y), max(f.x, s.z));
         }
 
-        public containsPoint(point: Point, strict = false): boolean {
+        public containsPoint(point: Vector, strict = false): boolean {
             return this.contains(point.x, point.y, point.z, strict);
         }
 
@@ -34,19 +34,19 @@ namespace Geometry.Shapes {
             return Math.abs(this.end.z - this.start.z);
         }
 
-        public get corners(): Point[] {
+        public get corners(): Vector[] {
             var points = [];
-            points.push(Point.fromCoords(this.start));
+            points.push(Vector.fromCoords(this.start));
             
-            points.push(Point.from(this.start.x + this.width, this.start.y, this.start.z));
-            points.push(Point.from(this.start.x, this.start.y + this.height, this.start.z));
-            points.push(Point.from(this.start.x, this.start.y, this.start.z + this.depth));
+            points.push(Vector.from(this.start.x + this.width, this.start.y, this.start.z));
+            points.push(Vector.from(this.start.x, this.start.y + this.height, this.start.z));
+            points.push(Vector.from(this.start.x, this.start.y, this.start.z + this.depth));
 
-            points.push(Point.from(this.start.x + this.width, this.start.y + this.height, this.start.z));
-            points.push(Point.from(this.start.x, this.start.y + this.height, this.start.z + this.depth));
-            points.push(Point.from(this.start.x + this.width, this.start.y, this.start.z + this.depth));
+            points.push(Vector.from(this.start.x + this.width, this.start.y + this.height, this.start.z));
+            points.push(Vector.from(this.start.x, this.start.y + this.height, this.start.z + this.depth));
+            points.push(Vector.from(this.start.x + this.width, this.start.y, this.start.z + this.depth));
 
-            points.push(Point.fromCoords(this.end));
+            points.push(Vector.fromCoords(this.end));
             
             return points;
         }
@@ -54,20 +54,22 @@ namespace Geometry.Shapes {
         public get edges(): Line[] {
             var edges = [];
 
-            let start = Point.fromCoords(this.start);
-            let end = Point.fromCoords(this.end);
+            let start = Vector.fromCoords(this.start);
+            let end = Vector.fromCoords(this.end);
 
-            edges.push(Line.fromPoints(start, Point.from(start.x + this.width, start.y, start.z)));
-            edges.push(Line.fromPoints(start, Point.from(start.x, start.y + this.height, start.z)));
-            edges.push(Line.fromPoints(start, Point.from(start.x, start.y, start.z + this.depth)));
+            edges.push(Line.fromPoints(start, Vector.from(start.x + this.width, start.y, start.z)));
+            edges.push(Line.fromPoints(start, Vector.from(start.x, start.y + this.height, start.z)));
+            edges.push(Line.fromPoints(start, Vector.from(start.x, start.y, start.z + this.depth)));
 
 
-            edges.push(Line.fromPoints(Point.from(start.x + this.width, start.y, start.z), end));
-            edges.push(Line.fromPoints(Point.from(start.x, start.y + this.height, start.z), end));
-            edges.push(Line.fromPoints(Point.from(start.x, start.y, start.z + this.depth), end));
+            edges.push(Line.fromPoints(Vector.from(start.x + this.width, start.y, start.z), end));
+            edges.push(Line.fromPoints(Vector.from(start.x, start.y + this.height, start.z), end));
+            edges.push(Line.fromPoints(Vector.from(start.x, start.y, start.z + this.depth), end));
             
             return edges;
         }
+
+        
 
         public intersectWith(target: Box, strict = false): boolean {
             for(let i in target.corners){

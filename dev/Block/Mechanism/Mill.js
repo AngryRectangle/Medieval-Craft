@@ -5,7 +5,12 @@ var wodenMillLevel=[{Block:[
 {x:1, y:0, z:2, id:[85]},{x:1, y:0, z:3, id:[85]},{x:1, y:0, z:4, id:[85]},
 {x:1, y:0, z:-2, id:[85]},{x:1, y:0, z:-3, id:[85]},{x:1, y:0, z:-4, id:[85]}
 ], 
-Level:1},
+Level: 1, domen: [
+	new Geometry.Shapes.Box(new Geometry.Point(1, 1, 0), new Geometry.Point(1, 4, 0)),
+	new Geometry.Shapes.Box(new Geometry.Point(1, -1, 0), new Geometry.Point(1, -4, 0)),
+	new Geometry.Shapes.Box(new Geometry.Point(1, 0, -4), new Geometry.Point(1, 0, 4))
+]
+},
 {Block:[
 {x:1, y:0, z:0, id:[17,162]},{x:1, y:1, z:0, id:[17,162]},{x:1, y:-1, z:0, id:[17,162]},{x:1, y:0, z:1, id:[17,162]},{x:1, y:0, z:-1, id:[17,162]},
 {x:1, y:2, z:0, id:[85]},{x:1, y:3, z:0, id:[85]},{x:1, y:4, z:0, id:[85]},
@@ -95,7 +100,6 @@ var windmill_render = new Render();
 var wind_millTexture = new Texture("res/model/small_windmill.png").setResolution(16,16);
 var mesh = new RenderMesh(__dir__ + "model/small_windmill.obj", "obj", {scale:[16, 16, 16],translate: [0, -16, 0]});
 var bodyPart = windmill_render.getPart("head");
-//windmill_render.setTexture(new Texture("res/model/small_windmill.png").setResolution(16,16));
 bodyPart.setMesh(mesh);
 
 TileEntity.registerPrototype(BlockID.woodenMill, {
@@ -109,13 +113,17 @@ TileEntity.registerPrototype(BlockID.woodenMill, {
 	isGenerator: function () {
 		return true;
 	},
-	init:function(){
-		this.animation = new Animation.Base(this.x + .5, this.y, this.z + 17/16);
-		this.animation.describe({
-			render: windmill_render.getId(),
-			skin: "model/small_windmill.png"
+	loadAnimation:function(id, texturePath){
+		var anim = new Animation.Base(this.x + .5, this.y, this.z + 17/16);
+		anim.describe({
+			render: id,
+			skin: texturePath
 		});
-		this.animation.load();
+		anim.load();
+		return anim;
+	},
+	init:function(){
+		this.animation = this.loadAnimation(windmill_render.getId(), "model/small_windmill.png");
 	},
 	tick: function () {
 		if (World.getWorldTime() % 20 == 0) {
@@ -174,9 +182,16 @@ Callback.addCallback("ItemUse", function (coords, item, block) {
 	if (item.id == ItemID.smallHammer && block.id == BlockID.woodenMill) {
 		if (!World.getTileEntity(coords.x, coords.y, coords.z).data.wheelLevel) {
 			var wheel = multiBlock.getLevel(coords.x, coords.y, coords.z, wodenMillLevel);
-			World.getTileEntity(coords.x, coords.y, coords.z).data.wheelLevel = wheel.Level;
-			World.getTileEntity(coords.x, coords.y, coords.z).data.orientation = wheel.orientation;
-			World.getTileEntity(coords.x, coords.y, coords.z).data.biome = World.getBiome(coords.x, coords.z);
+			var entity = World.getTileEntity(coords.x, coords.y, coords.z);
+			entity.data.wheelLevel = wheel.Level;
+			entity.data.orientation = wheel.orientation;
+			entity.data.biome = World.getBiome(coords.x, coords.z);
+			DomenManager.createDomen(entity, wodenMillLevel[0].domen);
+			var blockObj;
+			for(var i =0; i< wodenMillLevel[0].Block.length; i++){
+				blockObj =  wodenMillLevel[0].Block[i];
+				World.setBlock(blockObj.x+coords.x, blockObj.y+coords.y, blockObj.z+coords.z, blockObj.id[0], blockObj.id[1]);
+			}
 			if (wheel.Level) Game.message("Мельница построена, следите за ней");
 			if (!wheel.Level) Game.message("Мельница построена не правильно");
 		} else {

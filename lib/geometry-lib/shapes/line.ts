@@ -1,12 +1,12 @@
 namespace Geometry {
     export class Line {
-        static fromPoints(start: Point, end: Point): Line {
+        static fromPoints(start: Vector, end: Vector): Line {
             return new Line(start, end);
         }
 
         public vector: Vector;
-        constructor(public start: Point, public end: Point) {
-            this.vector = Vector.fromPoints(start, end);
+        constructor(public start: Vector, public end: Vector) {
+            this.vector = end.minus(start);
         }
 
 

@@ -1,6 +1,6 @@
 class Domen {
     public readonly boxes: Geometry.Shapes.Box[];
-    public constructor(boxes: Geometry.Shapes.Box[]){
+    public constructor(boxes: Geometry.Shapes.Box[]) {
         this.boxes = boxes;
     }
     public contains(x: number, y: number, z: number): boolean {
@@ -18,21 +18,28 @@ class Domen {
         return false;
     }*/
 }
-class DomenManager {
-    domens: Domen[];
-    entities: TileEntity[];
-    public createDomen(entity: TileEntity, boxes: Geometry.Shapes.Box[]): void {
+namespace DomenManager {
+    var domens: Domen[];
+    var entities: TileEntity[];
+
+    export function createDomen(entity: TileEntity, boxes: Geometry.Shapes.Box[]): void {
         this.domens.push(new Domen(boxes));
+        var vec = new Geometry.Vector(entity.x, entity.y, entity.z);
+        for(var i =0; i<boxes.length; i++){
+            boxes[i] = new Geometry.Shapes.Box(Geometry.Vector.plus(vec, boxes[i].start), Geometry.Vector.plus(vec, boxes[i].end))
+        }
         this.entities.push(entity);
     }
-    public getDomen(x: number, y: number, z: number): Domen {
+
+    export function getDomen(x: number, y: number, z: number): Domen {
         this.domens.forEach(domen => {
             if (domen.contains(x, y, z))
                 return domen;
         });
         return null;
     }
-    public removeDomenByEntity(entity: TileEntity): boolean {
+
+    export function removeDomenByEntity(entity: TileEntity): boolean {
         var x: number = entity.x;
         var y: number = entity.y;
         var z: number = entity.z;
@@ -47,7 +54,8 @@ class DomenManager {
         }
         return false;
     }
-    public removeDomenByCoords(x: number, y: number, z: number): boolean {
+
+    export function removeDomenByCoords(x: number, y: number, z: number): boolean {
         var domen: Domen;
         for (var i = 0; i < this.domens.length; i++) {
             domen = this.domens[i];

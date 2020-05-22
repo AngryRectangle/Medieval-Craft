@@ -21,8 +21,6 @@
     "dev/**/*"
   ],
   "files": [
-    "./declarations/core-engine.d.ts",
-    "./declarations/android-declarations.d.ts",
-    "./declarations/android-platform-21.d.ts"
+    "./declarations/**/.d.ts"
   ]
 }

@@ -524,276 +524,6 @@ function EnergyWeb(energyType) {
         this.retreivedAmount = 0;
     };
 }
-var Geometry;
-(function (Geometry) {
-    var Utilites = (function () {
-        function Utilites() {
-        }
-        Utilites.inRange = function (value, min, max, strict) {
-            if (strict)
-                return value > min && value < max;
-            return value >= min && value <= max;
-        };
-        return Utilites;
-    }());
-    Geometry.Utilites = Utilites;
-})(Geometry || (Geometry = {}));
-var Geometry;
-(function (Geometry) {
-    var Shapes;
-    (function (Shapes) {
-        var Arc = (function () {
-            function Arc() {
-            }
-            return Arc;
-        }());
-    })(Shapes = Geometry.Shapes || (Geometry.Shapes = {}));
-})(Geometry || (Geometry = {}));
-var Geometry;
-(function (Geometry) {
-    var Shapes;
-    (function (Shapes) {
-        var Box = (function () {
-            function Box(f, s) {
-                this.f = f;
-                this.s = s;
-                var min = Math.min;
-                var max = Math.max;
-                this.start = Geometry.Point.from(min(f.x, s.x), min(f.y, s.y), min(f.x, s.z));
-                this.end = Geometry.Point.from(max(f.x, s.x), max(f.y, s.y), max(f.x, s.z));
-            }
-            Box.prototype.containsPoint = function (point, strict) {
-                if (strict === void 0) { strict = false; }
-                return this.contains(point.x, point.y, point.z, strict);
-            };
-            Box.prototype.contains = function (x, y, z, strict) {
-                if (strict === void 0) { strict = false; }
-                var xs = Geometry.Utilites.inRange(x, this.start.x, this.end.x, strict);
-                var ys = Geometry.Utilites.inRange(y, this.start.y, this.end.y, strict);
-                var zs = Geometry.Utilites.inRange(z, this.start.z, this.end.z, strict);
-                return xs && ys && zs;
-            };
-            Object.defineProperty(Box.prototype, "width", {
-                get: function () {
-                    return Math.abs(this.end.x - this.start.x);
-                },
-                enumerable: true,
-                configurable: true
-            });
-            Object.defineProperty(Box.prototype, "height", {
-                get: function () {
-                    return Math.abs(this.end.y - this.start.y);
-                },
-                enumerable: true,
-                configurable: true
-            });
-            Object.defineProperty(Box.prototype, "depth", {
-                get: function () {
-                    return Math.abs(this.end.z - this.start.z);
-                },
-                enumerable: true,
-                configurable: true
-            });
-            Object.defineProperty(Box.prototype, "corners", {
-                get: function () {
-                    var points = [];
-                    points.push(Geometry.Point.fromCoords(this.start));
-                    points.push(Geometry.Point.from(this.start.x + this.width, this.start.y, this.start.z));
-                    points.push(Geometry.Point.from(this.start.x, this.start.y + this.height, this.start.z));
-                    points.push(Geometry.Point.from(this.start.x, this.start.y, this.start.z + this.depth));
-                    points.push(Geometry.Point.from(this.start.x + this.width, this.start.y + this.height, this.start.z));
-                    points.push(Geometry.Point.from(this.start.x, this.start.y + this.height, this.start.z + this.depth));
-                    points.push(Geometry.Point.from(this.start.x + this.width, this.start.y, this.start.z + this.depth));
-                    points.push(Geometry.Point.fromCoords(this.end));
-                    return points;
-                },
-                enumerable: true,
-                configurable: true
-            });
-            Object.defineProperty(Box.prototype, "edges", {
-                get: function () {
-                    var edges = [];
-                    var start = Geometry.Point.fromCoords(this.start);
-                    var end = Geometry.Point.fromCoords(this.end);
-                    edges.push(Geometry.Line.fromPoints(start, Geometry.Point.from(start.x + this.width, start.y, start.z)));
-                    edges.push(Geometry.Line.fromPoints(start, Geometry.Point.from(start.x, start.y + this.height, start.z)));
-                    edges.push(Geometry.Line.fromPoints(start, Geometry.Point.from(start.x, start.y, start.z + this.depth)));
-                    edges.push(Geometry.Line.fromPoints(Geometry.Point.from(start.x + this.width, start.y, start.z), end));
-                    edges.push(Geometry.Line.fromPoints(Geometry.Point.from(start.x, start.y + this.height, start.z), end));
-                    edges.push(Geometry.Line.fromPoints(Geometry.Point.from(start.x, start.y, start.z + this.depth), end));
-                    return edges;
-                },
-                enumerable: true,
-                configurable: true
-            });
-            Box.prototype.intersectWith = function (target, strict) {
-                if (strict === void 0) { strict = false; }
-                for (var i_1 in target.corners) {
-                    var corner = target.corners[i_1];
-                    if (this.containsPoint(corner, true))
-                        return true;
-                }
-                return false;
-            };
-            Box.prototype.adjacentWith = function (target, strict) {
-                if (strict === void 0) { strict = false; }
-                var tEdges = target.edges;
-                var tCorners = target.corners;
-                var lieTouching = false;
-                for (var i_2 = 0; i_2 < 4; i_2++) {
-                    if (this.corners[i_2] == tCorners[(i_2 + 2) % 4])
-                        lieTouching = !lieTouching;
-                }
-                if (lieTouching)
-                    return false;
-                for (var i_3 = 0; i_3 < 4; i_3++) {
-                    if (this.edges[i_3].intersectWith(tEdges[(i_3 + 2) % 4]))
-                        return true;
-                }
-                return false;
-            };
-            return Box;
-        }());
-        Shapes.Box = Box;
-    })(Shapes = Geometry.Shapes || (Geometry.Shapes = {}));
-})(Geometry || (Geometry = {}));
-var Geometry;
-(function (Geometry) {
-    var Line = (function () {
-        function Line(start, end) {
-            this.start = start;
-            this.end = end;
-            this.vector = Geometry.Vector.fromPoints(start, end);
-        }
-        Line.fromPoints = function (start, end) {
-            return new Line(start, end);
-        };
-        Line.prototype.intersectWith = function (target) {
-            if (this.equals(target))
-                return true;
-            return false;
-        };
-        Line.prototype.equals = function (target) {
-            return this.start.equals(target.start) && this.end.equals(target.end);
-        };
-        return Line;
-    }());
-    Geometry.Line = Line;
-})(Geometry || (Geometry = {}));
-var Geometry;
-(function (Geometry) {
-    var Point = (function () {
-        function Point(x, y, z) {
-            this.x = x;
-            this.y = y;
-            this.z = z;
-        }
-        Point.fromCoords = function (coords) {
-            return new Point(coords.x, coords.y, coords.z);
-        };
-        Point.fromEntity = function (entity) {
-            return Point.fromCoords(Entity.getPosition(entity));
-        };
-        Point.prototype.distanceTo = function (point) {
-            return Math.sqrt(Math.pow(point.x - this.x, 2) + Math.pow(point.y - this.y, 2) + Math.pow(point.z - this.z, 2));
-        };
-        Point.prototype.toString = function () {
-            return "Point (" + this.x + ", " + this.y + ", " + this.z + ")";
-        };
-        Point.prototype.equals = function (target) {
-            return this.x == target.x && this.y == target.y && this.z == target.z;
-        };
-        return Point;
-    }());
-    Geometry.Point = Point;
-})(Geometry || (Geometry = {}));
-var Geometry;
-(function (Geometry) {
-    var Shapes;
-    (function (Shapes) {
-        var Sphere = (function () {
-            function Sphere() {
-                this.position = new Geometry.Point(0, 0, 0);
-                this.radius = 1;
-            }
-            return Sphere;
-        }());
-    })(Shapes = Geometry.Shapes || (Geometry.Shapes = {}));
-})(Geometry || (Geometry = {}));
-var Geometry;
-(function (Geometry) {
-    var Vector = (function () {
-        function Vector(x, y, z) {
-            this.x = x;
-            this.y = y;
-            this.z = z;
-        }
-        Vector.fromCoords = function (coords) {
-            return new Vector(coords.x, coords.y, coords.z);
-        };
-        Object.defineProperty(Vector, "UP", {
-            get: function () { return new Vector(0, 1, 0); },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Vector, "DOWN", {
-            get: function () { return new Vector(0, -1, 0); },
-            enumerable: true,
-            configurable: true
-        });
-        Vector.fromPoints = function (f, s) {
-            return Vector.from(s.x - f.x, s.y - f.y, s.z - f.z);
-        };
-        Vector.plus = function () {
-            var args = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args[_i] = arguments[_i];
-            }
-            var x = 0, y = 0, z = 0;
-            for (var i in args) {
-                var vec = args[i];
-                x += vec.x;
-                y += vec.y;
-                z += vec.z;
-            }
-            return Vector.from(x, y, z);
-        };
-        Object.defineProperty(Vector.prototype, "length", {
-            get: function () {
-                return Math.sqrt(Math.pow(this.x, 2) +
-                    Math.pow(this.y, 2) +
-                    Math.pow(this.z, 2));
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Vector.prototype.normalize = function () {
-            var length = this.length;
-            this.x /= length;
-            this.y /= length;
-            this.z /= length;
-            return this;
-        };
-        Object.defineProperty(Vector.prototype, "normalized", {
-            get: function () {
-                return this.copy().normalize();
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Vector.prototype.copy = function () {
-            return Vector.fromCoords(this);
-        };
-        Vector.prototype.cross = function (target) {
-            var x = this.y * target.z - this.z * target.y;
-            var y = this.z * target.x - this.x * target.z;
-            var z = this.x * target.y - this.y * target.x;
-            return Vector.from(x, y, z);
-        };
-        return Vector;
-    }());
-    Geometry.Vector = Vector;
-})(Geometry || (Geometry = {}));
 var stringPath = {
     imagePath: {
         grinderBar: "grinder_bar_background",
@@ -943,11 +673,6 @@ var AdvMath = {
         return min + Math.round(Math.random() * (max - min));
     }
 };
-var Domen = (function () {
-    function Domen() {
-    }
-    return Domen;
-}());
 var MC = {
     DebugInSecond: function (msg) {
         if (World.getThreadTime() % 20 == 0) {
@@ -1760,8 +1485,8 @@ Block.createBlock("phisicBlock", [
 ], BLOCK_TYPE_INVISIBLE);
 var BlockAnimation = {
     setPhisicBlocks: function (array, entity) {
-        for (var i_4 in array.Block) {
-            World.setBlock(entity.x + array[i_4].Block.x, entity.y + array[i_4].Block.y, entity.z + array[i_4].Block.z, 0, 0);
+        for (var i_1 in array.Block) {
+            World.setBlock(entity.x + array[i_1].Block.x, entity.y + array[i_1].Block.y, entity.z + array[i_1].Block.z, 0, 0);
         }
     },
     convertBlockToAnimationTech: function (x, y, z) {
@@ -1777,8 +1502,8 @@ var BlockAnimation = {
     },
     convertBlocksToAnimation: function (array, en) {
         var animations = [];
-        for (var i_5 in array) {
-            animations.push(this.convertBlockToAnimationTech(array[i_5].x + en.x, array[i_5].y + en.y, array[i_5].z + en.z));
+        for (var i_2 in array) {
+            animations.push(this.convertBlockToAnimationTech(array[i_2].x + en.x, array[i_2].y + en.y, array[i_2].z + en.z));
         }
         this.setPhisicBlocks(array, en);
         return animations;
@@ -2024,9 +1749,9 @@ var multiBlock = {
     },
     getBlocksByOrientation: function (array, level, orientation) {
         var blockArr = [];
-        for (var i_6 in array) {
-            if (array[i_6].Level == level) {
-                array = array[i_6];
+        for (var i_3 in array) {
+            if (array[i_3].Level == level) {
+                array = array[i_3];
                 break;
             }
         }

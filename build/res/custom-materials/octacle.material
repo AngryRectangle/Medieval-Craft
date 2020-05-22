@@ -1,0 +1,10 @@
+{
+    "octacle_fired": {
+      "vertexShader": "shaders/entity.vertex",
+      "fragmentShader": "custom-shaders/mc_octacle_fired.fragment"
+      },
+      "octacle_normal": {
+      "vertexShader": "shaders/entity.vertex",
+      "fragmentShader": "custom-shaders/mc_octacle.fragment"
+      }
+}

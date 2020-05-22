@@ -9,4 +9,4 @@ namespace Geometry {
 }
 
 
-//EXPORT("Geometry", Geometry);
+EXPORT("Geometry", Geometry);
