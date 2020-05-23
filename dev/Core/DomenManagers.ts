@@ -1,4 +1,4 @@
-class Domen {
+/*class Domen {
     public readonly boxes: Geometry.Shapes.Box[];
     public constructor(boxes: Geometry.Shapes.Box[]) {
         this.boxes = boxes;
@@ -17,7 +17,7 @@ class Domen {
         });
         return false;
     }*/
-}
+/*}
 namespace DomenManager {
     var domens: Domen[];
     var entities: TileEntity[];
@@ -67,4 +67,4 @@ namespace DomenManager {
         }
         return false;
     }
-}
+}*/

@@ -79,7 +79,7 @@ TileEntity.registerPrototype(BlockID["barrel_wooden"], {
 		return barrelGui;
 	}
 });
-
+Callback.addCallback('PreLoaded', function () {
 Recipes.addShaped({
 	id: BlockID["barrel_wooden"],
 	count: 1,
@@ -90,3 +90,4 @@ Recipes.addShaped({
 	count: 1,
 	data: 0
 }, ["pap", "gug", "pgp"], ["g", 5, -1, "p", 265, -1, "a", 162, -1, "u", 102, -1]);
+});

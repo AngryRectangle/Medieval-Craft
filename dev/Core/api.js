@@ -1,6 +1,4 @@
 var Medieval = {};
-
-importLib("Tool", "*");
 Medieval.Tool = {
 	material: function (params) {
 		ToolAPI.addToolMaterial (params.material, params.describe);

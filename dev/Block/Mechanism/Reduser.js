@@ -17,4 +17,6 @@ IDRegistry.genItemID("reduser");
 Item.createItem("reduser", "Reduser", {name: "reduser", meta: 0}, {stack: 64});
 Translation.addTranslation("Reduser", {ru: "Редуктор"});
 MC.replaceBlock(ItemID.reduser, BlockID.reduser);
+Callback.addCallback('PreLoaded', function () {
 Recipes.addShaped({id: ItemID.reduser, count: 1, data: 0}, ["ppp", "gpg", "ppp"], ["p", 5,-1,"g", IDData.item.woodenGear_1x, -1]);
+});

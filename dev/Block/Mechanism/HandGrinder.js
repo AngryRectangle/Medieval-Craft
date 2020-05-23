@@ -16,7 +16,9 @@ Block.createBlock("grinderTable", [
 IDRegistry.genItemID("grinderTable");
 Item.createItem("grinderTable", "Grinder Table", {name: "grinder_table", meta: 0}, {stack: 64});
 MC.replaceBlock(ItemID.grinderTable, BlockID.grinderTable);
+Callback.addCallback('PreLoaded', function () {
 Recipes.addShaped({id: ItemID.grinderTable, count: 1, data: 0}, ["vvv", "ivi", "bib"], ["i", 265, -1, "b", 42, -1]);
+});
 Translation.addTranslation("Grinder Table", {ru: "Дробильный Столик"});
 ICRender.getGroup("kineticMachine").add(BlockID.grinderTable,-1);
 var render = new ICRender.Model();
@@ -36,7 +38,9 @@ IDRegistry.genItemID("crasherIron");
 Item.createItem("crasherIron", "Crasher", {name: "press", meta: 0}, {stack: 64});
 Translation.addTranslation("Crasher", {ru: "Железная плита для дробилки"});
 MC.replaceBlock(ItemID.crasherIron, BlockID.crasherIron);
+Callback.addCallback('PreLoaded', function () {
 Recipes.addShaped({id: ItemID.crasherIron, count: 1, data: 0}, ["vzv", "vzv", "ibi"], ["z", 85,-1,"i", 265, -1, "b", 42, -1]);
+});
 var render = new ICRender.Model();
 BlockRenderer.setStaticICRender (BlockID.crasherIron, 0, render);
 var model = BlockRenderer.createModel();

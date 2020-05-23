@@ -50,14 +50,17 @@ var drillWorkbench = function(api, field, result){
 var drill=function(){
 	MC.addAchivement("medievalCraft","createDrill");
 };
+Callback.addCallback('PreLoaded', function () {
 Recipes.addShaped({id: IDData.item.kineticDrill, count: 1, data: 0}, ["vvi", "ibg", "vvp"], ["g", IDData.item.ironGear_1x,-1,"p",5,-1, "i", 265,0,"b", 42,0],drill);
 Recipes.addShaped({id: IDData.item.kineticDrillwithGoldSpring, count: 1, data: 0}, ["aaa", "sda", "aaa"], ["s", IDData.item.kineticDrill,-1,"d",IDData.item.goldSpring,-1],drillWorkbench);
 Recipes.addShaped({id: IDData.item.kineticDrillwithIronSpring, count: 1, data: 0}, ["aaa", "sda", "aaa"], ["s", IDData.item.kineticDrill,-1,"d",IDData.item.ironSpring,-1],drillWorkbench);
+});
 Item.setMaxDamage(IDData.item.kineticDrillwithGoldSpring, 4500);
 Item.setMaxDamage(IDData.item.kineticDrillwithIronSpring, 3000);
+Callback.addCallback('PreLoaded', function () {
 Recipes.addShaped({id: IDData.item.goldSpring, count: 1, data: 0}, ["aaa", "ada", "aaa"], ["d",IDData.item.kineticDrillwithGoldSpring,-1],drillWorkbench);
 Recipes.addShaped({id: IDData.item.ironSpring, count: 1, data: 0}, ["aaa", "ada", "aaa"], ["d",IDData.item.kineticDrillwithIronSpring,-1],drillWorkbench);
-
+});
 /*Tool.add(ItemID.kineticDrillwithGoldSpring, {durability: 4500, level: 2, efficiency: 3, damage: 3},  ToolType.kineticDrill);
 Tool.add(ItemID.kineticDrillwithIronSpring, {durability: 4500, level: 2, efficiency: 3, damage: 3},  ToolType.kineticDrill);
 */

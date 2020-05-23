@@ -20,5 +20,7 @@ Medieval.Item.add ("goldSpring", {
 });
 MC.setSpring(IDData.item.ironSpring, 3000, 30, 500);
 MC.setSpring(IDData.item.goldSpring, 4500, 45, 750);
+Callback.addCallback('PreLoaded', function () {
 Recipes.addShaped({id: IDData.item.ironSpring, count: 1, data: 0}, ["ivv", "viv", "ivv"], ["i", 265,-1]);
 Recipes.addShaped({id: IDData.item.goldSpring, count: 1, data: 0}, ["ivv", "viv", "ivv"], ["i", 266,-1]);
+});

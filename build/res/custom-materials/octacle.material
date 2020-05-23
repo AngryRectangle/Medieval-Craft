@@ -1,10 +1,18 @@
 {
-    "octacle_fired": {
-      "vertexShader": "shaders/entity.vertex",
-      "fragmentShader": "custom-shaders/mc_octacle_fired.fragment"
+      "octacle_fired": {
+            "vertexShader": "shaders/entity.vertex",
+            "fragmentShader": "custom-shaders/mc_octacle_fired.fragment",
+            "+states": [
+                  "Blending",
+                  "DisableCulling"
+            ]
       },
-      "octacle_normal": {
-      "vertexShader": "shaders/entity.vertex",
-      "fragmentShader": "custom-shaders/mc_octacle.fragment"
+      "octacle_normal:entity_alphatest": {
+            "vertexShader": "shaders/entity.vertex",
+            "fragmentShader": "./mc_octacle.fragment",
+            "+states": [
+                  "Blending",
+                  "DisableCulling"
+            ]
       }
 }

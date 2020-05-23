@@ -20,7 +20,9 @@ IDRegistry.genBlockID("waterWheel");
 Block.createBlockWithRotation("waterWheel", [
 {name: "Water Wheel", texture: [["log_oak", 0],["log_oak", 0],["log_oak_top", 0],["watermill_side", 0],["log_oak", 0],["log_oak",0]], inCreative: true}
 ]);
+Callback.addCallback('PreLoaded', function () {
 Recipes.addShaped({id: BlockID.waterWheel, count: 1, data: 0}, ["ppp", "pop", "ppp"], ["p", 5,-1,"o",351,4]);
+});
 ICRender.getGroup("kineticMachine").add(BlockID.waterWheel,-1);
 Translation.addTranslation("Water Wheel", {ru: "Водяное Колесо"});
 var getRainLevel = ModAPI.requireGlobal("Level.getRainLevel");

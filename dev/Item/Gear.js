@@ -5,7 +5,6 @@ Medieval.Item.add ("woodenGear_05x", {
 		ru: "Деревянная шестерня 0.5x"
 	}
 });
-Recipes.addShaped({id: IDData.item.woodenGear_05x, count: 1, data: 0}, ["apa", "ppp", "apa"], ["p", 5,-1]);
 Medieval.Item.add ("woodenGear_1x", {
 	name: "Wooden Gear 1x",
 	texture: ["wood_gear_1x"],
@@ -13,7 +12,6 @@ Medieval.Item.add ("woodenGear_1x", {
 		ru: "Деревянная шестерня 1x"
 	}
 });
-Recipes.addShaped({id: IDData.item.woodenGear_1x, count: 1, data: 0}, ["pap", "ala", "pap"], ["p", 5,-1,"l",IDData.item.woodenGear_05x,0]);
 Medieval.Item.add ("woodenGear_2x", {
 	name: "Wooden Gear 2x",
 	texture: ["wood_gear_2x"],
@@ -21,7 +19,6 @@ Medieval.Item.add ("woodenGear_2x", {
 		ru: "Деревянная шестерня 2x"
 	}
 });
-Recipes.addShaped({id: IDData.item.woodenGear_2x, count: 1, data: 0}, ["pap", "ala", "pap"], ["p", 5,-1,"l",IDData.item.woodenGear_1x,0]);
 Medieval.Item.add ("stoneGear_05x", {
 	name: "Stone Gear 0.5x",
 	texture: ["stone_gear_05x"],
@@ -29,7 +26,6 @@ Medieval.Item.add ("stoneGear_05x", {
 		ru: "Каменная шестерня 0.5x"
 	}
 });
-Recipes.addShaped({id: IDData.item.stoneGear_05x, count: 1, data: 0}, ["apa", "ppp", "apa"], ["p", 1,0]);
 Medieval.Item.add ("stoneGear_1x", {
 	name: "Stone Gear 1x",
 	texture: ["stone_gear_1x"],
@@ -37,7 +33,6 @@ Medieval.Item.add ("stoneGear_1x", {
 		ru: "Каменная шестерня 1x"
 	}
 });
-Recipes.addShaped({id: IDData.item.stoneGear_1x, count: 1, data: 0}, ["pap", "ala", "pap"], ["p", 1,0,"l",IDData.item.stoneGear_05x,0]);
 Medieval.Item.add ("stoneGear_2x", {
 	name: "Stone Gear 2x",
 	texture: ["stone_gear_2x"],
@@ -45,7 +40,6 @@ Medieval.Item.add ("stoneGear_2x", {
 		ru: "Каменная шестерня 2x"
 	}
 });
-Recipes.addShaped({id: IDData.item.stoneGear_2x, count: 1, data: 0}, ["pap", "ala", "pap"], ["p", 1,0,"l",IDData.item.stoneGear_1x,0]);
 Medieval.Item.add ("ironGear_05x", {
 	name: "Iron Gear 0.5x",
 	texture: ["iron_gear_05x"],
@@ -67,9 +61,6 @@ Medieval.Item.add ("ironGear_2x", {
 		ru: "Железная шестерня 2x"
 	}
 });
-Recipes.addShaped({id: IDData.item.ironGear_05x, count: 1, data: 0}, ["apa", "ppp", "apa"], ["p", 265,0]);
-Recipes.addShaped({id: IDData.item.ironGear_1x, count: 1, data: 0}, ["pap", "ala", "pap"], ["p", 265,0,"l",IDData.item.ironGear_05x,0]);
-Recipes.addShaped({id: IDData.item.ironGear_2x, count: 1, data: 0}, ["pap", "ala", "pap"], ["p", 265,0,"l",IDData.item.ironGear_1x,0]);
 Medieval.Item.add ("goldenGear_05x", {
 	name: "Golden Gear 0.5x",
 	texture: ["gold_gear_05x"],
@@ -91,9 +82,28 @@ Medieval.Item.add ("goldenGear_2x", {
 		ru: "Золотая шестерня 2x"
 	}
 });
+Callback.addCallback('PreLoaded', function () {
+Recipes.addShaped({id: IDData.item.woodenGear_05x, count: 1, data: 0}, ["apa", "ppp", "apa"], ["p", 5,-1]);
+
+Recipes.addShaped({id: IDData.item.woodenGear_1x, count: 1, data: 0}, ["pap", "ala", "pap"], ["p", 5,-1,"l",IDData.item.woodenGear_05x,0]);
+
+Recipes.addShaped({id: IDData.item.woodenGear_2x, count: 1, data: 0}, ["pap", "ala", "pap"], ["p", 5,-1,"l",IDData.item.woodenGear_1x,0]);
+
+Recipes.addShaped({id: IDData.item.stoneGear_05x, count: 1, data: 0}, ["apa", "ppp", "apa"], ["p", 1,0]);
+
+Recipes.addShaped({id: IDData.item.stoneGear_1x, count: 1, data: 0}, ["pap", "ala", "pap"], ["p", 1,0,"l",IDData.item.stoneGear_05x,0]);
+
+Recipes.addShaped({id: IDData.item.stoneGear_2x, count: 1, data: 0}, ["pap", "ala", "pap"], ["p", 1,0,"l",IDData.item.stoneGear_1x,0]);
+
+
+Recipes.addShaped({id: IDData.item.ironGear_05x, count: 1, data: 0}, ["apa", "ppp", "apa"], ["p", 265,0]);
+Recipes.addShaped({id: IDData.item.ironGear_1x, count: 1, data: 0}, ["pap", "ala", "pap"], ["p", 265,0,"l",IDData.item.ironGear_05x,0]);
+Recipes.addShaped({id: IDData.item.ironGear_2x, count: 1, data: 0}, ["pap", "ala", "pap"], ["p", 265,0,"l",IDData.item.ironGear_1x,0]);
+
 Recipes.addShaped({id: IDData.item.goldenGear_05x, count: 1, data: 0}, ["apa", "ppp", "apa"], ["p", 266,0]);
 Recipes.addShaped({id: IDData.item.goldenGear_1x, count: 1, data: 0}, ["pap", "ala", "pap"], ["p", 266,0,"l",IDData.item.goldenGear_05x,0]);
 Recipes.addShaped({id: IDData.item.goldenGear_2x, count: 1, data: 0}, ["pap", "ala", "pap"], ["p", 266,0,"l",IDData.item.goldenGear_1x,0]);
+});
 Medieval.Item.setGear(IDData.item.woodenGear_05x, 10, 0.5, 0.5);
 Medieval.Item.setGear(IDData.item.woodenGear_1x, 10, 1, 1);
 Medieval.Item.setGear(IDData.item.woodenGear_2x, 10, 2, 2);

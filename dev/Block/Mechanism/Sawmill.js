@@ -13,8 +13,10 @@ function giveSawmill(){
 }
 Item.createItem("saw", "Saw", {name: "saw", meta: 0}, {stack: 64});
 Translation.addTranslation("Saw", {ru: "Пила"});
+Callback.addCallback('PreLoaded', function () {
 Recipes.addShaped({id: IDData.item.saw, count: 1, data: 0}, ["aia", "aia", "aia"], ["i", 265,-1]);
 Recipes.addShaped({id: ItemID.sawmill, count: 1, data: 0}, ["sss", "cac", "cac"], ["s", 280,-1,"c", 4, -1, "a", ItemID.saw, -1],giveSawmill);
+});
 var render = new ICRender.Model();
 BlockRenderer.setStaticICRender (BlockID.sawmill, 0, render);
 var model = BlockRenderer.createModel();

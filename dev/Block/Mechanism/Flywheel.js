@@ -29,7 +29,9 @@ IDRegistry.genItemID("flywheel");
 Item.createItem("flywheel", "Flywheel", {name: "flywheel", meta: 0}, {stack: 64});
 Translation.addTranslation("Flywheel", {ru: "Маховик"});
 MC.replaceBlock(ItemID.flywheel, BlockID.flywheel);
+Callback.addCallback('PreLoaded', function () {
 Recipes.addShaped({id: ItemID.flywheel, count: 1, data: 0}, ["vvv", "psp", "ppp"], ["p", 5,-1,"s", 280, -1]);
+});
 
 ICRender.getGroup("kineticMachine").add(BlockID.flywheel,-1);
 Translation.addTranslation("Flywheel", {ru: "Маховик"});

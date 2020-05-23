@@ -85,11 +85,13 @@ Block.createBlockWithRotation("woodenMill", [{
 	],
 	inCreative: true
 }]);
+Callback.addCallback('PreLoaded', function () {
 Recipes.addShaped({
 	id: BlockID.woodenMill,
 	count: 1,
 	data: 0
 }, ["ppp", "pop", "ppp"], ["p", 5, -1, "o", 288, 0]);
+});
 ICRender.getGroup("kineticMachine").add(BlockID.woodenMill, -1);
 Translation.addTranslation("Mill", {
 	ru: "Мельница"
@@ -98,7 +100,7 @@ var getRainLevel = ModAPI.requireGlobal("Level.getRainLevel");
 
 var windmill_render = new Render();
 var wind_millTexture = new Texture("res/model/small_windmill.png").setResolution(16,16);
-var mesh = new RenderMesh(__dir__ + "model/small_windmill.obj", "obj", {scale:[16, 16, 16],translate: [0, -16, 0]});
+var mesh = new RenderMesh(__dir__ + "res/model/small_windmill.obj", "obj", {scale:[16, 16, 16],translate: [0, -16, 0]});
 var bodyPart = windmill_render.getPart("head");
 bodyPart.setMesh(mesh);
 

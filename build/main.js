@@ -1,105 +1,3 @@
-var Tool = {
-    add: function (id, block, properties) {
-        Item.setToolRender(id, true);
-        ToolAPI.registerTool(id, properties.material, block, properties);
-        if (properties.enchant) {
-            Item.setEnchantType(id, properties.enchant.type, properties.enchant.max);
-        }
-        if (properties.useItem) {
-            Item.registerUseFunctionForID(id, properties.useItem);
-        }
-    },
-    broke: function (damage) {
-        item = Player.getCarriedItem();
-        item.data += damage;
-        if (item.data > Item.getMaxDamage(item.id)) {
-            item.id = 0;
-        }
-        else {
-            Player.setCarriedItem(item.id, item.count, item.data, item.enchant);
-        }
-    },
-    pickaxe: function (id, material) {
-        var properties = {};
-        var tool_material = ToolAPI.toolMaterials[material];
-        var blocks = ["stone"];
-        properties.material = material;
-        properties.durability = tool_material.durability;
-        properties.damage = 2;
-        properties.enchant = {
-            type: Native.EnchantType.pickaxe,
-            max: tool_material.enchantability
-        };
-        Tool.add(id, blocks, properties);
-    },
-    axe: function (id, material) {
-        var properties = {};
-        var tool_material = ToolAPI.toolMaterials[material];
-        var blocks = ["wood"];
-        properties.material = material;
-        properties.durability = tool_material.durability;
-        properties.damage = 3;
-        properties.enchant = {
-            type: Native.EnchantType.axe,
-            max: tool_material.enchantability
-        };
-        Tool.add(id, blocks, properties);
-    },
-    shovel: function (id, material) {
-        var properties = {};
-        var tool_material = ToolAPI.toolMaterials[material];
-        var blocks = ["dirt"];
-        properties.material = material;
-        properties.durability = tool_material.durability;
-        properties.damage = 1;
-        properties.enchant = {
-            type: Native.EnchantType.shovel,
-            max: tool_material.enchantability
-        };
-        properties.useItem = function (coords, item, block) {
-            if (block.id == 2 && coords.side == 1) {
-                World.setBlock(coords.x, coords.y, coords.z, 198);
-                World.playSound(coords.x, coords.y, coords.z, 'step.grass', 1, 1);
-                Tool.broke(1);
-            }
-        };
-        Tool.add(id, blocks, properties);
-    },
-    hoe: function (id, material) {
-        var properties = {};
-        var tool_material = ToolAPI.toolMaterials[material];
-        var blocks = [];
-        properties.material = material;
-        properties.durability = tool_material.durability;
-        properties.damage = 0;
-        properties.enchant = {
-            type: Native.EnchantType.hoe,
-            max: tool_material.enchantability
-        };
-        properties.useItem = function (coords, item, block) {
-            if (block.id == 2 && coords.side == 1) {
-                World.setBlock(coords.x, coords.y, coords.z, 60);
-                World.playSound(coords.x, coords.y, coords.z, 'step.grass', 1, 1);
-                Tool.broke(1);
-            }
-        };
-        Tool.add(id, blocks, properties);
-    },
-    sword: function (id, material) {
-        var properties = {};
-        var tool_material = ToolAPI.toolMaterials[material];
-        var blocks = ["plant", "corweb"];
-        properties.material = material;
-        properties.isWeapon = true;
-        properties.durability = tool_material.durability;
-        properties.damage = 4;
-        properties.enchant = {
-            type: Native.EnchantType.sword,
-            max: tool_material.enchantability
-        };
-        Tool.add(id, blocks, properties);
-    }
-};
 var libconfig = new Config(FileTools.workdir + "config-energylib.json");
 libconfig.checkAndRestore({
     performance: {
@@ -524,6 +422,108 @@ function EnergyWeb(energyType) {
         this.retreivedAmount = 0;
     };
 }
+var Tool = {
+    add: function (id, block, properties) {
+        Item.setToolRender(id, true);
+        ToolAPI.registerTool(id, properties.material, block, properties);
+        if (properties.enchant) {
+            Item.setEnchantType(id, properties.enchant.type, properties.enchant.max);
+        }
+        if (properties.useItem) {
+            Item.registerUseFunctionForID(id, properties.useItem);
+        }
+    },
+    broke: function (damage) {
+        item = Player.getCarriedItem();
+        item.data += damage;
+        if (item.data > Item.getMaxDamage(item.id)) {
+            item.id = 0;
+        }
+        else {
+            Player.setCarriedItem(item.id, item.count, item.data, item.enchant);
+        }
+    },
+    pickaxe: function (id, material) {
+        var properties = {};
+        var tool_material = ToolAPI.toolMaterials[material];
+        var blocks = ["stone"];
+        properties.material = material;
+        properties.durability = tool_material.durability;
+        properties.damage = 2;
+        properties.enchant = {
+            type: Native.EnchantType.pickaxe,
+            max: tool_material.enchantability
+        };
+        Tool.add(id, blocks, properties);
+    },
+    axe: function (id, material) {
+        var properties = {};
+        var tool_material = ToolAPI.toolMaterials[material];
+        var blocks = ["wood"];
+        properties.material = material;
+        properties.durability = tool_material.durability;
+        properties.damage = 3;
+        properties.enchant = {
+            type: Native.EnchantType.axe,
+            max: tool_material.enchantability
+        };
+        Tool.add(id, blocks, properties);
+    },
+    shovel: function (id, material) {
+        var properties = {};
+        var tool_material = ToolAPI.toolMaterials[material];
+        var blocks = ["dirt"];
+        properties.material = material;
+        properties.durability = tool_material.durability;
+        properties.damage = 1;
+        properties.enchant = {
+            type: Native.EnchantType.shovel,
+            max: tool_material.enchantability
+        };
+        properties.useItem = function (coords, item, block) {
+            if (block.id == 2 && coords.side == 1) {
+                World.setBlock(coords.x, coords.y, coords.z, 198);
+                World.playSound(coords.x, coords.y, coords.z, 'step.grass', 1, 1);
+                Tool.broke(1);
+            }
+        };
+        Tool.add(id, blocks, properties);
+    },
+    hoe: function (id, material) {
+        var properties = {};
+        var tool_material = ToolAPI.toolMaterials[material];
+        var blocks = [];
+        properties.material = material;
+        properties.durability = tool_material.durability;
+        properties.damage = 0;
+        properties.enchant = {
+            type: Native.EnchantType.hoe,
+            max: tool_material.enchantability
+        };
+        properties.useItem = function (coords, item, block) {
+            if (block.id == 2 && coords.side == 1) {
+                World.setBlock(coords.x, coords.y, coords.z, 60);
+                World.playSound(coords.x, coords.y, coords.z, 'step.grass', 1, 1);
+                Tool.broke(1);
+            }
+        };
+        Tool.add(id, blocks, properties);
+    },
+    sword: function (id, material) {
+        var properties = {};
+        var tool_material = ToolAPI.toolMaterials[material];
+        var blocks = ["plant", "corweb"];
+        properties.material = material;
+        properties.isWeapon = true;
+        properties.durability = tool_material.durability;
+        properties.damage = 4;
+        properties.enchant = {
+            type: Native.EnchantType.sword,
+            max: tool_material.enchantability
+        };
+        Tool.add(id, blocks, properties);
+    }
+};
 var Geometry;
 (function (Geometry) {
     var Utilites = (function () {
@@ -540,14 +540,127 @@ var Geometry;
 })(Geometry || (Geometry = {}));
 var Geometry;
 (function (Geometry) {
-    var Shapes;
-    (function (Shapes) {
-        var Arc = (function () {
-            function Arc() {
+    var Vector = (function () {
+        function Vector(x, y, z) {
+            this.x = x;
+            this.y = y;
+            this.z = z;
+        }
+        Vector.from = function (x, y, z) {
+            return new Geometry.Vector(x, y, z);
+        };
+        Vector.fromCoords = function (coords) {
+            return new Geometry.Vector(coords.x, coords.y, coords.z);
+        };
+        Object.defineProperty(Vector, "UP", {
+            get: function () { return new Geometry.Vector(0, 1, 0); },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Vector, "DOWN", {
+            get: function () { return new Geometry.Vector(0, -1, 0); },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Vector, "NORTH", {
+            get: function () { return new Geometry.Vector(-1, 0, 0); },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Vector, "SOUTH", {
+            get: function () { return new Geometry.Vector(1, 0, 0); },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Vector, "EAST", {
+            get: function () { return new Geometry.Vector(0, 0, -1); },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Vector, "WEST", {
+            get: function () { return new Geometry.Vector(0, 0, 1); },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Vector, "ZERO", {
+            get: function () { return new Geometry.Vector(0, 0, 0); },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Vector, "ONE", {
+            get: function () { return new Geometry.Vector(1, 1, 1); },
+            enumerable: true,
+            configurable: true
+        });
+        Vector.plus = function () {
+            var args = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                args[_i] = arguments[_i];
             }
-            return Arc;
-        }());
-    })(Shapes = Geometry.Shapes || (Geometry.Shapes = {}));
+            var x = 0, y = 0, z = 0;
+            for (var i in args) {
+                var vec = args[i];
+                x += vec.x;
+                y += vec.y;
+                z += vec.z;
+            }
+            return Vector.from(x, y, z);
+        };
+        Vector.minus = function (a, b) {
+            var x = a.x, y = a.y, z = a.z;
+            x -= b.x;
+            y -= b.y;
+            z -= b.z;
+            return Vector.from(x, y, z);
+        };
+        Vector.prototype.plus = function (v) {
+            var x = this.x + v.x;
+            var y = this.y + v.y;
+            var z = this.z + v.z;
+            return Vector.from(x, y, z);
+        };
+        Vector.prototype.minus = function (v) {
+            var x = this.x - v.x;
+            var y = this.y - v.y;
+            var z = this.z - v.z;
+            return Vector.from(x, y, z);
+        };
+        Object.defineProperty(Vector.prototype, "length", {
+            get: function () {
+                return Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2) + Math.pow(this.z, 2));
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Vector.prototype, "normalized", {
+            get: function () {
+                var length = this.length;
+                return Vector.from(this.x / length, this.y / length, this.z / length);
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Vector.prototype.scale = function (n) {
+            return Vector.from(this.x * n, this.y * n, this.z * n);
+        };
+        Vector.prototype.copy = function () {
+            return Vector.fromCoords(this);
+        };
+        Vector.prototype.cross = function (target) {
+            var x = this.y * target.z - this.z * target.y;
+            var y = this.z * target.x - this.x * target.z;
+            var z = this.x * target.y - this.y * target.x;
+            return Vector.from(x, y, z);
+        };
+        Vector.prototype.toString = function () {
+            return "Vector (" + this.x + ", " + this.y + ", " + this.z + ")";
+        };
+        Vector.prototype.equals = function (target) {
+            return this.x == target.x && this.y == target.y && this.z == target.z;
+        };
+        return Vector;
+    }());
+    Geometry.Vector = Vector;
 })(Geometry || (Geometry = {}));
 var Geometry;
 (function (Geometry) {
@@ -555,12 +668,10 @@ var Geometry;
     (function (Shapes) {
         var Box = (function () {
             function Box(f, s) {
-                this.f = f;
-                this.s = s;
                 var min = Math.min;
                 var max = Math.max;
-                this.start = Geometry.Point.from(min(f.x, s.x), min(f.y, s.y), min(f.x, s.z));
-                this.end = Geometry.Point.from(max(f.x, s.x), max(f.y, s.y), max(f.x, s.z));
+                this.start = Geometry.Vector.from(min(f.x, s.x), min(f.y, s.y), min(f.x, s.z));
+                this.end = Geometry.Vector.from(max(f.x, s.x), max(f.y, s.y), max(f.x, s.z));
             }
             Box.prototype.containsPoint = function (point, strict) {
                 if (strict === void 0) { strict = false; }
@@ -597,14 +708,14 @@ var Geometry;
             Object.defineProperty(Box.prototype, "corners", {
                 get: function () {
                     var points = [];
-                    points.push(Geometry.Point.fromCoords(this.start));
-                    points.push(Geometry.Point.from(this.start.x + this.width, this.start.y, this.start.z));
-                    points.push(Geometry.Point.from(this.start.x, this.start.y + this.height, this.start.z));
-                    points.push(Geometry.Point.from(this.start.x, this.start.y, this.start.z + this.depth));
-                    points.push(Geometry.Point.from(this.start.x + this.width, this.start.y + this.height, this.start.z));
-                    points.push(Geometry.Point.from(this.start.x, this.start.y + this.height, this.start.z + this.depth));
-                    points.push(Geometry.Point.from(this.start.x + this.width, this.start.y, this.start.z + this.depth));
-                    points.push(Geometry.Point.fromCoords(this.end));
+                    points.push(Geometry.Vector.fromCoords(this.start));
+                    points.push(Geometry.Vector.from(this.start.x + this.width, this.start.y, this.start.z));
+                    points.push(Geometry.Vector.from(this.start.x, this.start.y + this.height, this.start.z));
+                    points.push(Geometry.Vector.from(this.start.x, this.start.y, this.start.z + this.depth));
+                    points.push(Geometry.Vector.from(this.start.x + this.width, this.start.y + this.height, this.start.z));
+                    points.push(Geometry.Vector.from(this.start.x, this.start.y + this.height, this.start.z + this.depth));
+                    points.push(Geometry.Vector.from(this.start.x + this.width, this.start.y, this.start.z + this.depth));
+                    points.push(Geometry.Vector.fromCoords(this.end));
                     return points;
                 },
                 enumerable: true,
@@ -613,14 +724,14 @@ var Geometry;
             Object.defineProperty(Box.prototype, "edges", {
                 get: function () {
                     var edges = [];
-                    var start = Geometry.Point.fromCoords(this.start);
-                    var end = Geometry.Point.fromCoords(this.end);
-                    edges.push(Geometry.Line.fromPoints(start, Geometry.Point.from(start.x + this.width, start.y, start.z)));
-                    edges.push(Geometry.Line.fromPoints(start, Geometry.Point.from(start.x, start.y + this.height, start.z)));
-                    edges.push(Geometry.Line.fromPoints(start, Geometry.Point.from(start.x, start.y, start.z + this.depth)));
-                    edges.push(Geometry.Line.fromPoints(Geometry.Point.from(start.x + this.width, start.y, start.z), end));
-                    edges.push(Geometry.Line.fromPoints(Geometry.Point.from(start.x, start.y + this.height, start.z), end));
-                    edges.push(Geometry.Line.fromPoints(Geometry.Point.from(start.x, start.y, start.z + this.depth), end));
+                    var start = Geometry.Vector.fromCoords(this.start);
+                    var end = Geometry.Vector.fromCoords(this.end);
+                    edges.push(Geometry.Line.fromPoints(start, Geometry.Vector.from(start.x + this.width, start.y, start.z)));
+                    edges.push(Geometry.Line.fromPoints(start, Geometry.Vector.from(start.x, start.y + this.height, start.z)));
+                    edges.push(Geometry.Line.fromPoints(start, Geometry.Vector.from(start.x, start.y, start.z + this.depth)));
+                    edges.push(Geometry.Line.fromPoints(Geometry.Vector.from(start.x + this.width, start.y, start.z), end));
+                    edges.push(Geometry.Line.fromPoints(Geometry.Vector.from(start.x, start.y + this.height, start.z), end));
+                    edges.push(Geometry.Line.fromPoints(Geometry.Vector.from(start.x, start.y, start.z + this.depth), end));
                     return edges;
                 },
                 enumerable: true,
@@ -663,7 +774,7 @@ var Geometry;
         function Line(start, end) {
             this.start = start;
             this.end = end;
-            this.vector = Geometry.Vector.fromPoints(start, end);
+            this.vector = end.minus(start);
         }
         Line.fromPoints = function (start, end) {
             return new Line(start, end);
@@ -707,93 +818,9 @@ var Geometry;
     }());
     Geometry.Point = Point;
 })(Geometry || (Geometry = {}));
-var Geometry;
-(function (Geometry) {
-    var Shapes;
-    (function (Shapes) {
-        var Sphere = (function () {
-            function Sphere() {
-                this.position = new Geometry.Point(0, 0, 0);
-                this.radius = 1;
-            }
-            return Sphere;
-        }());
-    })(Shapes = Geometry.Shapes || (Geometry.Shapes = {}));
-})(Geometry || (Geometry = {}));
-var Geometry;
-(function (Geometry) {
-    var Vector = (function () {
-        function Vector(x, y, z) {
-            this.x = x;
-            this.y = y;
-            this.z = z;
-        }
-        Vector.fromCoords = function (coords) {
-            return new Vector(coords.x, coords.y, coords.z);
-        };
-        Object.defineProperty(Vector, "UP", {
-            get: function () { return new Vector(0, 1, 0); },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Vector, "DOWN", {
-            get: function () { return new Vector(0, -1, 0); },
-            enumerable: true,
-            configurable: true
-        });
-        Vector.fromPoints = function (f, s) {
-            return Vector.from(s.x - f.x, s.y - f.y, s.z - f.z);
-        };
-        Vector.plus = function () {
-            var args = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args[_i] = arguments[_i];
-            }
-            var x = 0, y = 0, z = 0;
-            for (var i in args) {
-                var vec = args[i];
-                x += vec.x;
-                y += vec.y;
-                z += vec.z;
-            }
-            return Vector.from(x, y, z);
-        };
-        Object.defineProperty(Vector.prototype, "length", {
-            get: function () {
-                return Math.sqrt(Math.pow(this.x, 2) +
-                    Math.pow(this.y, 2) +
-                    Math.pow(this.z, 2));
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Vector.prototype.normalize = function () {
-            var length = this.length;
-            this.x /= length;
-            this.y /= length;
-            this.z /= length;
-            return this;
-        };
-        Object.defineProperty(Vector.prototype, "normalized", {
-            get: function () {
-                return this.copy().normalize();
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Vector.prototype.copy = function () {
-            return Vector.fromCoords(this);
-        };
-        Vector.prototype.cross = function (target) {
-            var x = this.y * target.z - this.z * target.y;
-            var y = this.z * target.x - this.x * target.z;
-            var z = this.x * target.y - this.y * target.x;
-            return Vector.from(x, y, z);
-        };
-        return Vector;
-    }());
-    Geometry.Vector = Vector;
-})(Geometry || (Geometry = {}));
+importLib("energylib", "*");
+Callback.addCallback("LevelLoaded", function () {
+});
 var stringPath = {
     imagePath: {
         grinderBar: "grinder_bar_background",
@@ -943,10 +970,38 @@ var AdvMath = {
         return min + Math.round(Math.random() * (max - min));
     }
 };
-var Domen = (function () {
-    function Domen() {
+var Coroutine = (function () {
+    function Coroutine(action, timeToActivation, isRepeating) {
+        this.time = 0;
+        this.isRepeating = false;
+        this.timeToActivation = 1;
+        this.action = action;
+        this.timeToActivation = timeToActivation;
+        this.isRepeating = isRepeating;
     }
-    return Domen;
+    return Coroutine;
+}());
+var CoroutineController = (function () {
+    function CoroutineController() {
+        this.coroutines = new Array();
+    }
+    CoroutineController.prototype.addCoroutine = function (coroutine) {
+        this.coroutines.push(coroutine);
+    };
+    CoroutineController.prototype.removeCoroutine = function (index) {
+        this.coroutines.splice(index, 1);
+    };
+    CoroutineController.prototype.update = function () {
+        for (var i_4 = 0; i_4 < this.coroutines.length; i_4++) {
+            this.coroutines[i_4].time++;
+            if (!(this.coroutines[i_4].time % this.coroutines[i_4].timeToActivation))
+                if (this.coroutines[i_4].action() || this.coroutines[i_4].isRepeating == false) {
+                    this.removeCoroutine(i_4);
+                    i_4--;
+                }
+        }
+    };
+    return CoroutineController;
 }());
 var MC = {
     DebugInSecond: function (msg) {
@@ -1760,8 +1815,8 @@ Block.createBlock("phisicBlock", [
 ], BLOCK_TYPE_INVISIBLE);
 var BlockAnimation = {
     setPhisicBlocks: function (array, entity) {
-        for (var i_4 in array.Block) {
-            World.setBlock(entity.x + array[i_4].Block.x, entity.y + array[i_4].Block.y, entity.z + array[i_4].Block.z, 0, 0);
+        for (var i_5 in array.Block) {
+            World.setBlock(entity.x + array[i_5].Block.x, entity.y + array[i_5].Block.y, entity.z + array[i_5].Block.z, 0, 0);
         }
     },
     convertBlockToAnimationTech: function (x, y, z) {
@@ -1777,15 +1832,14 @@ var BlockAnimation = {
     },
     convertBlocksToAnimation: function (array, en) {
         var animations = [];
-        for (var i_5 in array) {
-            animations.push(this.convertBlockToAnimationTech(array[i_5].x + en.x, array[i_5].y + en.y, array[i_5].z + en.z));
+        for (var i_6 in array) {
+            animations.push(this.convertBlockToAnimationTech(array[i_6].x + en.x, array[i_6].y + en.y, array[i_6].z + en.z));
         }
         this.setPhisicBlocks(array, en);
         return animations;
     }
 };
 var Medieval = {};
-importLib("Tool", "*");
 Medieval.Tool = {
     material: function (params) {
         ToolAPI.addToolMaterial(params.material, params.describe);
@@ -2024,9 +2078,9 @@ var multiBlock = {
     },
     getBlocksByOrientation: function (array, level, orientation) {
         var blockArr = [];
-        for (var i_6 in array) {
-            if (array[i_6].Level == level) {
-                array = array[i_6];
+        for (var i_7 in array) {
+            if (array[i_7].Level == level) {
+                array = array[i_7];
                 break;
             }
         }
@@ -2263,6 +2317,214 @@ if (!ICRenderLib) {
     });
     Logger.Log("ICRender API was created and shared by " + __name__ + " with name ICRenderLib", "API");
 }
+var HELL_FIRE_PARTICLE = Particles.registerParticleType({
+    texture: "hell_fire",
+    size: [1, 1.5],
+    lifetime: [20, 30],
+    render: 2,
+    isUsingBlockLight: false,
+    animators: {
+        alpha: {
+            fadeIn: .12,
+            fadeOut: 1,
+            start: 0,
+            end: .1
+        },
+        icon: {
+            start: 0,
+            end: 1,
+            period: 48,
+            fadeIn: 1,
+        }
+    }
+});
+var Geometry;
+(function (Geometry) {
+    var Vector2 = (function () {
+        function Vector2(x, y) {
+            this.x = x;
+            this.y = y;
+        }
+        Object.defineProperty(Vector2, "LEFT", {
+            get: function () { return Vector2.from(-1, 0); },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Vector2, "RIGHT", {
+            get: function () { return Vector2.from(1, 0); },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Vector2, "DOWN", {
+            get: function () { return Vector2.from(0, -1); },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Vector2, "UP", {
+            get: function () { return Vector2.from(0, 1); },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Vector2, "ZERO", {
+            get: function () { return Vector2.from(0, 0); },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Vector2, "ONE", {
+            get: function () { return Vector2.from(1, 1); },
+            enumerable: true,
+            configurable: true
+        });
+        Vector2.from = function (x, y) {
+            return new Vector2(x, y);
+        };
+        Vector2.fromCoords = function (coords) {
+            return new Vector2(coords.x, coords.y);
+        };
+        Object.defineProperty(Vector2.prototype, "length", {
+            get: function () {
+                return Math.pow((Math.pow(this.x, 2) + Math.pow(this.y, 2)), 0.5);
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Vector2.prototype, "normalized", {
+            get: function () {
+                var len = this.length;
+                return new Vector2(this.x / len, this.y / len);
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Vector2.prototype.scale = function (n) {
+            return Vector2.from(this.x * n, this.y * n);
+        };
+        Vector2.prototype.equals = function (vec) {
+            return Math.abs(this.x - vec.x) < Number.EPSILON && Math.abs(this.y - vec.y) < Number.EPSILON;
+        };
+        Vector2.lerpF = function (a, b, c) {
+            return (b - a) * c + a;
+        };
+        Vector2.lerp = function (a, b, c) {
+            return new Vector2(this.lerpF(a.x, b.x, c), this.lerpF(a.y, b.y, c));
+        };
+        return Vector2;
+    }());
+    Geometry.Vector2 = Vector2;
+})(Geometry || (Geometry = {}));
+var Geometry;
+(function (Geometry) {
+    var Vector3 = (function () {
+        function Vector3(x, y, z) {
+            this.x = x;
+            this.y = y;
+            this.z = z;
+        }
+        Object.defineProperty(Vector3, "UP", {
+            get: function () { return Vector3.from(0, 1, 0); },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Vector3, "DOWN", {
+            get: function () { return Vector3.from(0, -1, 0); },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Vector3, "NORTH", {
+            get: function () { return Vector3.from(-1, 0, 0); },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Vector3, "SOUTH", {
+            get: function () { return Vector3.from(1, 0, 0); },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Vector3, "EAST", {
+            get: function () { return Vector3.from(0, 0, -1); },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Vector3, "WEST", {
+            get: function () { return Vector3.from(0, 0, 1); },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Vector3, "ZERO", {
+            get: function () { return Vector3.from(0, 0, 0); },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Vector3, "ONE", {
+            get: function () { return Vector3.from(1, 1, 1); },
+            enumerable: true,
+            configurable: true
+        });
+        Vector3.from = function (x, y, z) {
+            return new Vector3(x, y, z);
+        };
+        Vector3.fromCoords = function (coords) {
+            return new Vector3(coords.x, coords.y, coords.z);
+        };
+        Object.defineProperty(Vector3.prototype, "length", {
+            get: function () {
+                return Math.pow((Math.pow(this.x, 2) + Math.pow(this.y, 2) + Math.pow(this.z, 2)), 0.5);
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Vector3.prototype, "normalized", {
+            get: function () {
+                var len = this.length;
+                return new Vector3(this.x / len, this.y / len, this.z / len);
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Vector3.prototype.scale = function (n) {
+            return Vector3.from(this.x * n, this.y * n, this.z * n);
+        };
+        Object.defineProperty(Vector3.prototype, "inverted", {
+            get: function () {
+                return this.scale(-1);
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Vector3.prototype.cross = function (vec) {
+            var x = this.y * vec.z - this.z * vec.y;
+            var y = this.z * vec.x - this.x * vec.z;
+            var z = this.x * vec.y - this.y * vec.x;
+            return Vector3.from(x, y, z);
+        };
+        Vector3.prototype.toArray = function () {
+            return [this.x, this.y, this.z];
+        };
+        Vector3.prototype.plus = function (vec) {
+            return Vector3.from(this.x + vec.x, this.y + vec.y, this.z + vec.z);
+        };
+        Vector3.prototype.copy = function () {
+            return Vector3.fromCoords(this);
+        };
+        Vector3.prototype.toString = function () {
+            return "Vector3 (" + this.x + ", " + this.y + ", " + this.z + ")";
+        };
+        Vector3.prototype.equals = function (vec) {
+            return Math.abs(this.x - vec.x) < Number.EPSILON && Math.abs(this.y - vec.y) < Number.EPSILON && Math.abs(this.z - vec.z) < Number.EPSILON;
+        };
+        Vector3.prototype.isNaN = function () {
+            return isNaN(this.x) || isNaN(this.y) || isNaN(this.z);
+        };
+        Vector3.lerpF = function (a, b, c) {
+            return (b - a) * c + a;
+        };
+        Vector3.lerp = function (a, b, c) {
+            return new Vector3(this.lerpF(a.x, b.x, c), this.lerpF(a.y, b.y, c), this.lerpF(a.z, b.z, c));
+        };
+        return Vector3;
+    }());
+    Geometry.Vector3 = Vector3;
+})(Geometry || (Geometry = {}));
 var ae_api_tool = {
     material: function (params) {
         ToolAPI.addToolMaterial(params.material, params.describe);
@@ -2470,14 +2732,14 @@ var ae_player = {
         }
     }
 };
-importLib("Tool", "*");
-importLib("energylib", "*");
-Callback.addCallback("LevelLoaded", function () {
-});
 var BLOCK_TYPE_WOOD = Block.createSpecialType({
     base: 17,
     opaque: true
 });
+IDRegistry.genBlockID("medievalStructureBlock");
+Block.createBlock("medievalStructureBlock", [
+    { name: "Structure block", texture: [["bedrock", 0], ["bedrock", 0], ["bedrock", 0], ["bedrock", 0], ["bedrock", 0], ["bedrock", 0]], inCreative: false }
+]);
 IDRegistry.genBlockID("barrel_wooden");
 Block.createBlock("barrel_wooden", [
     { name: "Wooden barrel", texture: [["barrel_top", 0], ["barrel_top", 0], ["barrel_side", 0], ["barrel_side", 0], ["barrel_side", 0], ["barrel_side", 0]], inCreative: true }
@@ -2555,16 +2817,18 @@ TileEntity.registerPrototype(BlockID["barrel_wooden"], {
         return barrelGui;
     }
 });
-Recipes.addShaped({
-    id: BlockID["barrel_wooden"],
-    count: 1,
-    data: 0
-}, ["pap", "gug", "pgp"], ["g", 5, -1, "p", 265, -1, "a", 17, -1, "u", 102, -1]);
-Recipes.addShaped({
-    id: BlockID["barrel_wooden"],
-    count: 1,
-    data: 0
-}, ["pap", "gug", "pgp"], ["g", 5, -1, "p", 265, -1, "a", 162, -1, "u", 102, -1]);
+Callback.addCallback('PreLoaded', function () {
+    Recipes.addShaped({
+        id: BlockID["barrel_wooden"],
+        count: 1,
+        data: 0
+    }, ["pap", "gug", "pgp"], ["g", 5, -1, "p", 265, -1, "a", 17, -1, "u", 102, -1]);
+    Recipes.addShaped({
+        id: BlockID["barrel_wooden"],
+        count: 1,
+        data: 0
+    }, ["pap", "gug", "pgp"], ["g", 5, -1, "p", 265, -1, "a", 162, -1, "u", 102, -1]);
+});
 var renderStick = new Render();
 var partObj = [{
         type: "box",
@@ -2593,7 +2857,9 @@ IDRegistry.genItemID("flywheel");
 Item.createItem("flywheel", "Flywheel", { name: "flywheel", meta: 0 }, { stack: 64 });
 Translation.addTranslation("Flywheel", { ru: "Маховик" });
 MC.replaceBlock(ItemID.flywheel, BlockID.flywheel);
-Recipes.addShaped({ id: ItemID.flywheel, count: 1, data: 0 }, ["vvv", "psp", "ppp"], ["p", 5, -1, "s", 280, -1]);
+Callback.addCallback('PreLoaded', function () {
+    Recipes.addShaped({ id: ItemID.flywheel, count: 1, data: 0 }, ["vvv", "psp", "ppp"], ["p", 5, -1, "s", 280, -1]);
+});
 ICRender.getGroup("kineticMachine").add(BlockID.flywheel, -1);
 Translation.addTranslation("Flywheel", { ru: "Маховик" });
 var render = new ICRender.Model();
@@ -2721,7 +2987,9 @@ Block.createBlock("grinderTable", [
 IDRegistry.genItemID("grinderTable");
 Item.createItem("grinderTable", "Grinder Table", { name: "grinder_table", meta: 0 }, { stack: 64 });
 MC.replaceBlock(ItemID.grinderTable, BlockID.grinderTable);
-Recipes.addShaped({ id: ItemID.grinderTable, count: 1, data: 0 }, ["vvv", "ivi", "bib"], ["i", 265, -1, "b", 42, -1]);
+Callback.addCallback('PreLoaded', function () {
+    Recipes.addShaped({ id: ItemID.grinderTable, count: 1, data: 0 }, ["vvv", "ivi", "bib"], ["i", 265, -1, "b", 42, -1]);
+});
 Translation.addTranslation("Grinder Table", { ru: "Дробильный Столик" });
 ICRender.getGroup("kineticMachine").add(BlockID.grinderTable, -1);
 var render = new ICRender.Model();
@@ -2741,7 +3009,9 @@ IDRegistry.genItemID("crasherIron");
 Item.createItem("crasherIron", "Crasher", { name: "press", meta: 0 }, { stack: 64 });
 Translation.addTranslation("Crasher", { ru: "Железная плита для дробилки" });
 MC.replaceBlock(ItemID.crasherIron, BlockID.crasherIron);
-Recipes.addShaped({ id: ItemID.crasherIron, count: 1, data: 0 }, ["vzv", "vzv", "ibi"], ["z", 85, -1, "i", 265, -1, "b", 42, -1]);
+Callback.addCallback('PreLoaded', function () {
+    Recipes.addShaped({ id: ItemID.crasherIron, count: 1, data: 0 }, ["vzv", "vzv", "ibi"], ["z", 85, -1, "i", 265, -1, "b", 42, -1]);
+});
 var render = new ICRender.Model();
 BlockRenderer.setStaticICRender(BlockID.crasherIron, 0, render);
 var model = BlockRenderer.createModel();
@@ -2957,7 +3227,12 @@ var wodenMillLevel = [{ Block: [
             { x: 1, y: 0, z: 2, id: [85] }, { x: 1, y: 0, z: 3, id: [85] }, { x: 1, y: 0, z: 4, id: [85] },
             { x: 1, y: 0, z: -2, id: [85] }, { x: 1, y: 0, z: -3, id: [85] }, { x: 1, y: 0, z: -4, id: [85] }
         ],
-        Level: 1 },
+        Level: 1, domen: [
+            new Geometry.Shapes.Box(new Geometry.Point(1, 1, 0), new Geometry.Point(1, 4, 0)),
+            new Geometry.Shapes.Box(new Geometry.Point(1, -1, 0), new Geometry.Point(1, -4, 0)),
+            new Geometry.Shapes.Box(new Geometry.Point(1, 0, -4), new Geometry.Point(1, 0, 4))
+        ]
+    },
     { Block: [
             { x: 1, y: 0, z: 0, id: [17, 162] }, { x: 1, y: 1, z: 0, id: [17, 162] }, { x: 1, y: -1, z: 0, id: [17, 162] }, { x: 1, y: 0, z: 1, id: [17, 162] }, { x: 1, y: 0, z: -1, id: [17, 162] },
             { x: 1, y: 2, z: 0, id: [85] }, { x: 1, y: 3, z: 0, id: [85] }, { x: 1, y: 4, z: 0, id: [85] },
@@ -3031,11 +3306,13 @@ Block.createBlockWithRotation("woodenMill", [{
         ],
         inCreative: true
     }]);
-Recipes.addShaped({
-    id: BlockID.woodenMill,
-    count: 1,
-    data: 0
-}, ["ppp", "pop", "ppp"], ["p", 5, -1, "o", 288, 0]);
+Callback.addCallback('PreLoaded', function () {
+    Recipes.addShaped({
+        id: BlockID.woodenMill,
+        count: 1,
+        data: 0
+    }, ["ppp", "pop", "ppp"], ["p", 5, -1, "o", 288, 0]);
+});
 ICRender.getGroup("kineticMachine").add(BlockID.woodenMill, -1);
 Translation.addTranslation("Mill", {
     ru: "Мельница"
@@ -3043,7 +3320,7 @@ Translation.addTranslation("Mill", {
 var getRainLevel = ModAPI.requireGlobal("Level.getRainLevel");
 var windmill_render = new Render();
 var wind_millTexture = new Texture("res/model/small_windmill.png").setResolution(16, 16);
-var mesh = new RenderMesh(__dir__ + "model/small_windmill.obj", "obj", { scale: [16, 16, 16], translate: [0, -16, 0] });
+var mesh = new RenderMesh(__dir__ + "res/model/small_windmill.obj", "obj", { scale: [16, 16, 16], translate: [0, -16, 0] });
 var bodyPart = windmill_render.getPart("head");
 bodyPart.setMesh(mesh);
 TileEntity.registerPrototype(BlockID.woodenMill, {
@@ -3057,13 +3334,17 @@ TileEntity.registerPrototype(BlockID.woodenMill, {
     isGenerator: function () {
         return true;
     },
-    init: function () {
-        this.animation = new Animation.Base(this.x + .5, this.y, this.z + 17 / 16);
-        this.animation.describe({
-            render: windmill_render.getId(),
-            skin: "model/small_windmill.png"
+    loadAnimation: function (id, texturePath) {
+        var anim = new Animation.Base(this.x + .5, this.y, this.z + 17 / 16);
+        anim.describe({
+            render: id,
+            skin: texturePath
         });
-        this.animation.load();
+        anim.load();
+        return anim;
+    },
+    init: function () {
+        this.animation = this.loadAnimation(windmill_render.getId(), "model/small_windmill.png");
     },
     tick: function () {
         if (World.getWorldTime() % 20 == 0) {
@@ -3119,9 +3400,16 @@ Callback.addCallback("ItemUse", function (coords, item, block) {
     if (item.id == ItemID.smallHammer && block.id == BlockID.woodenMill) {
         if (!World.getTileEntity(coords.x, coords.y, coords.z).data.wheelLevel) {
             var wheel = multiBlock.getLevel(coords.x, coords.y, coords.z, wodenMillLevel);
-            World.getTileEntity(coords.x, coords.y, coords.z).data.wheelLevel = wheel.Level;
-            World.getTileEntity(coords.x, coords.y, coords.z).data.orientation = wheel.orientation;
-            World.getTileEntity(coords.x, coords.y, coords.z).data.biome = World.getBiome(coords.x, coords.z);
+            var entity = World.getTileEntity(coords.x, coords.y, coords.z);
+            entity.data.wheelLevel = wheel.Level;
+            entity.data.orientation = wheel.orientation;
+            entity.data.biome = World.getBiome(coords.x, coords.z);
+            DomenManager.createDomen(entity, wodenMillLevel[0].domen);
+            var blockObj;
+            for (var i = 0; i < wodenMillLevel[0].Block.length; i++) {
+                blockObj = wodenMillLevel[0].Block[i];
+                World.setBlock(blockObj.x + coords.x, blockObj.y + coords.y, blockObj.z + coords.z, blockObj.id[0], blockObj.id[1]);
+            }
             if (wheel.Level)
                 Game.message("Мельница построена, следите за ней");
             if (!wheel.Level)
@@ -3171,7 +3459,9 @@ IDRegistry.genItemID("reduser");
 Item.createItem("reduser", "Reduser", { name: "reduser", meta: 0 }, { stack: 64 });
 Translation.addTranslation("Reduser", { ru: "Редуктор" });
 MC.replaceBlock(ItemID.reduser, BlockID.reduser);
-Recipes.addShaped({ id: ItemID.reduser, count: 1, data: 0 }, ["ppp", "gpg", "ppp"], ["p", 5, -1, "g", IDData.item.woodenGear_1x, -1]);
+Callback.addCallback('PreLoaded', function () {
+    Recipes.addShaped({ id: ItemID.reduser, count: 1, data: 0 }, ["ppp", "gpg", "ppp"], ["p", 5, -1, "g", IDData.item.woodenGear_1x, -1]);
+});
 IDRegistry.genBlockID("sawmill");
 Block.createBlock("sawmill", [
     { name: "Sawmill", texture: [["cobblestone", 0]], inCreative: false }
@@ -3187,8 +3477,10 @@ function giveSawmill() {
 }
 Item.createItem("saw", "Saw", { name: "saw", meta: 0 }, { stack: 64 });
 Translation.addTranslation("Saw", { ru: "Пила" });
-Recipes.addShaped({ id: IDData.item.saw, count: 1, data: 0 }, ["aia", "aia", "aia"], ["i", 265, -1]);
-Recipes.addShaped({ id: ItemID.sawmill, count: 1, data: 0 }, ["sss", "cac", "cac"], ["s", 280, -1, "c", 4, -1, "a", ItemID.saw, -1], giveSawmill);
+Callback.addCallback('PreLoaded', function () {
+    Recipes.addShaped({ id: IDData.item.saw, count: 1, data: 0 }, ["aia", "aia", "aia"], ["i", 265, -1]);
+    Recipes.addShaped({ id: ItemID.sawmill, count: 1, data: 0 }, ["sss", "cac", "cac"], ["s", 280, -1, "c", 4, -1, "a", ItemID.saw, -1], giveSawmill);
+});
 var render = new ICRender.Model();
 BlockRenderer.setStaticICRender(BlockID.sawmill, 0, render);
 var model = BlockRenderer.createModel();
@@ -3410,7 +3702,9 @@ IDRegistry.genBlockID("wodenShaft");
 Block.createBlock("wodenShaft", [
     { name: "Woden Shaft", texture: [["shaft", 0]], inCreative: true }
 ]);
-Recipes.addShaped({ id: BlockID.wodenShaft, count: 6, data: 0 }, ["pip", "gvg", "pip"], ["p", 5, -1, "g", IDData.item.woodenGear_1x, 0, "i", 265, 0]);
+Callback.addCallback('PreLoaded', function () {
+    Recipes.addShaped({ id: BlockID.wodenShaft, count: 6, data: 0 }, ["pip", "gvg", "pip"], ["p", 5, -1, "g", IDData.item.woodenGear_1x, 0, "i", 265, 0]);
+});
 Block.setBlockShape(BlockID.wodenShaft, { x: 8 / 16 - 3 / 16, y: 8 / 16 - 3 / 16, z: 8 / 16 - 3 / 16 }, { x: 8 / 16 + 3 / 16, y: 8 / 16 + 3 / 16, z: 8 / 16 + 3 / 16 });
 energyKineticEnergy.registerWire(BlockID.wodenShaft);
 function setupWireRender(id, width, groupName, preventSelfAdd) {
@@ -3612,7 +3906,9 @@ IDRegistry.genBlockID("waterWheel");
 Block.createBlockWithRotation("waterWheel", [
     { name: "Water Wheel", texture: [["log_oak", 0], ["log_oak", 0], ["log_oak_top", 0], ["watermill_side", 0], ["log_oak", 0], ["log_oak", 0]], inCreative: true }
 ]);
-Recipes.addShaped({ id: BlockID.waterWheel, count: 1, data: 0 }, ["ppp", "pop", "ppp"], ["p", 5, -1, "o", 351, 4]);
+Callback.addCallback('PreLoaded', function () {
+    Recipes.addShaped({ id: BlockID.waterWheel, count: 1, data: 0 }, ["ppp", "pop", "ppp"], ["p", 5, -1, "o", 351, 4]);
+});
 ICRender.getGroup("kineticMachine").add(BlockID.waterWheel, -1);
 Translation.addTranslation("Water Wheel", { ru: "Водяное Колесо" });
 var getRainLevel = ModAPI.requireGlobal("Level.getRainLevel");
@@ -3739,7 +4035,9 @@ Block.createBlock("woodenGate", [
     { name: "Wooden Gate", texture: [["barrel_top", 0], ["barrel_top", 0], ["barrel_side", 0], ["barrel_side", 0], ["barrel_side", 0], ["barrel_side", 0]], inCreative: true }
 ]);
 Translation.addTranslation("Wood Gate", { ru: "Деревянный краник" });
-Recipes.addShaped({ id: BlockID.woodenGate, count: 1, data: 0 }, ["pip", "ivi", "pip"], ["p", 5, -1, "i", 265, -1]);
+Callback.addCallback('PreLoaded', function () {
+    Recipes.addShaped({ id: BlockID.woodenGate, count: 1, data: 0 }, ["pip", "ivi", "pip"], ["p", 5, -1, "i", 265, -1]);
+});
 function getBorder(x, y, z) {
     var yy = 0;
     var xx = 0;
@@ -3884,6 +4182,188 @@ TileEntity.registerPrototype(BlockID.woodenGate, {
     },
     getGuiScreen: function () {
         return barrelGui;
+    }
+});
+IDRegistry.genBlockID("hell_octacle");
+Block.createBlock("hell_octacle", [{
+        name: "Hell octacle",
+        texture: [
+            ["glass", 0]
+        ],
+        inCreative: true
+    }]);
+Translation.addTranslation("Hell octacle", {
+    ru: "Адский октакль"
+});
+Block.setShape(BlockID["hell_octacle"], 0, 0, 0, 1, 1 / 16, 1);
+var render = new ICRender.Model();
+BlockRenderer.setStaticICRender(BlockID.hell_octacle, 0, render);
+var model = BlockRenderer.createModel();
+render.addEntry(model);
+var BLOOD_FOG_LIFETIME = 60;
+var HELL_OCTACLE_RADIUS = 1.37631;
+TileEntity.registerPrototype(BlockID["hell_octacle"], {
+    defaultValues: {},
+    loadAnimation: function () {
+        this.octacleAnim = new Animation.Base(this.x, this.y + .01, this.z);
+        this.octacleAnim.describe({
+            mesh: new RenderMesh(__dir__ + "res/model/quad.obj", "obj", {
+                scale: [HELL_OCTACLE_RADIUS, 1, HELL_OCTACLE_RADIUS],
+                translate: [.5, 0, .5]
+            }),
+            skin: "model/octacle",
+            material: "octacle_normal"
+        });
+        this.octacleAnim.load();
+    },
+    setFireOctacle: function () {
+        this.octacleAnim.describe({
+            mesh: new RenderMesh(__dir__ + "res/model/quad.obj", "obj", {
+                scale: [HELL_OCTACLE_RADIUS, 1, HELL_OCTACLE_RADIUS],
+                translate: [.5, 0, .5]
+            }),
+            skin: "model/octacle",
+            material: "octacle_fired"
+        });
+    },
+    polarToCartesian: function (coord) {
+        return new Geometry.Vector2(coord.y * Math.cos(coord.x), coord.y * Math.sin(coord.x));
+    },
+    emitBloodFog: function (pos, count) {
+        var targets = Array(count);
+        for (var i_8 = 0; i_8 < count; i_8++) {
+            var coord = this.polarToCartesian(new Geometry.Vector2(Math.PI * 2 * Math.random(), Math.sqrt(Math.random()) * HELL_OCTACLE_RADIUS));
+            targets[i_8] = new Geometry.Vector3((coord.x + this.x + .5 - pos.x) / BLOOD_FOG_LIFETIME, (this.y - pos.y) / BLOOD_FOG_LIFETIME, (coord.y + this.z + .5 - pos.z) / BLOOD_FOG_LIFETIME);
+        }
+        for (var i_9 = 0; i_9 < count; i_9++) {
+            Particles.addParticle(BLOOD_FOG_PARTICLE, pos.x, pos.y, pos.z, targets[i_9].x, targets[i_9].y, targets[i_9].z);
+        }
+    },
+    startRitual: function (pos) {
+        this.emitBloodFog(pos, 200);
+        var cor = new Coroutine(function () {
+            this.data.setFireOctacle();
+            this.data.startHellFire();
+        }, 70, false);
+        cor.data = this;
+        this.controller.addCoroutine(cor);
+        cor = new Coroutine(function () {
+            if (this.time > 170) {
+                for (var i_10 = 0; i_10 < 1; i_10++) {
+                    var coord = this.data.polarToCartesian(new Geometry.Vector2(Math.PI * 2 * Math.random(), .7 * HELL_OCTACLE_RADIUS));
+                    Particles.addParticle(HELL_SMOKE_PARTICLE, this.data.x + coord.x + .5, this.data.y + 1 / 16, this.data.z + coord.y + .5, 0, .05, 0);
+                }
+            }
+        }, 1, true);
+        cor.data = this;
+        this.controller.addCoroutine(cor);
+        cor = new Coroutine(function () {
+            if (this.time > 180 && Math.random() > .7) {
+                var coord = this.data.polarToCartesian(new Geometry.Vector2(Math.PI * 2 * Math.random(), .1 * HELL_OCTACLE_RADIUS));
+                Particles.addParticle(HELL_FIRE_SMOKE_PARTICLE, this.data.x + coord.x + .5, this.data.y + 1 / 16, this.data.z + coord.y + .5, 0, .05, 0);
+            }
+            if (this.time > 180 && Math.random() > .7) {
+                var coord = this.data.polarToCartesian(new Geometry.Vector2(Math.PI * 2 * Math.random(), .1 * HELL_OCTACLE_RADIUS));
+                Particles.addParticle(Native.ParticleType.lava, this.data.x + coord.x + .5, this.data.y + .5, this.data.z + coord.y + .5, 0, .1, 0);
+                Particles.addParticle(Native.ParticleType.lava, this.data.x + coord.x + .5, this.data.y + .5, this.data.z + coord.y + .5, 0, .1, 0);
+            }
+        }, 1, true);
+        cor.data = this;
+        this.controller.addCoroutine(cor);
+    },
+    setFireOnLineInCircle: function (a, b) {
+        var cor = new Coroutine(function () {
+            if (this.time % 2 == 0 && this.time < 100) {
+                var pos = Geometry.Vector3.lerp(this.data.dep, this.data.dest, this.time / 100);
+                Particles.addParticle(HELL_FIRE_PARTICLE, pos.x, pos.y, pos.z, 0, 0, 0);
+            }
+            var count = Math.min(this.time / 100, 1) * 2;
+            for (var i_11 = 0; i_11 < count; i_11++) {
+                var pos = Geometry.Vector3.lerp(this.data.dep, this.data.dest, Math.random() * Math.min(this.time / 100, 1));
+                Particles.addParticle(HELL_FIRE_PARTICLE, pos.x, pos.y, pos.z, 0, 0, 0);
+            }
+        }, 1, true);
+        var coord = this.polarToCartesian(a);
+        cor.data = {};
+        cor.data.dep = new Geometry.Vector3(coord.x + this.x + .5, this.y + 1 / 32, coord.y + this.z + .5);
+        coord = this.polarToCartesian(b);
+        cor.data.dest = new Geometry.Vector3(coord.x + this.x + .5, this.y + 1 / 32, coord.y + this.z + .5);
+        return cor;
+    },
+    setFireOnArcInCircle: function (a, b) {
+        var cor = new Coroutine(function () {
+            if (this.time % 2 == 0 && this.time < 40) {
+                var pos = this.data.polarToCartesian(Geometry.Vector2.lerp(this.data.dep, this.data.dest, this.time / 40));
+                Particles.addParticle(HELL_FIRE_PARTICLE, pos.x + this.data.tpos.x + .5, this.data.tpos.y + 1 / 32, pos.y + this.data.tpos.z + .5, 0, 0, 0);
+            }
+            var count = Math.min(this.time / 20, 1) * 1;
+            for (var i_12 = 0; i_12 < count; i_12++) {
+                var pos = this.data.polarToCartesian(Geometry.Vector2.lerp(this.data.dep, this.data.dest, Math.random() * Math.min(this.time / 20, 1)));
+                Particles.addParticle(HELL_FIRE_PARTICLE, pos.x + this.data.tpos.x + .5, this.data.tpos.y + 1 / 32, pos.y + this.data.tpos.z + .5, 0, 0, 0);
+            }
+        }, 1, true);
+        cor.data = {};
+        cor.data.dep = a;
+        cor.data.dest = b;
+        cor.data.polarToCartesian = this.polarToCartesian;
+        cor.data.tpos = this;
+        return cor;
+    },
+    startHellFire: function () {
+        for (var i_13 = 0; i_13 < 4; i_13++) {
+            this.controller.addCoroutine(this.setFireOnLineInCircle(new Geometry.Vector2(i_13 / 2 * Math.PI, 1), new Geometry.Vector2((0.75 + i_13 / 2) * Math.PI, 1)));
+            this.controller.addCoroutine(this.setFireOnLineInCircle(new Geometry.Vector2(i_13 / 2 * Math.PI, 1), new Geometry.Vector2((1.25 + i_13 / 2) * Math.PI, 1)));
+            this.controller.addCoroutine(this.setFireOnArcInCircle(new Geometry.Vector2(i_13 / 2 * Math.PI, 1), new Geometry.Vector2((i_13 / 2 + 1 / 4) * Math.PI, 1)));
+            this.controller.addCoroutine(this.setFireOnArcInCircle(new Geometry.Vector2(i_13 / 2 * Math.PI, 1), new Geometry.Vector2((i_13 / 2 - 1 / 4) * Math.PI, 1)));
+        }
+    },
+    init: function () {
+        this.loadAnimation();
+        this.controller = new CoroutineController();
+    },
+    tick: function () {
+        this.controller.update();
+    }
+});
+Callback.addCallback('EntityDeath', function (entity, attacker, damageType) {
+    var pos = Entity.getPosition(entity);
+    if (World.getBlockID(Math.floor(pos.x), Math.floor(pos.y), Math.floor(pos.z)) == BlockID["hell_octacle"]) {
+        TileEntity.getTileEntity(Math.floor(pos.x), Math.floor(pos.y), Math.floor(pos.z)).startRitual(new Geometry.Vector3(pos.x, pos.y + .3, pos.z));
+    }
+});
+IDRegistry.genBlockID("candle");
+Block.createBlock("candle", [
+    {
+        name: "Candle",
+        texture: [["light_candle", 0]],
+        inCreative: true
+    }
+], { lightlevel: 7 });
+Block.setShape(BlockID.candle, 0, 0, 0, 1, 1 / 16, 1);
+var render = new ICRender.Model();
+BlockRenderer.setStaticICRender(BlockID.candle, 0, render);
+var model = BlockRenderer.createModel();
+model.addBox(6.5 / 16, 0, 6.5 / 16, 9.5 / 16, 5 / 16, 9.5 / 16, BlockID.candle, 0);
+model.addBox(7.8 / 16, 5 / 16, 7.8 / 16, 8.2 / 16, 5.5 / 16, 8.2 / 16, 173, 0);
+render.addEntry(model);
+TileEntity.registerPrototype(BlockID.candle, {
+    tick: function () {
+        this.controller.update();
+    },
+    init: function () {
+        this.controller = new CoroutineController();
+        var cor = new Coroutine(function () {
+            Particles.addParticle(HELL_SMOKE_PARTICLE, this.data.x + .5, this.data.y + 6 / 16, this.data.z + .5, 0, 0, 0);
+        }, 1, false);
+        cor.data = this;
+        this.controller.addCoroutine(cor);
+        cor = new Coroutine(function () {
+            if (this.time % 20 == 0 && this.time > 300) {
+                Particles.addParticle(HELL_FIRE_PARTICLE, this.data.x + .5, this.data.y + 6 / 16, this.data.z + .5, 0, 0, 0);
+            }
+        }, 1, true);
+        cor.data = this;
+        this.controller.addCoroutine(cor);
     }
 });
 Theme.createTheme("about_us", "main_page");
@@ -4245,7 +4725,6 @@ Medieval.Item.add("woodenGear_05x", {
         ru: "Деревянная шестерня 0.5x"
     }
 });
-Recipes.addShaped({ id: IDData.item.woodenGear_05x, count: 1, data: 0 }, ["apa", "ppp", "apa"], ["p", 5, -1]);
 Medieval.Item.add("woodenGear_1x", {
     name: "Wooden Gear 1x",
     texture: ["wood_gear_1x"],
@@ -4253,7 +4732,6 @@ Medieval.Item.add("woodenGear_1x", {
         ru: "Деревянная шестерня 1x"
     }
 });
-Recipes.addShaped({ id: IDData.item.woodenGear_1x, count: 1, data: 0 }, ["pap", "ala", "pap"], ["p", 5, -1, "l", IDData.item.woodenGear_05x, 0]);
 Medieval.Item.add("woodenGear_2x", {
     name: "Wooden Gear 2x",
     texture: ["wood_gear_2x"],
@@ -4261,7 +4739,6 @@ Medieval.Item.add("woodenGear_2x", {
         ru: "Деревянная шестерня 2x"
     }
 });
-Recipes.addShaped({ id: IDData.item.woodenGear_2x, count: 1, data: 0 }, ["pap", "ala", "pap"], ["p", 5, -1, "l", IDData.item.woodenGear_1x, 0]);
 Medieval.Item.add("stoneGear_05x", {
     name: "Stone Gear 0.5x",
     texture: ["stone_gear_05x"],
@@ -4269,7 +4746,6 @@ Medieval.Item.add("stoneGear_05x", {
         ru: "Каменная шестерня 0.5x"
     }
 });
-Recipes.addShaped({ id: IDData.item.stoneGear_05x, count: 1, data: 0 }, ["apa", "ppp", "apa"], ["p", 1, 0]);
 Medieval.Item.add("stoneGear_1x", {
     name: "Stone Gear 1x",
     texture: ["stone_gear_1x"],
@@ -4277,7 +4753,6 @@ Medieval.Item.add("stoneGear_1x", {
         ru: "Каменная шестерня 1x"
     }
 });
-Recipes.addShaped({ id: IDData.item.stoneGear_1x, count: 1, data: 0 }, ["pap", "ala", "pap"], ["p", 1, 0, "l", IDData.item.stoneGear_05x, 0]);
 Medieval.Item.add("stoneGear_2x", {
     name: "Stone Gear 2x",
     texture: ["stone_gear_2x"],
@@ -4285,7 +4760,6 @@ Medieval.Item.add("stoneGear_2x", {
         ru: "Каменная шестерня 2x"
     }
 });
-Recipes.addShaped({ id: IDData.item.stoneGear_2x, count: 1, data: 0 }, ["pap", "ala", "pap"], ["p", 1, 0, "l", IDData.item.stoneGear_1x, 0]);
 Medieval.Item.add("ironGear_05x", {
     name: "Iron Gear 0.5x",
     texture: ["iron_gear_05x"],
@@ -4307,9 +4781,6 @@ Medieval.Item.add("ironGear_2x", {
         ru: "Железная шестерня 2x"
     }
 });
-Recipes.addShaped({ id: IDData.item.ironGear_05x, count: 1, data: 0 }, ["apa", "ppp", "apa"], ["p", 265, 0]);
-Recipes.addShaped({ id: IDData.item.ironGear_1x, count: 1, data: 0 }, ["pap", "ala", "pap"], ["p", 265, 0, "l", IDData.item.ironGear_05x, 0]);
-Recipes.addShaped({ id: IDData.item.ironGear_2x, count: 1, data: 0 }, ["pap", "ala", "pap"], ["p", 265, 0, "l", IDData.item.ironGear_1x, 0]);
 Medieval.Item.add("goldenGear_05x", {
     name: "Golden Gear 0.5x",
     texture: ["gold_gear_05x"],
@@ -4331,9 +4802,20 @@ Medieval.Item.add("goldenGear_2x", {
         ru: "Золотая шестерня 2x"
     }
 });
-Recipes.addShaped({ id: IDData.item.goldenGear_05x, count: 1, data: 0 }, ["apa", "ppp", "apa"], ["p", 266, 0]);
-Recipes.addShaped({ id: IDData.item.goldenGear_1x, count: 1, data: 0 }, ["pap", "ala", "pap"], ["p", 266, 0, "l", IDData.item.goldenGear_05x, 0]);
-Recipes.addShaped({ id: IDData.item.goldenGear_2x, count: 1, data: 0 }, ["pap", "ala", "pap"], ["p", 266, 0, "l", IDData.item.goldenGear_1x, 0]);
+Callback.addCallback('PreLoaded', function () {
+    Recipes.addShaped({ id: IDData.item.woodenGear_05x, count: 1, data: 0 }, ["apa", "ppp", "apa"], ["p", 5, -1]);
+    Recipes.addShaped({ id: IDData.item.woodenGear_1x, count: 1, data: 0 }, ["pap", "ala", "pap"], ["p", 5, -1, "l", IDData.item.woodenGear_05x, 0]);
+    Recipes.addShaped({ id: IDData.item.woodenGear_2x, count: 1, data: 0 }, ["pap", "ala", "pap"], ["p", 5, -1, "l", IDData.item.woodenGear_1x, 0]);
+    Recipes.addShaped({ id: IDData.item.stoneGear_05x, count: 1, data: 0 }, ["apa", "ppp", "apa"], ["p", 1, 0]);
+    Recipes.addShaped({ id: IDData.item.stoneGear_1x, count: 1, data: 0 }, ["pap", "ala", "pap"], ["p", 1, 0, "l", IDData.item.stoneGear_05x, 0]);
+    Recipes.addShaped({ id: IDData.item.stoneGear_2x, count: 1, data: 0 }, ["pap", "ala", "pap"], ["p", 1, 0, "l", IDData.item.stoneGear_1x, 0]);
+    Recipes.addShaped({ id: IDData.item.ironGear_05x, count: 1, data: 0 }, ["apa", "ppp", "apa"], ["p", 265, 0]);
+    Recipes.addShaped({ id: IDData.item.ironGear_1x, count: 1, data: 0 }, ["pap", "ala", "pap"], ["p", 265, 0, "l", IDData.item.ironGear_05x, 0]);
+    Recipes.addShaped({ id: IDData.item.ironGear_2x, count: 1, data: 0 }, ["pap", "ala", "pap"], ["p", 265, 0, "l", IDData.item.ironGear_1x, 0]);
+    Recipes.addShaped({ id: IDData.item.goldenGear_05x, count: 1, data: 0 }, ["apa", "ppp", "apa"], ["p", 266, 0]);
+    Recipes.addShaped({ id: IDData.item.goldenGear_1x, count: 1, data: 0 }, ["pap", "ala", "pap"], ["p", 266, 0, "l", IDData.item.goldenGear_05x, 0]);
+    Recipes.addShaped({ id: IDData.item.goldenGear_2x, count: 1, data: 0 }, ["pap", "ala", "pap"], ["p", 266, 0, "l", IDData.item.goldenGear_1x, 0]);
+});
 Medieval.Item.setGear(IDData.item.woodenGear_05x, 10, 0.5, 0.5);
 Medieval.Item.setGear(IDData.item.woodenGear_1x, 10, 1, 1);
 Medieval.Item.setGear(IDData.item.woodenGear_2x, 10, 2, 2);
@@ -4397,13 +4879,17 @@ var drillWorkbench = function (api, field, result) {
 var drill = function () {
     MC.addAchivement("medievalCraft", "createDrill");
 };
-Recipes.addShaped({ id: IDData.item.kineticDrill, count: 1, data: 0 }, ["vvi", "ibg", "vvp"], ["g", IDData.item.ironGear_1x, -1, "p", 5, -1, "i", 265, 0, "b", 42, 0], drill);
-Recipes.addShaped({ id: IDData.item.kineticDrillwithGoldSpring, count: 1, data: 0 }, ["aaa", "sda", "aaa"], ["s", IDData.item.kineticDrill, -1, "d", IDData.item.goldSpring, -1], drillWorkbench);
-Recipes.addShaped({ id: IDData.item.kineticDrillwithIronSpring, count: 1, data: 0 }, ["aaa", "sda", "aaa"], ["s", IDData.item.kineticDrill, -1, "d", IDData.item.ironSpring, -1], drillWorkbench);
+Callback.addCallback('PreLoaded', function () {
+    Recipes.addShaped({ id: IDData.item.kineticDrill, count: 1, data: 0 }, ["vvi", "ibg", "vvp"], ["g", IDData.item.ironGear_1x, -1, "p", 5, -1, "i", 265, 0, "b", 42, 0], drill);
+    Recipes.addShaped({ id: IDData.item.kineticDrillwithGoldSpring, count: 1, data: 0 }, ["aaa", "sda", "aaa"], ["s", IDData.item.kineticDrill, -1, "d", IDData.item.goldSpring, -1], drillWorkbench);
+    Recipes.addShaped({ id: IDData.item.kineticDrillwithIronSpring, count: 1, data: 0 }, ["aaa", "sda", "aaa"], ["s", IDData.item.kineticDrill, -1, "d", IDData.item.ironSpring, -1], drillWorkbench);
+});
 Item.setMaxDamage(IDData.item.kineticDrillwithGoldSpring, 4500);
 Item.setMaxDamage(IDData.item.kineticDrillwithIronSpring, 3000);
-Recipes.addShaped({ id: IDData.item.goldSpring, count: 1, data: 0 }, ["aaa", "ada", "aaa"], ["d", IDData.item.kineticDrillwithGoldSpring, -1], drillWorkbench);
-Recipes.addShaped({ id: IDData.item.ironSpring, count: 1, data: 0 }, ["aaa", "ada", "aaa"], ["d", IDData.item.kineticDrillwithIronSpring, -1], drillWorkbench);
+Callback.addCallback('PreLoaded', function () {
+    Recipes.addShaped({ id: IDData.item.goldSpring, count: 1, data: 0 }, ["aaa", "ada", "aaa"], ["d", IDData.item.kineticDrillwithGoldSpring, -1], drillWorkbench);
+    Recipes.addShaped({ id: IDData.item.ironSpring, count: 1, data: 0 }, ["aaa", "ada", "aaa"], ["d", IDData.item.kineticDrillwithIronSpring, -1], drillWorkbench);
+});
 Tool.add(ItemID.kineticDrillwithGoldSpring, ['stone', "dirt"], {
     material: 'iron',
     durability: 45,
@@ -4452,7 +4938,9 @@ function giveSmallHammer() {
 IDRegistry.genItemID("smallHammer");
 Item.createItem("smallHammer", "Small Hammer", { name: "small_hammer", meta: 0 }, { stack: 1 });
 Translation.addTranslation("Small Hammer", { ru: "Молоток" });
-Recipes.addShaped({ id: ItemID.smallHammer, count: 1, data: 0 }, ["aii", "asa", "aaa"], ["i", 4, -1, "s", 280, 0], giveSmallHammer);
+Callback.addCallback('PreLoaded', function () {
+    Recipes.addShaped({ id: ItemID.smallHammer, count: 1, data: 0 }, ["aii", "asa", "aaa"], ["i", 4, -1, "s", 280, 0], giveSmallHammer);
+});
 Callback.addCallback("ItemUse", function (coords, item, block) {
     if (item.id == ItemID.smallHammer && block.id == 47) {
         World.setBlock(coords.x, coords.y, coords.z, 0);
@@ -4481,8 +4969,10 @@ Medieval.Item.add("goldSpring", {
 });
 MC.setSpring(IDData.item.ironSpring, 3000, 30, 500);
 MC.setSpring(IDData.item.goldSpring, 4500, 45, 750);
-Recipes.addShaped({ id: IDData.item.ironSpring, count: 1, data: 0 }, ["ivv", "viv", "ivv"], ["i", 265, -1]);
-Recipes.addShaped({ id: IDData.item.goldSpring, count: 1, data: 0 }, ["ivv", "viv", "ivv"], ["i", 266, -1]);
+Callback.addCallback('PreLoaded', function () {
+    Recipes.addShaped({ id: IDData.item.ironSpring, count: 1, data: 0 }, ["ivv", "viv", "ivv"], ["i", 265, -1]);
+    Recipes.addShaped({ id: IDData.item.goldSpring, count: 1, data: 0 }, ["ivv", "viv", "ivv"], ["i", 266, -1]);
+});
 IDRegistry.genItemID("dw");
 Item.createItem("dw", "Drop to lava", { name: "debug_wrench", meta: 0 }, { stack: 64 });
 Translation.addTranslation("Drop to lava", { ru: "Выкинь в лаву" });
@@ -4537,3 +5027,67 @@ Translation.addTranslation("Gold Dust", { ru: "Пыль камня и золот
 IDRegistry.genItemID("sawdust");
 Item.createItem("sawdust", "Sawdust", { name: "sawdust", meta: 0 }, { stack: 64 });
 Translation.addTranslation("Sawdust", { ru: "Опилки" });
+var BLOOD_FOG_PARTICLE = Particles.registerParticleType({
+    texture: "blood_fog",
+    size: [3, 5],
+    lifetime: [90, 100],
+    render: 2,
+    color: [1, .1, .1, 1],
+    collision: true,
+    keepVelocityAfterImpact: false,
+    isUsingBlockLight: true,
+    animators: {
+        alpha: {
+            fadeIn: 0,
+            fadeOut: .98,
+            start: 1,
+            end: .1
+        }
+    }
+});
+var HELL_FIRE_SMOKE_PARTICLE = Particles.registerParticleType({
+    texture: "blood_fog",
+    size: [6, 7],
+    color: [.7, .4, .3, .6],
+    lifetime: [20, 30],
+    velocity: [0, .05, 0],
+    render: 2,
+    isUsingBlockLight: true,
+    animators: {
+        alpha: {
+            fadeIn: .5,
+            fadeOut: .6,
+            start: .1,
+            end: 0
+        },
+        size: {
+            fadeIn: .05,
+            fadeOut: .98,
+            start: .1,
+            end: 1
+        }
+    }
+});
+var HELL_SMOKE_PARTICLE = Particles.registerParticleType({
+    texture: "blood_fog",
+    size: [6, 7],
+    color: [.3, .3, .3, 1],
+    lifetime: [70, 100],
+    velocity: [0, .05, 0],
+    render: 2,
+    isUsingBlockLight: true,
+    animators: {
+        alpha: {
+            fadeIn: .12,
+            fadeOut: .98,
+            start: 0,
+            end: .1
+        },
+        size: {
+            fadeIn: .05,
+            fadeOut: .98,
+            start: .1,
+            end: 1
+        }
+    }
+});

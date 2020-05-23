@@ -3,8 +3,9 @@ Block.createBlock("woodenGate", [
 	{name: "Wooden Gate", texture: [["barrel_top", 0], ["barrel_top", 0], ["barrel_side", 0], ["barrel_side", 0], ["barrel_side", 0], ["barrel_side", 0]], inCreative: true}
 ]);
 Translation.addTranslation("Wood Gate", {ru: "Деревянный краник"});
+Callback.addCallback('PreLoaded', function () {
 Recipes.addShaped({id: BlockID.woodenGate, count: 1, data: 0}, ["pip", "ivi", "pip"], ["p", 5,-1,"i", 265, -1]);
-
+});
 function getBorder(x,y,z){
 	var yy = 0;
 	var xx = 0;

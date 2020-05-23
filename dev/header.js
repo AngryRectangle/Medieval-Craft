@@ -11,7 +11,6 @@
 █──█──█─█───█──█──█─────█
 ████──█─█───█──█──█─────█
 */
-importLib ("Tool", "*");
 importLib("energylib", "*");
 Callback.addCallback("LevelLoaded",function(){
 	//Game.message("Зарктыая бета-версия, распространение запрещено.");

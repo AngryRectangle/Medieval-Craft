@@ -47,110 +47,1130 @@ declare namespace Armor {
     function preventDamaging(id: string): void;
 }
 
-declare namespace Callback {
-
-    function addCallback(name: string, callback: ItemUseFunction | 
-                                                 ProjectileHitFunction | 
-                                                 ItemIconOverrideFunction | 
-                                                 ItemNameOverrideFunction |
-                                                 ItemUseNoTargetFunction |
-                                                 ItemUsingReleasedFunction | 
-                                                 ItemUsingCompleteFunction | 
-                                                 ItemDispensedFunction): void;
-
+/**
+ * Module used to create and manipulate blocks. The difference between terms 
+ * "block" and "tile" is in its usage: blocks are used in the inventory, 
+ * tiles are placed in the world and have different ids for some vanilla blocks. 
+ * Use [[Block.convertBlockToItemId]] and [[Block.convertItemToBlockId]]
+ */
+declare namespace Block {
     /**
-     * Function used in "ItemUse" callback
+     * @param id string id of the block
+     * @returns block numeric id by its string id or just returns its numeric id 
+     * if input was a numeric id
      */
-    type ItemUseFunction = 
+    function getNumericId(id: string): number;
+
     /**
+     * Creates new block using specified params
+     * @param namedID string id of the block. You should register it via 
+     * [[IDRegistry.genBlockID]] call first
+     * @param defineData array containing all variations of the block. Each 
+     * variation corresponds to block data value, data values are assigned 
+     * according to variations order
+     * @param blockType [[SpecialType]] object, either java-object returned by
+     * [[Block.createSpecialType]] or js-object with the required properties, 
+     * you can also pass special type name, if the type was previously 
+     * registered
+     */
+    function createBlock(namedID: string, defineData: BlockVariation[], blockType: SpecialType|string): void;
+
+    /**
+     * Creates new block using specified params, creating four variations for 
+     * each of the specified variations to be able to place it facing flayer 
+     * with the front side and defines the appropriate behavior. Useful for 
+     * different machines and mechanisms
+     * @param namedID string id of the block. You should register it via 
+     * [[IDRegistry.genBlockID]] call first
+     * @param defineData array containing all variations of the block. Each 
+     * variation corresponds to four block data values, data values are assigned 
+     * according to variations order
+     * @param blockType [[SpecialType]] object, either java-object returned by
+     * [[Block.createSpecialType]] or js-object with the required properties, 
+     * you can also pass special type name, if the type was previously 
+     * registered
+     */
+    function createBlockWithRotation(namedID: string, defineData: BlockVariation[], blockType: SpecialType|string): void;
+
+    /**
+     * @param id numeric block id
+     * @returns true, if the specified block id is a vanilla block
+     */
+    function isNativeTile(id: number): boolean;
+
+    /**
+     * Converts tile id to the block id
+     * @param id numeric tile id
+     * @returns numeric block id corresponding to the given tile id
+     */
+    function convertBlockToItemId(id: number): number;
+
+    /**
+     * Converts block id to the tile id
+     * @param id numeric tile id
+     * @returns numeric tile id corresponding to the given block id
+     */
+    function convertItemToBlockId(id: number): number;
+
+    /**
+     * Same as [[Block.registerDropFunction]] but accepts only numeric 
+     * tile id as the first param
+     */
+    function registerDropFunctionForID(numericID: number, dropFunc: DropFunction, level?: number): boolean;
+
+    /**
+     * Registers function used by Core Engine to determine block drop for the 
+     * specified block id
+     * @param numericID tile string or numeric id
+     * @param dropFunc function to be called to determine what will be dropped 
+     * when the block is broken
+     * @param level if level is specified and is not 0, digging level of the
+     * block is additionally set
+     * @returns true, if specified string or numeric id exists and the function
+     * was registered correctly, false otherwise
+     */
+    function registerDropFunction(namedID: string|number, dropFunc: DropFunction, level?: number): boolean;
+
+    /**
+     * Same as [[Block.registerPopResourcesFunction]] but accepts only numeric 
+     * tile id as the first param
+     */
+    function registerPopResourcesFunctionForID(numericID: number, func: PopResourcesFunction): void;
+
+    /**
+     * Registeres function used by Core Engine to determine block drop for the 
+     * specified block id
+     * @param namedID tile string or numeric id 
+     * @param func function to be called when a block in the world is broken by
+     * environment (explosions, pistons, etc.)
+     * @returns true, if specified string or numeric id exists and the function
+     * was registered correctly, false otherwise
+     */
+    function registerPopResourcesFunction(namedID: string|number, func: PopResourcesFunction): void;
+
+    /**
+     * Same as [[Block.setDestroyLevel]] but accepts only numeric 
+     * tile id as the first param
+     */
+    function setDestroyLevelForID(id: number, level: number, resetData: boolean): void;
+
+    /**
+     * Registers a default destroy function for the specified block, considering
+     * its digging level
+     * @param namedID tile string id
+     * @param level digging level of the block
+     * @param resetData if true, the block is dropped with data equals to 0
+     */
+    function setDestroyLevel(namedID: string|number, level: number, resetData: boolean): void;
+
+    /**
+     * Sets destroy time for the block with specified id
+     * @param namedID string or numeric block id
+     * @param time destroy time for the block, in ticks
+     */
+    function setDestroyTime(namedID: string|number, time: number): void;
+
+    /**
+     * @param numericID numeric block id
+     * @returns true, if block is solid, false otherwise
+     */
+    function isSolid(numericID: number): boolean;
+
+    /**
+     * @param numericID numeric block id
+     * @returns destroy time of the block, in ticks
+     */
+    function getDestroyTime(numericID: number): number;
+
+    /**
+     * @param numericID numeric block id
+     * @returns explostion resistance of the block
+     */
+    function getExplosionResistance(numericID: number): number;
+
+    /**
+     * @param numericID numeric block id
+     * @returns friction of the block
+     */
+    function getFriction(numericID: number): number;
+
+    /**
+     * @param numericID numeric block id
+     * @returns translucency of the block
+     */
+    function getTranslucency(numericID: number): number;
+
+    /**
+     * @param numericID numeric block id
+     * @returns light level, emmited by block, from 0 to 15
+     */
+    function getLightLevel(numericID: number): number;
+
+    /**
+     * @param numericID numeric block id
+     * @returns light opacity of the block, from 0 to 15
+     */
+    function getLightOpacity(numericID: number): number;
+
+    /**
+     * @param numericID numeric block id
+     * @returns render layer of the block
+     */
+    function getRenderLayer(numericID: number): number;
+
+    /**
+     * @param numericID numeric block id
+     * @returns render type of the block
+     */
+    function getRenderType(numericID: number): number;
+
+    /**
+     * Temporarily sets destroy time for block, saving the old value for the 
+     * further usage
+     * @param numericID numeric block id
+     * @param time new destroy time in ticks
+     */
+    function setTempDestroyTime(numericID: number, time: number): void;
+
+    /**
+     * Registers material and digging level for the specified block
+     * @param namedID block numeric or string id
+     * @param material material name
+     * @param level block's digging level
+     */
+    function setBlockMaterial(namedID: string|number, material: string, level: number): void;
+
+    /**
+     * Makes block accept redstone signal
+     * @param namedID block numeric or string id
+     * @param data block data, currently not used
+     * @param isRedstone if true, the redstone changes at the block will notify
+     * the "RedstoneSignal" callback
+     */
+    function setRedstoneTile(namedID: string|number, data: number, isRedstone: boolean): void;
+
+    /**
+     * Gets drop for the specified block. Used mostly by Core Engine's 
+     * [[ToolAPI]], though, can be useful in the mods, too
+     * @param block block info
+     * @param item item that was (or is going to be) used to break the block
+     * @param coords coordinates where the block was (or is going to be) broken 
+     * @returns block drop, the array of arrays, each containing three values: 
+     * id, count and data respectively
+     */
+    function getBlockDropViaItem(block: Tile, item: ItemInstance, coords: Vector): [number, number, number][];
+
+    /**
+     * Same as [[Block.registerPlaceFunction]] but accepts only numeric 
+     * tile id as the first param
+     */
+    function registerPlaceFunctionForID(block: number, func: PlaceFunction): void;
+
+    /**
+     * Registers function to be called when the block is placed in the world
+     * @param namedID block numeric or string id
+     * @param func function to be called when the block is placed in the world
+     */
+    function registerPlaceFunction(namedID: string|number, func: PlaceFunction): void;
+
+    /**
+     * Sets block box shape
+     * @param id block numeric id
+     * @param pos1 block lower corner position, in voxels (1/16 of the block)
+     * @param pos2 block upper conner position, in voxels (1/16 of the block)
+     * @param data block data
+     */
+    function setBlockShape(id: number, pos1: Vector, pos2: Vector, data: number): void;
+
+    /**
+     * Same as [[Block.setBlockShape]], but accepts coordinates as scalar 
+     * params, not objects
+     * @param id block numeric id
+     * @param data  block data
+     */
+    function setShape(id: number, x1: number, y1: number, z1: number, x2: number, y2: number, z2: number, data: number): void;
+
+    /**
+     * Creates a new special type using specified params and registers it by 
+     * name
+     * @param description special type properties
+     * @param nameKey string name to register the special type
+     */
+    function createSpecialType(description: SpecialType, nameKey: string): number;
+
+    /**
+     * @deprecated No longer supported
+     */
+    function setPrototype(namedID: string|number, Prototype: any): number;
+
+    /**
+     * Makes block invoke callback randomly depending on game speed
+     * @param id block id to register for random ticks
+     * @param callback function to be called on random block tick
+     */
+    function setRandomTickCallback(id: number, callback: RandomTickFunction): number;
+
+    /**
+     * Makes block invoke callback randomly depending on game speed. Occurs more 
+     * often then [[Block.setRandomTickCallback]] and only if the block is not
+     * far away from player
+     * @param id block id to register
+     * @param callback function to be called 
+     */
+    function setAnimateTickCallback(id: number, callback: AnimateTickFunction): number;
+
+
+    /**
+     * Special types are used to set properties to the block. Unlike items, 
+     * blocks properties are defined using special types, due to old Inner 
+     * Core's block ids limitations 
+     */
+    interface SpecialType {
+        /**
+         * Unique string identifier of the SpecialType
+         */
+        name?: string,
+
+        /**
+         * Vanilla block ID to inherit some of the properties. Default is 0
+         */
+        base?: number,
+
+        /**
+         * Block material constant. Default is 3
+         */
+        material?: number,
+
+        /**
+         * If true, the block is not transparent. Default is false
+         */
+        solid?: boolean,
+
+        /**
+         * If true, all block faces are rendered, otherwise back faces are not
+         * rendered (for optimization purposes). Default is false
+         */
+        renderallfaces?: boolean,
+
+        /**
+         * Sets render type of the block. Default is 0 (full block), use other 
+         * values to change block's shape
+         */
+        rendertype?: number,
+
+        /**
+         * Specifies the layer that is used to render the block. Default is 4
+         */
+        renderlayer?: number,
+
+        /**
+         * If non-zero value is used, the block emits light of that value. 
+         * Default is false, use values from 1 to 15 to set light level
+         */
+        lightlevel?: number,
+
+        /**
+         * Specifies how opaque the block is. Default is 0 (solid), use values 
+         * from 1 to 15 to make the block opaque
+         */
+        lightopacity?: number,
+
+        /**
+         * Specifies how block resists to the explosions. Default value is 3
+         */
+        explosionres?: number,
+
+        /**
+         * Specifies how player walks on this block. The higher the friction is,
+         * the more difficult it is to change speed and direction. Default value
+         * is 0.6000000238418579
+         */
+        friction?: number,
+
+        /**
+         * Specifies the time required to destroy the block, in ticks
+         */
+        destroytime?: number,
+
+        /**
+         * Detirmines the way the light passes through the block, if it is not
+         * opaque
+         */
+        translucency?: number,
+    }
+
+
+    /**
+     * Object used to represent single block variation
+     */
+    interface BlockVariation {
+        /**
+         * Variation name, displayed as item name everywhere. Default value is
+         * *"Unknown Block"*
+         */
+        name?: string,
+
+        /**
+         * Variation textures, array containing pairs of texture name and data.
+         * Texture file should be located in items-opaque folder and its name
+         * should be in the format: *name_data*, e.g. if the file name is 
+         * *ignot_copper_0*, you should specifiy an array 
+         * ```js 
+         * ["ignot_copper", 0]
+         * ```
+         * There should be from one to six texture 
+         * pairs in the array, if less then six variations are specified, the 
+         * last texture is used for missing textures. The sides go in the 
+         * following order:
+         * ```js 
+         * texture: [
+         *   ["название1", индекс1], // bottom
+         *   ["название2", индекс2], // top
+         *   ["название3", индекс3], // back
+         *   ["название4", индекс4], // front
+         *   ["название5", индекс5], // left
+         *   ["название6", индекс6]  // right
+         * ]
+         * ```
+         */
+        textures: [string, number][]
+
+        /**
+         * If true, block variation will be added to creative inventory
+         */
+        inCreative?: boolean,
+    }
+
+    /**
+     * Function used to determine block drop
+     * @param blockCoords coordinates where the block is destroyed and side from
+     * where it is destroyed
+     * @param blockID numeric tile id
+     * @param blockData block data value
+     * @param diggingLevel level of the tool the block was digged with
+     * @returns block drop, the array of arrays, each containing three values: 
+     * id, count and data respectively
+     */
+    interface DropFunction {
+        (blockCoords: Callback.ItemUseCoordinates, blockID: number, blockData: number, diggingLevel: number): [number, number, number][]
+    }
+
+    /**
+     * Function used to determine when block is broken by
+     * environment (explosions, pistons, etc.)
+     * @param blockCoords coordinates where the block is destroyed and side from
+     * where it is destroyed
+     * @param block information about block that is broken
+     * @param f unknown floating-point param
+     * @param i unknown integer param
+     */
+    interface PopResourcesFunction {
+        (blockCoords: Vector, block: Tile, f: number, i: number): void
+    }
+
+
+    /**
+     * Function used to determine when block is placed in the world
      * @param coords set of all coordinate values that can be useful to write 
      * custom use logics
      * @param item item that was in the player's hand when he touched the block
      * @param block block that was touched
+     * @returns coordinates where to actually place the block, or void for 
+     * default placement
      */
-    (coords: ItemUseCoordinates, item: ItemInstance, block: Tile) => void;
+    interface PlaceFunction {
+        (coords: Callback.ItemUseCoordinates, item: ItemInstance, block: Tile): Vector|void
+    }
+
+
+    /**
+     * Function used to track random block ticks
+     * @param x x coordinate of the block that ticked
+     * @param y y coordinate of the block that ticked
+     * @param z z coordinate of the block that ticked
+     * @param id block id
+     * @param data block data
+     */
+    interface RandomTickFunction {
+        (x: number, y: number, z: number, id: number, data: number): void
+    }
+
+
+    /**
+     * Function used to track random block animation ticks
+     * @param x x coordinate of the block that should be updated
+     * @param y y coordinate of the block that should be updated
+     * @param z z coordinate of the block that should be updated
+     * @param id block id
+     * @param data block data
+     */
+    interface AnimateTickFunction {
+        (x: number, y: number, z: number, id: number, data: number): void
+    }
+}
+/**
+ * Module used to handle in-game events. When some native event occurs, all 
+ * callback functions registered for this event are called. Also you can invoke
+ * callback with any name manually using [[Callback.invokeCallback]] function.
+ * 
+ * All pre-defined callbacks with their functions interfaces are listed below.
+ * If no function interface is provided, use a function with no params and 
+ * return value:
+ * 
+ * **UI callbacks:**
+ * 
+ * *ContainerOpened* occurs when user opens some container. See 
+ * [[ContainerOpenedFunction]] for details
+ * 
+ * *ContainerClosed* occurs when some container is closed. See
+ * [[ContainerClosedFunction]] for details
+ * 
+ * *CustomWindowOpened* occurs when every single window is opened. Called for 
+ * every window and subwindow. Examples of subwindows include standard 
+ * inventory, window title, main window, etc. See [[CustomWindowOpenedFunction]]
+ * for details
+ * 
+ * *CustomWindowClosed* occurs when every single window is closed. See 
+ * [[CustomWindowClosedFunction]] for details
+ * 
+ * 
+ * **Workbench callbacks:**
+ * 
+ * *CraftRecipePreProvided* occurs befor crafting is performed. See 
+ * [[CraftRecipePreProvidedFunction]] for details
+ * 
+ * *CraftRecipeProvided* occurs afrer crafting recipe result is determined. See 
+ * [[CraftRecipeProvidedFunction]] for details
+ * 
+ * *VanillaWorkbenchCraft* occurs just before adding crafting recipe result to 
+ * player's inventory. See [[VanillaWorkbenchCraftFunction]] for details
+ * 
+ * *VanillaWorkbenchPostCraft* occurs after adding crafting recipe result to 
+ * player's inventory. See [[VanillaWorkbenchCraftFunction]] for details
+ * 
+ * *VanillaWorkbenchRecipeSelected* occurs when player selects recipe in the 
+ * workbench. See [[VanillaWorkbenchRecipeSelectedFunction]] for details
+ * 
+ * 
+ * **Inner Core and Core Engine callbacks:**
+ * 
+ * *CoreConfigured* occurs when Inner Core default configuration file is loaded. 
+ * See [[CoreConfiguredFunction]] for details
+ * 
+ * *PreLoaded* occurs directly after "CoreConfigured" callback
+ * 
+ * *APILoaded* occurs directly after "PreLoaded" callback
+ * 
+ * *ModsLoaded* occurs directly after "APILoaded" callback
+ * 
+ * *PostLoaded* occurs directly after "ModsLoaded" callback. Last of the loading
+ * callbacks
+ * 
+ * *AppSuspended* occurs when Minecraft application is paused
+ * 
+ * *NativeGuiChanged* occurs when vanilla screen changes. See 
+ * [[NativeGuiChangedFunction]] for details
+ * 
+ * *ReadSaves* occurs when reading saves from global scope. See 
+ * [[SavesFunction]] for details
+ * 
+ * *WriteSaves* occurs when writing saves to global scope. See 
+ * [[SavesFunction]] for details
+ * 
+ * 
+ * **Worlds and dimensions callbacks:**
+ * 
+ * *tick* is main game tick. This callback is called 20 times per second and is
+ * used to define all dynamic events in the game. Avoid overloading tick 
+ * functions and use [[Updatable]]s and [[TileEntity]]s when posssible
+ * 
+ * *LevelSelected* occurs when the level is selected and will be loaded. See 
+ * [[LevelSelectedFunction]] for details
+ * 
+ * *LevelCreated* occurs when level is created in the memory of the device
+ * 
+ * *LevelDisplayed* occurs when level is displayed to the player
+ * 
+ * *LevelPreLoaded* occurs before some level initialization
+ * 
+ * *LevelLoaded* occurs when level is completely loaded and is ready to be 
+ * displayed to the player
+ * 
+ * *DimensionLoaded* occurs when vanilla or custom dimension is loaded. See 
+ * [[DimensionLoadedFunction]] for details
+ * 
+ * *LevelPreLeft* occurs when player starts leaving world
+ *  
+ * *LevelLeft* occurs when player completes leaving world
+ * 
+ * *PreBlocksDefined* occurs before saving block data while loading world
+ * 
+ * *BlocksDefined* occurs after saving block data while loading world
+ * 
+ * 
+ * **Player actions callbacks:**
+ * 
+ * *DestroyBlock* occurs when player breaks block. See [[DestroyBlockFunction]]
+ * for details
+ * 
+ * *DestroyBlockStart* occurs when player starts breaking block. Has the same 
+ * parameters as "DestroyBlock" callback, see [[DestroyBlockFunction]] for 
+ * details
+ * 
+ * *DestroyBlockContinue* occurs when player continues breaking block. Occurs 
+ * several times during one block breaking. See [[DestroyBlockContinueFunction]] 
+ * for details
+ * 
+ * *BuildBlock* occurs when player places block somewhere in the world. See 
+ * [[BuildBlockFunction]] for details
+ * 
+ * *BlockChanged* occurs when block changes in the world. To capture this event 
+ * you should register blocks that you need to watch using 
+ * [[World.setBlockChangeCallbackEnabled]] method. All block changes that are 
+ * related to the registered blocks trigger this event. See 
+ * [[BlockChangedFunction]] for details
+ * 
+ * *ItemUse* occurs when player uses item on some block. Doesn't work if vanilla
+ * container is opened (e.g. chest, workbench, etc.). Use "ItemUseLocalServer" 
+ * to track such events instead. See [[ItemUseFunction]] for details
+ * 
+ * *ItemUseLocalServer* occurs when player uses some item on the local server. 
+ * Can be used to prevent vanilla container from opening. See 
+ * [[ItemUseFunction]] for details
+ * 
+ * *FoodEaten* occurs when player eats food. See [[FoodEatenFunction]] for 
+ * details
+ * 
+ * *ExpAdd* occurs when player gains some experience. See [[ExpAddFunciton]]
+ * for details
+ * 
+ * *ExpLevelAdd* occurs when player gains some experience levels. See 
+ * [[ExpLevelAddFunciton]] for details
+ * 
+ * *NativeCommand* occurs when player enters some command. See 
+ * [[NativeCommandFunciton]] for details
+ * 
+ * *PlayerAttack* occurs when player attacks some entity. See 
+ * [[PlayerAttackFunction]] for details
+ * 
+ * *EntityInteract* occurs when player longclick some entity (interacts with 
+ * it). See [[EntityInteractFunction]] for details
+ * 
+ * *ItemUseNoTarget* occurs when an item is used in the air. See 
+ * [[ItemUseNoTargetFunction]] for details
+ * 
+ * *ItemUsingReleased* occurs when player doesn't complete using item that has 
+ * maximum use time set with [[Item.setMaxUseDuration]] funciton. See 
+ * [[ItemUsingReleasedFunction]] for details
+ * 
+ * *ItemUsingComplete* when player completes using item that has maximum use 
+ * time set with [[Item.setMaxUseDuration]] funciton. See 
+ * [[ItemUsingCompleteFunction]] for details
+ * 
+ * 
+ * **Entities and environment callbacks:**
+ * 
+ * *Explosion* occurs when something is exploded in the world. See 
+ * [[ExplosionFunction]] for details
+ * 
+ * *EntityAdded* occurs when an entity is added in the world. See 
+ * [[EntityAddedFunction]] for details
+ * 
+ * *EntityRemoved* occurs when an entity is removed from the world. See 
+ * [[EntityRemovedFunction]] for details
+ * 
+ * *EntityDeath* occurs when an entity dies. See [[EntityDeathFunction]] for
+ * details
+ * 
+ * *EntityHurt* occurs when an entity is hurt. See [[EntityHurtFunction]] for 
+ * details
+ * 
+ * *ProjectileHit* occurs when a projectile entity hits entity or block. See
+ * [[ProjectileHitFunction]] for details
+ * 
+ * 
+ * **Items and blocks callbacks:**
+ * 
+ * *RedstoneSignal* occurs when redstone signal changes on the specified 
+ * coordinates. To register block as redstone consumer, use 
+ * [[Block.setRedstoneTile]] function. See [[RedstoneSignalFunction]] for 
+ * details
+ * 
+ * *PopBlockResources* occurs when block is desroyed somehow (not by player).
+ * See [[PopBlockResourcesFunction]] for details
+ * 
+ * *CustomBlockTessellation*
+ * 
+ * *ItemIconOverride* occurs when displaying item somewhere to override item's 
+ * icon. You can use it to change item's icon depending on some item state. See
+ * [[ItemIconOverrideFunction]] for details
+ * 
+ * *ItemNameOverride* occurs when displaying item name to override it. You can 
+ * use it to display item charge, status, etc. See [[ItemNameOverrideFunction]] 
+ * for details
+ * 
+ * *ItemDispensed* occurs when an item is dispenced using dispenser. See 
+ * [ItemDispensedFunction]] for details
+ * 
+ * 
+ * **Generation callbacks:**
+ * 
+ * *GenerateChunk* occurs when generating chunk in overworld. Shoud be
+ * used for all generation process. See [[GenerateChunkFunction]] for details
+ * 
+ * *GenerateChunkUnderground* occurs when generating chunk's underground in 
+ * overworld. Can be used for all underground generation process (though it is 
+ * OK to use "GenerateChunk" for it as well). See [[GenerateChunkFunction]] for 
+ * details
+ * 
+ * *GenerateNetherChunk* occurs when generating chunk in neather world. 
+ * See [[GenerateChunkFunction]] for details
+ * 
+ * *GenerateEndChunk* occurs when generating chunk in end world. See
+ * [[GenerateChunkFunction]] for details
+ * 
+ */
+declare namespace Callback {
+
+    /**
+     * Adds callback function for the specified callback name. Most of native 
+     * events can be prevented using [[Game.prevent]] call.
+     * @param name callback name, should be one of the pre-defined or a custom
+     * name if invoked via [[Callback.invokeCallback]]
+     * @param func function to be called when an event occures
+     */
+    function addCallback(name: string, func: Function): void;
+
+    /**
+     * Invokes callback with any name and up to 10 additional parameters. You
+     * should not generally call pre-defined callbacks until you really need to 
+     * do so. If you want to trigger some event in your mode, use your own 
+     * callback names
+     * @param name callback name
+     */
+    function invokeCallback(name: string, o1?: any, o2?: any, o3?: any, o4?: any, o5?: any, o6?: any, o7?: any, o8?: any, o9?: any, o10?: any): void;
+
+
+    /**
+     * Function used in "CraftRecipePreProvided" callback
+     * @param recipe object containing recipe information
+     * @param field object containing crafting field information
+     */
+    interface CraftRecipePreProvidedFunction {
+        (recipe: Recipes.WorkbenchRecipe, field: Recipes.WorkbenchField): void
+    }
+
+    /**
+     * Function used in "CraftRecipeProvided" callback
+     * @param recipe object containing recipe information
+     * @param field object containing crafting field information
+     * @param isPrevented if true, recipe was prevented by craft function
+     */
+    interface CraftRecipeProvidedFunction {
+        (recipe: Recipes.WorkbenchRecipe, field: Recipes.WorkbenchField, isPrevented: boolean): void
+    }
+
+
+    /**
+     * Function used in "VanillaWorkbenchCraft" and "VanillaWorkbenchPostCraft" 
+     * callbacks
+     * @param result recipe result item
+     * @param workbenchContainer workbench container instance
+     */
+    interface VanillaWorkbenchCraftFunction {
+        (result: ItemInstance, workbenchContainer: UI.Container): void
+    }
+
+
+    /**
+     * Function used in "VanillaWorkbenchRecipeSelected" callback
+     * @param recipe object containing recipe information
+     * @param result recipe result item
+     * @param workbenchContainer workbench container instance
+     */
+    interface VanillaWorkbenchRecipeSelectedFunction {
+        (recipe: Recipes.WorkbenchRecipe, result: ItemInstance, workbenchContainer: UI.Container)
+    }
+
+
+    /**
+     * Function used in "ContainerClosed" callback
+     * @param container container that was closed
+     * @param window window that was loaded in the container
+     * @param byUser if true, container was closed by user, from the code 
+     * otherwise
+     */
+    interface ContainerClosedFunction {
+        (container: UI.Container, window: UI.IWindow, byUser: boolean): void
+    }
+
+
+    /**
+     * Function used in "ContainerOpened" callback
+     * @param container container that was opened
+     * @param window window that was loaded in the container
+     */
+    interface ContainerOpenedFunction {
+        (container: UI.Container, window: UI.IWindow): void
+    }
+
+
+    /**
+     * Funciton used in "CustomWindowOpened" callback
+     * @param window window that was opened
+     */
+    interface CustomWindowOpenedFunction {
+        (window: UI.IWindow): void;
+    }
+
+    
+    /**
+     * Funciton used in "CustomWindowClosed" callback
+     * @param window window that was closed
+     */
+    interface CustomWindowClosedFunction {
+        (window: UI.IWindow): void;
+    }
+
+
+    /**
+     * Function used in "CoreConfigured" callback
+     * @param config Inner Core default config instance
+     */
+    interface CoreConfiguredFunction {
+        (config: Config): void;
+    }
+
+
+    /**
+     * Function used in "LevelSelected" callback
+     * @param worldName name of the selected world
+     * @param worldDir name of the directory where the world is stored. Worlds
+     * directories are located at games/horizon/minecraftWorlds/
+     */
+    interface LevelSelectedFunction {
+        (worldName: string, worldDir: string): void
+    }
+
+
+    /**
+     * Function used in "DimensionLoaded" callback
+     * @param dimension vanilla dimension id, one of the [[Native.Dimension]]
+     * values, or custom dimension id
+     */
+    interface DimensionLoadedFunction {
+        (dimension: number): void
+    }
+
+
+    /**
+     * Function used in "DestroyBlock" and "DestroyBlockStart" callbacks
+     * @param coords coordinates where the block is destroyed and side from
+     * where it is destroyed
+     * @param block block that is destroyed
+     * @param player player entity unique numeric id
+     */
+    interface DestroyBlockFunction {
+        (coords: ItemUseCoordinates, block: Tile, player: number): void
+    }
+
+
+    /**
+     * Function used in "DestroyBlockContinue" callback 
+     * @param coords coordinates where the block is destroyed and side from
+     * where it is destroyed
+     * @param block block that is destroyed
+     * @param progress current fraction of breaking progress
+     */
+    interface DestroyBlockContinueFunction {
+        (coords: ItemUseCoordinates, block: Tile, progress: number): void
+    }
+
+
+    /**
+     * Function used in "BuildBlock" callback
+     * @param coords coordinates where the block is placed and side from
+     * where it is placed
+     * @param block block that is placed
+     * @param player player entity unique numeric id
+     */
+    interface BuildBlockFunction {
+        (coords: ItemUseCoordinates, block: Tile, player: number): void
+    }
+
+    /**
+     * Function used in "BlockChanged" callback
+     * @param coords coordinates where block change occured
+     * @param oldBlock the block that is being replaced 
+     * @param newBlock replacement block
+     * @param i1 some integer
+     * @param i2 some integer
+     */
+    interface BlockChangedFunction {
+        (coords: Vector, oldBlock: Tile, newBlock: Tile, i1: number, i2: number): void
+    }
+
+
+    /**
+     * Function used in "ItemUse" and "ItemUseLocalServer" callbacks
+     * @param coords set of all coordinate values that can be useful to write 
+     * custom use logics
+     * @param item item that was in the player's hand when he touched the block
+     * @param block block that was touched
+     * @param isExternal if true, the event was triggerd by the remote player,
+     * else by local player
+     */
+    interface ItemUseFunction {
+        (coords: ItemUseCoordinates, item: ItemInstance, block: Tile, isExternal: boolean|undefined): void
+    }
+
+    /**
+     * Function used in "Explosion" callback
+     * @param coords coordinates of the explosion
+     * @param params additional explosion data
+     * @param params.power explosion power
+     * @param params.entity if explosion is produced by an entity, entity unique
+     * id, -1 otherwise
+     * @param onFire if true, explosion produced the fire
+     * @param someBool some boolean value
+     * @param someFloat some floating point value
+     */
+    interface ExplosionFunction {
+        (coords: Vector, params: {power: number, entity: number, onFire: boolean, someBool: boolean, someFloat: number}): void
+    }
+
+    /**
+     * Function used in the "FoodEaten" callback. You can use 
+     * [[Player.getCarriedItem]] to get info about food item
+     * @param food food amount produced by eaten food
+     * @param ratio saturation ratio produced by food
+     */
+    interface FoodEatenFunction {
+        (food: number, ratio: number): void
+    }
+
+    /**
+     * Function used in "ExpAdd" callback
+     * @param exp amount of experience to be added 
+     */
+    interface ExpAddFunciton {
+        (exp: number): void
+    }
+
+    /**
+     * Function used in "ExpLevelAdd" callback
+     * @param level amount of levels to be added 
+     */
+    interface ExpLevelAddFunciton {
+        (level: number): void
+    }
+
+    /**
+     * Function used in "NativeCommand" callback
+     * @param command command that was entered or null if no command was 
+     * provided
+     */
+    interface NativeCommandFunciton {
+        (command: string|null): void
+    }
+
+    /**
+     * Function used in "PlayerAttack" callback
+     * @param attacker player entity unique id
+     * @param victim attacked entity unique id
+     */
+    interface PlayerAttackFunction {
+        (attacker: number, victim: number): void
+    }
+
+    /**
+     * Function used in "EntityAdded" callback
+     * @param entity entity unique id
+     */
+    interface EntityAddedFunction {
+        (entity: number): void
+    }
+
+
+    /**
+     * Function used in "EntityRemoved" callback
+     * @param entity entity unique id
+     */
+    interface EntityRemovedFunction {
+        (entity: number): void
+    }
+
+    /**
+     * Function used in "EntityDeath" callback
+     * @param entity entity that is dead
+     * @param attacker if the entity was killed by another entity, attacker's 
+     * entity unique id, -1 otherwise
+     * @param damageType damage source id
+     */
+    interface EntityDeathFunction {
+        (entity: number, attacker: number, damageType: number): void
+    }
+
+    
+    /**
+     * Function used in "EntityHurt" callback
+     * @param attacker if an entity was hurt by another entity, attacker's 
+     * unique id, -1 otherwise
+     * @param entity entity that is hurt
+     * @param damageValue amount of damage produced to entity
+     * @param damageType damage source id
+     * @param someBool1 some boolean value
+     * @param someBool2 some boolean value
+     */
+    interface EntityHurtFunction {
+        (attacker: number, entity: number, damageValue: number, damageType: number, someBool1: boolean, someBool2: boolean): void
+    }
+
+
+    /**
+     * Function used in "EntityInteract" callback
+     * @param entity entity unique id
+     * @param player player entity unique id
+     */
+    interface EntityInteractFunction {
+        (entity: number, player: number): void
+    }
 
 
     /**
      * Function used in "ProjectileHit" callback
-     */
-    type ProjectileHitFunction = 
-    /**
      * @param projectile projectile entity unique ID
      * @param item projectile item
      * @param target object containing hit coordinates and information about 
      * hit entity/block
      */
-    (projectile: number, item: ItemInstance, target: ProjectileHitTarget) => void;
+    interface ProjectileHitFunction {
+        (projectile: number, item: ItemInstance, target: ProjectileHitTarget): void
+    }
+
+
+    /**
+     * Function used in "RedstoneSignal" callback
+     * @param coords coordinates where redstone signal changed
+     * @param params information about redstone signal
+     * @param params.power redstone signal power
+     * @param params.signal same as params.power
+     * @param params.onLoad always true
+     * @param block information aboit the block on the specified coordinates
+     */
+    interface RedstoneSignalFunction {
+        (coords: Vector, params: {power: number, signal: number, onLoad: boolean}, block: Tile): void
+    }
+
+    
+    /**
+     * Funciton used in "PopBlockResources" callback
+     * @param coords coordinates of the block that was broken
+     * @param block information about the block that was broken
+     * @param f some floating point value
+     * @param i some integer value
+     */
+    interface PopBlockResourcesFunction {
+        (coords: Vector, block: Tile, f: number, i: number): void
+    }
 
 
     /**
      * Function used in "ItemIconOverride" callback
-     */
-    type ItemIconOverrideFunction = 
-    /**
      * @param item information about item that is used in override function
      * @returns void if used in callback, [[Item.TextureData]] if used in item 
      * override function to return texture that will be used for the item
      */
-    (item: ItemInstance) => void|Item.TextureData;
+    interface ItemIconOverrideFunction {
+        (item: ItemInstance): void|Item.TextureData
+    }
 
 
     /**
      * Function used in "ItemNameOverride" callback
-     */
-    type ItemNameOverrideFunction = 
-    /**
      * @param item information about item that is used in override function
      * @param translation translated item name
      * @param name original item name
      * @returns void if used in callback, string if used in item override 
      * function to return new name that will be displayed
      */
-    (item: ItemInstance, translation: string, name: string) => void|string;
+    interface ItemNameOverrideFunction {
+        (item: ItemInstance, translation: string, name: string): void|string;
+    }    
 
 
     /**
      * Function used in "ItemUseNoTarget" callback
-     */
-    type ItemUseNoTargetFunction = 
-    /**
      * @param item item that was in the player's hand when the event occured
      * @param ticks amount of ticks player kept touching screen
      */
-    (item: ItemInstance, ticks: number) => void;
+    interface ItemUseNoTargetFunction {
+        (item: ItemInstance, ticks: number): void
+    }
 
 
     /**
      * Function used in "ItemUsingReleased" callback
-     */
-    type ItemUsingReleasedFunction = 
-    /**
      * @param item item that was in the player's hand when the event occured
      * @param ticks amount of ticks left to the specified max use duration value
      */
-    (item: ItemInstance, ticks: number) => void;
+    interface ItemUsingReleasedFunction {
+        (item: ItemInstance, ticks: number): void
+    }
 
 
     /**
      * Function used in "ItemUsingComplete" callback
-     */
-    type ItemUsingCompleteFunction = 
-    /**
      * @param item item that was in the player's hand when the event occured
      */
-    (item: ItemInstance) => void;
+    interface ItemUsingCompleteFunction {
+        (item: ItemInstance): void
+    }
 
 
     /**
      * Function used in "ItemDispensed" callback
-     */
-    type ItemDispensedFunction = 
-    /**
      * @param coords coordinates of the spawned drop item entity
      * @param item item that was dispensed
      */
-    (coords: ItemUseCoordinates, item: ItemInstance) => void;
+    interface ItemDispensedFunction {
+        (coords: ItemUseCoordinates, item: ItemInstance): void
+    }
+
+
+    /**
+     * Function used in "NativeGuiChanged" callback
+     * @param name current screen name
+     * @param lastName previous screen name
+     * @param isPushEvent if true, the new screen was pushed on the Minecraft 
+     * screens stack, poped from the stack otherwise
+     */
+    interface NativeGuiChangedFunction {
+        (name: string, lastName: string, isPushEvent: string): void
+    }
+
+
+    /**
+     * Function used in all generation callbacks
+     * @param chunkX chunk X coordinate. Multiply by 16 to receive corner block 
+     * coordinates
+     * @param chunkY chunk Y coordinate. Multiply by 16 to receive corner block 
+     * coordinates
+     * @param random java.util.Random object that should be used for generation
+     * process. Already seeded by appropriate values
+     */
+    interface GenerateChunkFunction {
+        (chunkX: number, chunkZ: number, random: java.util.Random): void
+    }
+
+
+    /**
+     * Function used in "ReadSaves" and "WriteSaves" callbacks
+     * Avoid modifying values directly, consider using [[Saver]] instead
+     */
+    interface SavesFunction {
+        (globalScope: object): void
+    }
 
 
     /**
@@ -198,6 +1218,25 @@ declare namespace Callback {
 }
 
 /**
+ * Namespace used to manipulate minecraft commands
+ */
+declare namespace Commands {
+    /**
+     * Executes specified command
+     * @param command command to be executed
+     * @returns error message or null if the command was run successfully 
+     */
+    function exec(command: string): string|null;
+
+    /**
+     * Executes specified command using specified coordinates as command 
+     * location for all relative calculations
+     * @param command command to be executed
+     * @returns error message or null if the command was run successfully 
+     */
+    function execAt(command: string, x: number, y: number, z: number): string|null;
+}
+/**
  * Json configuration file reading/writing utility
  */
 declare class Config {
@@ -211,7 +1250,7 @@ declare class Config {
      * Creates new Config instance using specified file
      * @param path java.io.File instance of the file to use
      */
-    public constructor(file: jobject);
+    public constructor(file: java.io.File);
 
     /**
      * Writes configuration JSON to the file
@@ -222,7 +1261,7 @@ declare class Config {
      * @returns java.util.ArrayList instance containing all the names in the 
      * current config file 
      */
-    public getNames(): jobject;
+    public getNames(): java.util.ArrayList<string>;
     
     /**
      * Gets property from the config
@@ -237,12 +1276,12 @@ declare class Config {
      * property is object, org.json.JSONArray instance if the property is an 
      * array, raw type if the property is of that raw type, null otherwise
      */
-    public get(name: string): Config|jobject|boolean|number|string|null;
+    public get(name: string): Config|org.json.JSONArray|boolean|number|string|null;
 
     /**
      * Same as [[Config.get]]
      */
-    public access(name: string): Config|jobject|boolean|number|string|null;
+    public access(name: string): Config|org.json.JSONArray|boolean|number|string|null;
 
     /**
      * @param name option name, supports multi-layer calls, separated by '.'
@@ -272,7 +1311,7 @@ declare class Config {
      * @param value value, may be org.json.JSONArray instance, 
      * org.json.JSONObject instance or raw data type
      */
-    public set(name: string, value: jobject|boolean|number|string): boolean;
+    public set(name: string, value: org.json.JSONObject|boolean|number|string): boolean;
 
     /**
      * @param name option name, supports multi-layer calls, separated by '.'
@@ -300,7 +1339,7 @@ declare class Config {
      * not, puts default values to match the pattern
      * @param data org.json.JSONObject instance to be used as data pattern
      */
-    public checkAndRestore(data: jobject): void;
+    public checkAndRestore(data: org.json.JSONObject): void;
 }
 
 
@@ -314,13 +1353,13 @@ declare namespace Config {
          * @param value value, may be org.json.JSONArray instance, 
          * org.json.JSONObject instance or raw data type
          */
-        public set(value: jobject|boolean|number|string): void;
+        public set(value: org.json.JSONObject|boolean|number|string): void;
 
         /**
          * @returns config value, result is the same as the result of 
          * [[Config.get]] call
          */
-        public get(): Config|jobject|boolean|number|string|null;
+        public get(): Config|org.json.JSONObject|boolean|number|string|null;
 
         /**
          * @returns readable config value name representation along with class 
@@ -328,9 +1367,6 @@ declare namespace Config {
          */
         public toString(): string;
     }
-}
-declare namespace UI {
-    class Container {}
 }
 declare namespace TileEntity {
     namespace tileEntityPrototypes {}
@@ -398,7 +1434,6 @@ declare namespace MobSpawnRegistry {
 
     function onChunkGenerated(x: number, z: number): any;
 }
-declare namespace Callback {}
 declare function GameObject(name: any, Prototype: any): any;
 declare namespace GameObjectRegistry {
     namespace gameObjectTypes {}
@@ -443,86 +1478,8 @@ declare namespace IDData {
     namespace item {}
     namespace block {}
 }
-declare namespace Block {
-    namespace idSource {}
-    namespace dropFunctions {}
-
-    function createBlock(id: string, array: any[]):any;
-
-    function getNumericId(id: number): any;
-
-    function createBlock(namedID: any, defineData: any, blockType: any): any;
-
-    function createBlockWithRotation(namedID: any, defineData: any, blockType: any): any;
-
-    function isNativeTile(id: number): any;
-
-    function registerDropFunctionForID(numericID: any, dropFunc: any, level: any): any;
-
-    function registerDropFunction(namedID: any, dropFunc: any, level: any): any;
-
-    function defaultDropFunction(blockCoords: any, blockID: any, blockData: any, diggingLevel: any): any;
-
-    function getDropFunction(id: number): any;
-
-    function setDestroyLevelForID(id: number, level: any, resetData: any): any;
-
-    function setDestroyLevel(namedID: any, level: any): any;
-
-    function setDestroyTime(namedID: any, time: any): any;
-
-    function isSolid(numericID: any): any;
-
-    function getDestroyTime(numericID: any): any;
-
-    function getExplosionResistance(numericID: any): any;
-
-    function getFriction(numericID: any): any;
-
-    function getTranslucency(numericID: any): any;
-
-    function getLightLevel(numericID: any): any;
-
-    function getLightOpacity(numericID: any): any;
-
-    function getRenderLayer(numericID: any): any;
-
-    function getRenderType(numericID: any): any;
-
-    function setTempDestroyTime(numericID: any, time: any): any;
-
-    function setBlockMaterial(namedID: any, material: any, level: any): any;
-
-    function setRedstoneTile(namedID: any, data: number, isRedstone: any): any;
-
-    function onBlockDestroyed(coords: any, fullTile: any): any;
-
-    function getBlockDropViaItem(block: any, item: any, coords: any): any;
-    namespace placeFuncs {}
-
-    function registerPlaceFunctionForID(block: any, func: any): any;
-
-    function registerPlaceFunction(namedID: any, func: any): any;
-
-    function getPlaceFunc(block: any): any;
-
-    function setBlockShape(id: number, pos1: any, pos2: any, data: number): any;
-
-    function setShape(id: number, x1: any, y1: any, z1: any, x2: any, y2: any, z2: any, data: number): any;
-
-    function createSpecialType(description: any, nameKey: number): any;
-    var TYPE_BASE: string;
-    var TYPE_ROTATION: string;
-
-    function setPrototype(namedID: any, Prototype: any): any;
-
-    function setRandomTickCallback(id: number, callback: any): any;
-
-    function setAnimateTickCallback(id: number, callback: any): any;
-}
 declare namespace BlockRenderer {}
 declare namespace ICRender {}
-declare namespace Recipes {}
 declare namespace LiquidRegistry {
     var liquidStorageSaverId: number;
     namespace liquids {
@@ -585,7 +1542,6 @@ declare namespace LiquidRegistry {
 
     function Storage(tileEntity: number): any;
 }
-declare function alert(): any;
 declare function ItemExtraData(): any;
 declare function RenderMesh(): any;
 /**
@@ -667,6 +1623,18 @@ declare function getMCPEVersion():
  * @param main version number, calculated as *array[0] * 17 + array[1]*
  */
 {str: string, array: number[], main: number};
+
+/**
+ * 
+ * @param arg 
+ */
+declare function alert(arg: string): any;
+
+
+declare function LIBRARY(description: object): void;
+
+
+declare function EXPORT(name: string, lib: any): void;
 /**
  * Defines some useful methods for debugging
  */
@@ -717,17 +1685,8 @@ declare namespace Debug {
      * displayed
      * @param title title of the AlertDialog
      */
-    function bitmap(bitmap: jobject, title: string): void;
+    function bitmap(bitmap: android.graphics.Bitmap, title: string): void;
 }
-/**
- * Generic type used to mark Java objects
- */
-type jobject = any;
-
-/**
- * Generic type used to mark Java arrays of type T
- */
-type jarray<T> = Iterable<T>;
 
 /**
  * Type used to mark Java bytes
@@ -774,10 +1733,20 @@ interface LookAngle {
  * Object representing item instance in the inventory
  */
 interface ItemInstance {
-    in: number,
+    id: number,
     count: number, 
+    /**
+     * Item data value. Generally specifies some property of the item, e.g. 
+     * color, material, etc. Defaults to 0, in many cases -1 means "any data 
+     * value"
+     */
     data: number,
-    extra?: number|ItemExtra
+
+    /**
+     * Item extra data. Contains some additional item data such as enchants, 
+     * custom item name or some additional properties
+     */
+    extra?: ItemExtra
 }
 
 /**
@@ -819,9 +1788,7 @@ interface Weather {
  * Class representing TileEntity in the worls
  */
 declare class TileEntity {
-    x: number;
-    y: number;
-    z: number;
+
 }
 
 declare class NativeTileEntity {
@@ -832,6 +1799,293 @@ declare class CustomEntity {
 
 }
 
+/**
+ * Namespace used to create and manipulate custom dimensions
+ */
+declare namespace Dimensions {
+    /**
+     * Class representing custom dimension
+     */
+    class CustomDimension {
+        /**
+         * Constructs a new dimension with specified name and preffered 
+         * @param name dimension name, can be used to get dimension via 
+         * [[CustomDimension.getDimensionByName]] call
+         * @param preferedId prefered dimension id. If id is already occupied 
+         * by some another dimension, constructor will look for the next empty
+         * dimension id and assign it to the current dimension
+         */
+        constructor(name: string, preferedId: number);
+
+        /**
+         * Custom dimension id
+         */
+        id: number;
+
+        /**
+         * Sets custom landscape generator
+         * @param generator custom landscape generator used for current 
+         * dimension
+         * @returns reference to itself to be used in sequential calls
+         */
+        setGenerator(generator: CustomGenerator): CustomDimension;
+
+        /**
+         * Specifies whether the sky produces light (like in overworld) or not 
+         * (like in the End or Nether). By default this value is true
+         * @param hasSkyLight if true, the sky produces light in the dimension
+         * @returns reference to itself to be used in sequential calls
+         */
+        setHasSkyLight(hasSkyLight: boolean): CustomDimension;
+
+        /**
+         * @returns whether the sky produces light in the current dimension
+         */
+        hasSkyLight(): boolean;
+
+        /**
+         * Sets sky color for the dimension in the RGB format. Default 
+         * color is as in the Overworld
+         * @param r red color component, value from 0 to 1
+         * @param g green color component, value from 0 to 1
+         * @param b blue color component, value from 0 to 1
+         * @returns reference to itself to be used in sequential calls
+         */
+        setSkyColor(r: number, g: number, b: number): CustomDimension;
+
+        /**
+         * Resets sky color to the default value
+         * @returns reference to itself to be used in sequential calls
+         */
+        resetSkyColor(): CustomDimension;
+
+        /**
+         * Sets fog color for the dimension in the RGB format. Default 
+         * color is as in the Overworld
+         * @param r red color component, value from 0 to 1
+         * @param g green color component, value from 0 to 1
+         * @param b blue color component, value from 0 to 1
+         * @returns reference to itself to be used in sequential calls
+         */
+        setFogColor(r: number, g: number, b: number): CustomDimension;
+
+        /**
+         * Resets fog color to the default value
+         * @returns reference to itself to be used in sequential calls
+         */
+        resetFogColor(): CustomDimension;
+
+        /**
+         * Sets clouds color for the dimension in the RGB format. Default 
+         * color is as in the Overworld
+         * @param r red color component, value from 0 to 1
+         * @param g green color component, value from 0 to 1
+         * @param b blue color component, value from 0 to 1
+         * @returns reference to itself to be used in sequential calls
+         */
+        setCloudColor(r: number, g: number, b: number): CustomDimension;
+
+        /**
+         * Resets clouds color to the default value
+         * @returns reference to itself to be used in sequential calls
+         */
+        resetCloudColor(): CustomDimension;
+
+        /**
+         * Sets sunset sky color for the dimension in the RGB format. Default 
+         * color is as in the Overworld
+         * @param r red color component, value from 0 to 1
+         * @param g green color component, value from 0 to 1
+         * @param b blue color component, value from 0 to 1
+         * @returns reference to itself to be used in sequential calls
+         */
+        setSunsetColor(r: number, g: number, b: number): CustomDimension;
+
+        /**
+         * Resets sunset sky color to the default value
+         * @returns reference to itself to be used in sequential calls
+         */
+        resetSunsetColor(): CustomDimension;
+    }
+
+    /**
+     * Class representing landscape generator used for the dimension
+     */
+    class CustomGenerator {
+        /**
+         * Creates a new [[CustomGenerator]] instance using specified base type
+         * @param baseType base generator type constant, can be from 0 to 4. 0 
+         * and 1 represent overworld generator, 2 represents flat world 
+         * generator, 3 represents nether generator and 4 represents end 
+         * generator
+         */
+        constructor(baseType: number);
+
+        /**
+         * Specifies whether to use vanilla biome surface cover blocks (grass, 
+         * sand, podzol, etc.)
+         * @param value if true, vanilla surface will be generated, default 
+         * value is false
+         * @returns reference to itself to be used in sequential calls
+         */
+        setBuildVanillaSurfaces(value: boolean): CustomGenerator;
+
+        /**
+         * Specifies whether to generate minecraft vanilla structures
+         * @param value if true, vanilla structures will be generated, default
+         * value is false
+         * @returns reference to itself to be used in sequential calls
+         */
+        setGenerateVanillaStructures(value: boolean): CustomGenerator;
+
+        /**
+         * Specifies whether to use mod's generation callbacks
+         * @param value if true, mod generation will be used, default
+         * value is true
+         * @returns reference to itself to be used in sequential calls
+         */
+        setGenerateModStructures(value: boolean): CustomGenerator;
+
+        /**
+         * Sets terrain generator object used for the landscape generation
+         * @param generator terrain generator to be used with current landscape 
+         * generator or removes terrain generator, if the value is null
+         * @returns reference to itself to be used in sequential calls
+         */
+        setTerrainGenerator(generator: AbstractTerrainGenerator|null): CustomGenerator;
+        
+    }
+
+    interface AbstractTerrainGenerator {
+
+    }
+
+    /**
+     * Class representing terrain that consists of single biome
+     */
+    class MonoBiomeTerrainGenerator implements AbstractTerrainGenerator {
+        /**
+         * Constructs new [[MonoBiomeTerrainGenerator]] instance with no terrain
+         * layers
+         */
+        constructor();
+
+        addTerrainLayer(minY: number, maxY: number): TerrainLayer;
+
+        /**
+         * Sets base biome for the current terrain 
+         * @param id id of the biome to be used as a single biome of the terrain
+         * layer
+         */
+        setBaseBiome(id: number): MonoBiomeTerrainGenerator;
+    }
+
+    /**
+     * Class representing single terrain layer that may consist of several noise 
+     * layers
+     */
+    interface TerrainLayer {
+        addNewMaterial(generator: NoiseGenerator, priority: number): TerrainMaterial;
+
+        setHeightmapNoise(generator: NoiseGenerator): TerrainLayer;
+
+        setMainNoise(generator: NoiseGenerator): TerrainLayer;
+
+        setYConversion(conversion: NoiseConversion): TerrainLayer;
+
+        getMainMaterial(): TerrainMaterial;
+    }
+
+    interface TerrainMaterial {
+
+        setBase(id: number, data: number): TerrainMaterial; 
+
+        setCover(id: number, data: number): TerrainMaterial; 
+
+        setSurface(width: number, id: number, data: number): TerrainMaterial; 
+
+        setFilling(width: number, id: number, data: number): TerrainMaterial; 
+
+        setDiffuse(value: number): TerrainMaterial;
+    }
+
+    class NoiseConversion {
+        constructor();
+
+        addNode(x: number, y: number): NoiseConversion;
+    }
+
+    class NoiseGenerator {
+        constructor();
+
+        addLayer(layer: NoiseLayer): NoiseGenerator;
+
+        setConversion(conversion: NoiseConversion): NoiseGenerator;
+    }
+
+    class NoiseLayer {
+        constructor();
+
+        addOctave(octave: NoiseOctave): NoiseLayer;
+
+        setConversion(conversion: NoiseConversion): NoiseLayer;
+    }
+
+    class NoiseOctave {
+        constructor(type?: number);
+
+        setTranslate(x: number, y: number, z: number): NoiseOctave;
+
+        setScale(x: number, y: number, z: number): NoiseOctave;
+
+        setWeight(weight: number): NoiseOctave;
+
+        setSeed(x: number, y: number, z: number): NoiseOctave;
+
+        setConversion(conversion: NoiseConversion): NoiseOctave;
+    }
+
+    /**
+     * Overrides default generator of vanilla dimension
+     * @param id vanilla dimension id, one of the [[Native.Dimension]] 
+     * values
+     * @param generator custom landscape generator used for vanilla 
+     * dimension
+     */
+    function overrideGeneratorForVanillaDimension(id: number, generator: CustomGenerator): void;
+
+
+    /**
+     * @param name dimension name
+     * @returns dimension by its string name specified in 
+     * [[CustomDimension.constructor]]
+     */
+    function getDimensionByName(name: string): CustomDimension;
+
+
+    /**
+     * @param id dimension id
+     * @returns custom dimension by its numeric id
+     */
+    function getDimensionById(id: number): CustomDimension;
+
+
+    /**
+     * @param id dimension id
+     * @returns true, if dimension is a limbo dimension. Limbo dimension is 
+     * created by Horizon automatically if you try to teleport the player to
+     * non-existing dimension
+     */
+    function isLimboId(id: number): boolean;
+
+    /**
+     * Transferes specified entity to the dimension with specified id
+     * @param entity numeric id of the 
+     * @param dimensionId numeric id of the dimension to transfer the entity to
+     */
+    function transfer(entity: number, dimensionId: number): void;
+
+}
 /**
  * Module used to manipulate entities (mobs, drop, arrows, etc.) in the world.
  * Every entity has its unique numeric id which is often used across this module 
@@ -857,7 +2111,7 @@ declare namespace Entity {
     /** 
      * @deprecated No longer supported
      */
-    function putExtra(ent: number, name: string, extra?: number|ItemExtra): void;
+    function putExtra(ent: number, name: string, extra?: ItemExtra): void;
 
     /**
      * @deprecated No longer supported
@@ -1007,9 +2261,11 @@ declare namespace Entity {
     function setRender(ent: number, render: number): void;
 
     /**
-     * @deprecated No longer supported
+     * Makes rider ride entity
+     * @param entity ridden entity
+     * @param rider rider entity
      */
-    function rideAnimal(ent1: number, ent2: number): void;
+    function rideAnimal(entity: number, rider: number): void;
 
     /**
      * @returns entity custom name tag
@@ -1056,12 +2312,12 @@ declare namespace Entity {
     function setSneaking(ent: number, sneak: any): void;
 
     /**
-     * @deprecated No longer supported
+     * @returns entity that is riding the specified entity
      */
     function getRider(ent: number): number;
 
     /**
-     * @deprecated No longer supported
+     * @returns entity that is ridden by specified entity
      */
     function getRiding(ent: number): void;
 
@@ -1273,7 +2529,7 @@ declare namespace Entity {
      * @param data item data
      * @param extra item extra
      */
-    function setArmorSlot(ent: number, slot: number, id: number, count: number, data: number, extra?: number|ItemExtra): void;
+    function setArmorSlot(ent: number, slot: number, id: number, count: number, data: number, extra?: ItemExtra): void;
 
     /**
      * @param bool1 parameter is no longer supported and should not be used
@@ -1289,7 +2545,7 @@ declare namespace Entity {
      * @param data item data
      * @param extra item extra
      */
-    function setCarriedItem(ent: number, id: number, count: number, data: number, extra?: number|ItemExtra): void;
+    function setCarriedItem(ent: number, id: number, count: number, data: number, extra?: ItemExtra): void;
 
     /**
      * Gets item from specified drop entity
@@ -1304,7 +2560,7 @@ declare namespace Entity {
      * @param data item data
      * @param extra item extra
      */
-    function setDroppedItem(ent: number, id: number, count: number, data: number, extra?: number|ItemExtra): void;
+    function setDroppedItem(ent: number, id: number, count: number, data: number, extra?: ItemExtra): void;
 
     /**
      * @deprecated No longer supported
@@ -1734,7 +2990,7 @@ declare namespace FileTools {
      * @param bitmap android.graphics.Bitmap object of the bitmup to be wriiten
      * to the file
      */
-    function WriteImage(file: string, bitmap: jobject): void;
+    function WriteImage(file: string, bitmap: android.graphics.Bitmap): void;
 
     /**
      * Reads bitmap from file
@@ -1742,7 +2998,7 @@ declare namespace FileTools {
      * @returns android.graphics.Bitmap object of the bitmup that was read from
      * file or null if file does not exist or is not accessible
      */
-    function ReadImage(file: string): jobject|null;
+    function ReadImage(file: string): android.graphics.Bitmap|null;
 
     /**
      * Reads string from asset by its full name
@@ -1757,7 +3013,7 @@ declare namespace FileTools {
      * @returns android.graphics.Bitmap object of the bitmup that was read from
      * asset or null, if asset doesn't exist
      */
-    function ReadImageAsset(name: string): jobject|null;
+    function ReadImageAsset(name: string): android.graphics.Bitmap|null;
 
     /**
      * Reads bytes array from assets
@@ -1765,14 +3021,14 @@ declare namespace FileTools {
      * @returns java array of bytes read from assets or null if asset doesn't 
      * exist
      */
-    function ReadBytesAsset(name: string): jarray<jbyte>;
+    function ReadBytesAsset(name: string): native.Array<jbyte>;
 
     /**
      * Lists children directories for the specified path
      * @param path home-relative or absolute path to the file
      * @returns array of java.io.File instances of listed directories
      */
-    function GetListOfDirs(path: string): jobject[];
+    function GetListOfDirs(path: string): java.io.File[];
 
     /**
      * Lists files in the specified directory
@@ -1781,7 +3037,7 @@ declare namespace FileTools {
      * string to include all files
      * @returns array of java.io.File instances that match specified extension
      */
-    function GetListOfFiles(path: string, ext: string): jobject[];
+    function GetListOfFiles(path: string, ext: string): java.io.File[];
 
     /**
      * Reads file as key:value pairs
@@ -2326,7 +3582,7 @@ declare namespace Logger {
      * Logs java Throwable with full stack trace to 
      * @param error java Throwable to be logged
      */
-    function LogError(error: jobject): void;
+    function LogError(error: java.lang.Throwable): void;
 
     /**
      * Writes logger content to file and clears all buffers
@@ -2969,7 +4225,7 @@ declare namespace Player {
      * @param boolean if set to false, function drops items that could not be 
      * added to player's inventory, destroys them otherwise
      */
-    function addItemToInventory(id: number, count: number, data: number, extra?: number|ItemExtra, preventDrop?: boolean): void;
+    function addItemToInventory(id: number, count: number, data: number, extra?: ItemExtra, preventDrop?: boolean): void;
 
     /**
      * @param handleEnchant No longer supported and should not be passed
@@ -2985,7 +4241,7 @@ declare namespace Player {
      * @param data item data
      * @param extra item extra
      */
-    function setCarriedItem(id: number, count: number, data: number, extra?: number|ItemExtra): void;
+    function setCarriedItem(id: number, count: number, data: number, extra?: ItemExtra): void;
 
     /**
      * Decreases carried item count by specified number
@@ -3008,7 +4264,7 @@ declare namespace Player {
      * @param data item data
      * @param extra item extra
      */
-    function setInventorySlot(slot: number, id: number, count: number, data: number, extra?: number|ItemExtra): void;
+    function setInventorySlot(slot: number, id: number, count: number, data: number, extra?: ItemExtra): void;
 
     /**
      * @param slot armor slot id, should be one of the [[Native.ArmorType]] 
@@ -3026,7 +4282,7 @@ declare namespace Player {
      * @param data item data
      * @param extra item extra
      */
-    function setArmorSlot(slot: number, id: number, count: number, data: number, extra?: number|ItemExtra): void;
+    function setArmorSlot(slot: number, id: number, count: number, data: number, extra?: ItemExtra): void;
 
     /**
      * @returns currently selected inventory slot, from 0 to 8
@@ -3419,6 +4675,436 @@ declare namespace Player {
         public get(): number;
     }
 }
+/**
+ * Module used to manipulate crafring recipes for vanilla and custom workbenches
+ */
+declare namespace Recipes {
+    /**
+     * Adds new shaped crafting recipe. For example:
+     * 
+     * Simple example:
+     * 
+     * ```ts
+     * Recipes.addShaped({id: 264, count: 1, data: 0}, [
+     *     "ax", 
+     *     "xa", 
+     *     "ax"
+     * ], ['x', 265, 0, 'a', 266, 0]); 
+     * ```
+     * 
+     * @param result recipe result item
+     * @param mask recipe shape, up to three string corresponding to the three 
+     * crafting field rows. Each character means one item in the field. 
+     * E.g. the pickaxe recipe should look like this:
+     * 
+     * ```
+     * "+++"
+     * " | "
+     * " | "
+     * ```
+     * 
+     * Do not use empty lines or line endings, if the recipe can be placed 
+     * within less then three rows or cols. E.g. to craft plates, you can use 
+     * a shape like this: 
+     * 
+     * ```
+     * "--"
+     * ```
+     * 
+     * @param data an array explaining the meaning of each character within 
+     * mask. The array should contain three values for each symbol: the symbol
+     * itself, item id and item data. 
+     * @param func function to be called when the craft is processed
+     * @param prefix recipe prefix. Use a non-empty values to register recipes
+     * for custom workbenches
+     */
+    function addShaped(result: ItemInstance, mask: string[], data: (string|number)[], func?: CraftingFunction, prefix?: string): void;
+
+    /**
+     * Same as [[Recipes.addShaped]], but you can specifiy result as three 
+     * separate values corresponding to id, count and data
+     */
+    function addShaped2(id: number, count: number, aux: number, mask: string[], data: (string|number)[], func?: CraftingFunction, prefix?: string): void;
+
+    /**
+     * Adds new shapeless crafting recipe. For example: 
+     * 
+     * ```ts
+     * Recipes.addShapeless({id: 264, count: 1, data: 0}, 
+     *     [{id: 265, data: 0}, {id: 265, data: 0}, {id: 265, data: 0}, 
+     *     {id: 266, data: 0}, {id: 266, data: 0}, {id: 266, data: 0}]);
+     * ```
+     * 
+     * @param result recipe result item
+     * @param data crafting ingregients, an array of objects representing item 
+     * id and data
+     * @param func function to be called when the craft is processed
+     * @param prefix recipe prefix. Use a non-empty values to register recipes
+     * for custom workbenches
+     */
+    function addShapeless(result: ItemInstance, data: {id: number, data: number}[], func?: CraftingFunction, prefix?: string): void;
+
+    /**
+     * Deletes recipe by its result 
+     * @param result recipe result
+     */
+    function deleteRecipe(result: ItemInstance): void;
+    
+    /**
+     * Removes recipe by result id, count and data
+     */
+    function removeWorkbenchRecipe(id: number, count: number, data: number): void;
+    
+    /**
+     * Gets all available recipes for the recipe result
+     * @returns java.util.Collection object containing [[WorkbenchRecipe]]s
+     */
+    function getWorkbenchRecipesByResult(id: number, count: number, data: number): java.util.Collection<WorkbenchRecipe>;
+
+    /**
+     * Gets all avaliable recipes containing an ingredient
+     * @returns java.util.Collection object containing [[WorkbenchRecipe]]s
+     */
+    function getWorkbenchRecipesByIngredient(id: number, data: number): java.util.Collection<WorkbenchRecipe>;
+
+    /**
+     * Gets recipe by the field and prefix
+     * @param field [[WorkbenchField]] object containing crafting field 
+     * information
+     * @param prefix recipe prefix, defaults to empty string (vanilla workbench)
+     * @returns [[WorkbenchRecipe]] instance, containing useful methods and 
+     * recipe information
+     */
+    function getRecipeByField(field: WorkbenchField, prefix?: string): WorkbenchRecipe|null;
+
+    /**
+     * Gets recipe result item by the field and recipe prefix
+     * @param field [[WorkbenchField]] object containing crafting field 
+     * information
+     * @param prefix recipe prefix, defaults to empty string (vanilla workbench)
+     */
+    function getRecipeResult(field: WorkbenchField, prefix?: string): ItemInstance|null;
+
+    /**
+     * Performs crafting by the field contents and recipe prefix
+     * @param field [[WorkbenchField]] object containing crafting field 
+     * information
+     * @param prefix recipe prefix, defaults to empty string (vanilla workbench)
+     */
+    function provideRecipe(field: WorkbenchField, prefix?: string): ItemInstance|null;
+
+    /**
+     * Adds new furnace recipe
+     * @param sourceId source item id
+     * @param sourceData source item data
+     * @param resultId resulting item id
+     * @param resultData resulting item data
+     * @param prefix prefix, used to create recipes for non-vanilla furnaces
+     */
+    function addFurnace(sourceId: number, sourceData: number, resultId: number, resultData: number, prefix?: string): void;
+
+    /**
+     * Adds new furnace recipe with no need to manually specify input item data
+     * (it defaults to -1)
+     * @param sourceId source item id
+     * @param resultId result item id
+     * @param resultData resulting item data
+     * @param prefix prefix, used to create recipes for non-vanilla furnaces. If
+     * the prefix is not empty and some recipes for this source exist for 
+     * vanilla furnace, they are removed
+     */
+    function addFurnace(sourceId: number, resultId: number, resultData: number, prefix?: string): void
+    
+    /**
+     * Removes furnace recipes by source item
+     * @param sourceId source item id
+     * @param sourceData source item data
+     */
+    function removeFurnaceRecipe(sourceId: number, sourceData: number): void;
+
+    /**
+     * Adds fuel that can be used in the furnace
+     * @param id fuel item id
+     * @param data fuel item data
+     * @param time burning time in ticks
+     */
+    function addFurnaceFuel(id: number, data: number, time: number): void;
+
+    /**
+     * Removes furnace fuel by fuel item id and data
+     */
+    function removeFurnaceFuel(id: number, data: number): void;
+
+    /**
+     * @param prefix recipe prefix used for non-vanilla furnaces
+     * @returns furnace recipe resulting item
+     */
+    function getFurnaceRecipeResult(id: number, data: number, prefix?: string): ItemInstance;
+
+    /**
+     * @returns fuel burn duration by fuel item id and data
+     */
+    function getFuelBurnDuration(id: number, data: number): number;
+
+    /**
+     * Gets furnace recipes by result and custom prefix
+     * @param resultId result item id
+     * @param resultData result item data
+     * @param prefix recipe prefix used for non-vanilla furnaces
+     * @returns java.util.Collection of 
+     */
+    function getFurnaceRecipesByResult(resultId: number, resultData: number, prefix: string): java.util.Collection<FurnaceRecipe>;
+
+    /**
+     * Class used to simplify creation of custom workbenches
+     */
+    class WorkbenchUIHandler {
+
+        /**
+         * Constructs a new Workbench UI handler
+         * @param target target [[WindowContent.elements]] section
+         * @param targetCon target container
+         * @param field workbench field
+         */
+        constructor(target: UI.UIElementSet, targetCon: UI.Container, field: WorkbenchField);
+
+        /**
+         * Sets custom workbench prefix
+         * @param prefix custom workbench prefix
+         */
+        setPrefix(prefix: string): void;
+
+        /**
+         * Refreshes all the recipes in the workbench
+         * @returns amount of recipes displayed
+         */
+        refresh(): number;
+
+        /**
+         * Runs recipes refresh in the ticking thread delaying refresh process 
+         * for a tick. To get recipes count use 
+         * [[WorkbenchUIHandler.setOnRefreshListener]]
+         */
+        refreshAsync(): void;
+
+        /**
+         * Registers listener to be notified when some recipe is selected
+         * @param listener recipe selection listener
+         */
+        setOnSelectionListener(listener: {onRecipeSelected: (recipe: WorkbenchRecipe) => void}): void;
+
+        /**
+         * Registers listener to be notified when the workbench starts and 
+         * completes refreshing
+         * @param listener workbench refresh listener
+         */
+        setOnRefreshListener(listener: {onRefreshCompleted: (count: number) => void, onRefreshStarted: () => void}): void;
+
+        /**
+         * Deselects current recipe (asynchronuously)
+         */
+        deselectCurrentRecipe(): void;
+
+        /**
+         * Sets workbench recipes displaying limit. By default it is 250
+         * @param count count of the recipes to show
+         */
+        setMaximumRecipesToShow(count: number): void;
+    }
+
+
+    /**
+     * Object representing workbench recipe
+     */
+    interface WorkbenchRecipe extends java.lang.Object {
+        /**
+         * @returns true, if the recipe is valid, false otherwise
+         */
+        isValid(): boolean;
+
+        /**
+         * @param c recipe entry character
+         * @returns recipe entry by entry character
+         */
+        getEntry(c: string): RecipeEntry;
+        
+        /**
+         * @returns resulting item instance
+         */
+        getResult(): ItemInstance;
+
+        /**
+         * @returns true if specified item is recipe's result, false otherwise
+         */
+        isMatchingResult(id: number, count: number, data: number): boolean;
+
+        /**
+         * @returns recipe unique mask identifier
+         */
+        getRecipeMask(): string;
+        
+        /**
+         * @param field workbench field to compare with
+         * @returns true if the field contains this recipe, false otherwise
+         */
+        isMatchingField(field: WorkbenchField): boolean;
+
+        /**
+         * @returns all recipe's entries in a java array
+         */
+        getSortedEntries(): native.Array<RecipeEntry>;
+        
+        /**
+         * Tries to fill workbench field with current recipe
+         * @param field workbench field to fill
+         */
+        putIntoTheField(field: WorkbenchField): void;
+
+        /**
+         * @returns recipe prefix. Defaults to empty string
+         */
+        getPrefix(): string;
+
+        /**
+         * Sets prefix value for the recipe
+         * @param prefix new prefix value
+         */
+        setPrefix(prefix: string): void;
+
+        /**
+         * Compares current recipe's prefix with given one
+         * @param prefix prefix value to compare with
+         * @returns true, if current recipe's prefix is the same as given one,
+         * false otherwise
+         */
+        isMatchingPrefix(prefix: string): boolean;
+
+        /**
+         * Sets craft function for the recipe
+         * @param callback function to be called on item craft
+         */
+        setCallback(callback: CraftingFunction): void;
+
+        /**
+         * @returns current crafting function or null if no one was specified
+         */
+        getCallback(): CraftingFunction|null;
+
+    }
+
+
+    /**
+     * Object representing furnace recipe
+     */
+    interface FurnaceRecipe extends java.lang.Object {
+        /**
+         * @returns true, if the recipe is valid, false otherwise
+         */
+        isValid(): boolean;
+        
+        /**
+         * @returns resulting item instance
+         */
+        getResult(): ItemInstance;
+
+        /**
+         * @returns recipe prefix. Defaults to empty string
+         */
+        getPrefix(): string;
+
+        /**
+         * Sets prefix value for the recipe
+         * @param prefix new prefix value
+         */
+        setPrefix(prefix: string): void;
+
+        /**
+         * Compares current recipe's prefix with given one
+         * @param prefix prefix value to compare with
+         * @returns true, if current recipe's prefix is the same as given one,
+         * false otherwise
+         */
+        isMatchingPrefix(prefix: string): boolean;
+    }
+
+
+    /**
+     * Function called when the craft is in progress
+     * @param api object used to perform simple recipe manipulations and to prevent 
+     * crafting
+     * @param field array containing all slots of the crafting field
+     * @param result recipe result item instance
+     */
+    interface CraftingFunction{
+        (api: WorkbenchFieldAPI, field: UI.Slot[], result: ItemInstance): void
+    }
+
+    /**
+     * Object representing workbench field
+     */
+    interface WorkbenchField {
+        /**
+         * @param slot slot index
+         * @returns workbench slot instance by slot index
+         */
+        getFieldSlot(slot: number): UI.Slot,
+
+        /**
+         * @returns js array of all slots
+         */
+        asScriptableField(): UI.Slot[]
+    }
+
+
+    /**
+     * Object used to work with workbench field in the craft function
+     */
+    interface WorkbenchFieldAPI {
+
+        /**
+         * @param slot slot index
+         * @returns workbench slot instance by slot index
+         */
+        getFieldSlot(slot: number): UI.Slot;
+
+        /**
+         * Decreases item count in the specified slot, if possible
+         * @param slot slot index
+         */
+        decreaseFieldSlot(slot: number): void;
+
+        /**
+         * Prevents crafting event
+         */
+        prevent(): void;
+        
+        /**
+         * @returns true, if crafting event was prevented, false otherwise
+         */
+        isPrevented(): boolean;
+    }
+
+    
+    /**
+     * Crafting recipe entry
+     */
+    interface RecipeEntry extends java.lang.Object {
+
+        /**
+         * @param slot slot to compare with
+         * @returns true if recipe entry matches the slot
+         */
+        isMatching(slot: UI.Slot): boolean;
+
+        /**
+         * @param entry entry to compare with
+         * @returns true if recipe entry matches another entry
+         */
+        isMatching(entry: RecipeEntry): boolean;
+    }
+}
+
+
 /** 
  * An interface of the object that is used as [[Render.constructor]] parameter 
  * */
@@ -3634,14 +5320,14 @@ declare namespace Threading {
      * display in fatal error AlertDialog
      * @return java.lang.Thread instance representing created thread
      */
-    function initThread(name: string, func: () => void, priority?: number, isErrorFatal?: boolean, formatFunc?: ErrorMessageFormatFunction): jobject;
+    function initThread(name: string, func: () => void, priority?: number, isErrorFatal?: boolean, formatFunc?: ErrorMessageFormatFunction): java.lang.Thread;
 
     /**
      * Gets thread by its name
      * @param name name of the thread
      * @return java.lang.Thread instance representing the thread
      */
-    function getThread(name: string): jobject;
+    function getThread(name: string): java.lang.Thread;
 }
 /**
  * Module used to manage block and tools material and create tools with all
@@ -4087,6 +5773,1988 @@ declare namespace Translation {
      */
     function getLanguage(): string;
 }
+declare namespace UI {
+    /**
+     * Containers are used to properly manipulate windows and save slots 
+     * contents and windows state between window opens. Every [[TileEntity]] has 
+     * a built-in container that can be accessed as [[TileEntity.container]]
+     */
+    class Container implements Recipes.WorkbenchField{
+        /**
+         * Creates a new instance of [[Container]]
+         */
+        constructor();
+
+        /**
+         * Creates a new instance of [[Container]] and initializes its parent. 
+         * See [[Container.setParent]] for details
+         */
+        constructor(parent: TileEntity|null|any);
+
+
+        /**
+         * If container is a part of [[TileEntity]], this field stores reference 
+         * to it, otherwise null. You can also assign any value of any type to
+         * it using [[Container.setParent]] method or using constructor 
+         * parameter. Consider using [[TileEntity.getParent]] instead of direct 
+         * field access
+         */
+        parent: TileEntity|null|any;
+
+        /**
+         * Same as [[Container.parent]]
+         */
+        tileEntity: TileEntity|null|any;
+
+        /**
+         * Sets container's parent object, for [[TileEntity]]'s container it 
+         * should be a [[TileEntity]] reference, otherwise you can pass any 
+         * value to be used in your code later
+         * @param parent an object to be set as container's parent
+         */
+        setParent(parent: TileEntity|null|any): void;
+
+        /**
+         * Getter for [[Container.parent]] field
+         */
+        getParent(): TileEntity|null|any;
+
+        /**
+         * Gets the slot by its name. If a slot with specified name doesn't 
+         * exists, creates an empty one with specified name
+         * @param name slot name
+         * @returns contents of the slot in a [[Slot]] object. You can modify it
+         * to change the contents of the slot
+         */
+        getSlot(name: string): Slot;
+
+        /**
+         * Gets the slot by its name. If a slot with specified name doesn't 
+         * exists, creates an empty one with specified name
+         * @param name slot name
+         * @returns contents of the slot in a [[FullSlot]] object containing 
+         * more useful methods for slot manipulation
+         */
+        getFullSlot(name: string): FullSlot;
+
+        /**
+         * Set slot's content by its name. If a slot with specified name doesn't 
+         * exists, creates an empty one with specified name and item
+         * @param name slot name
+         */
+        setSlot(name: string, id: number, count: number, data: number): void;
+
+        /**
+         * Set slot's content by its name. If a slot with specified name doesn't 
+         * exists, creates an empty one with specified name and item
+         * @param name slot name
+         * @param extra item extra value. Note that it should be an instance of
+         * ItemExtra and not its numeric id
+         */
+        setSlot(name: string, id: number, count: number, data: number, extra: ItemExtra): void;
+
+        /**
+         * Validates slot contents. If the data value is less then 0, it becomes
+         * 0, if id is 0 or count is less then or equals to zero, slot is reset 
+         * to an empty one
+         * @param name slot name
+         */
+        validateSlot(name: string): void;
+
+        /**
+         * Clears slot's contents
+         * @param name slot name
+         */
+        clearSlot(name: string): void;
+
+        /**
+         * Drops slot's contents on the specified coordinates and clears the 
+         * slot
+         * @param name slot name
+         */
+        dropSlot(name: string, x: number, y: number, z: number): void;
+
+        /**
+         * Drops the contents of all the slots in the container on the specified
+         * coordinates and clears them
+         */
+        dropAt(x: number, y: number, z: number): void;
+
+        /**
+         * Validates all the slots in the container
+         */
+        validateAll(): void;
+
+        /**
+         * @returns currently opened [[IWindow]] or null if no window is currently 
+         * opened in the container
+         */
+        getWindow(): IWindow|null;
+
+        /**
+         * Opens [[IWindow]] object in the container
+         * @param window [[IWindow]] object to be opened
+         */
+        openAs(window: IWindow): void;
+
+        /**
+         * Closes currently opened window 
+         */
+        close(): void;
+
+        /**
+         * Sets an object to be notified when the window is closed
+         * @param listener object to be notified when the window is closed
+         */
+        setOnCloseListener(listener: {
+            /**
+             * @param container [[Container]] the window was opened in
+             * @param window an instance of [[IWindow]] that was opened
+             */
+            onClose: (container: Container, window: IWindow) => void
+        }): void;
+    
+        /**
+         * @returns true, if some window is opened in the container
+         */
+        isOpened(): boolean;
+
+        /**
+         * Same as [[Container.getWindow]]
+         */
+        getGuiScreen(): IWindow|null;
+
+        /**
+         * @returns window's content object (usually specified in the window's 
+         * constructor) if a window was opened in the container, null otherwise
+         */
+        getGuiContent(): WindowContent|null;
+
+        /**
+         * Returns window's element by its name
+         * @param name element name
+         */
+        getElement(name: string): Element;
+
+        /**
+         * Passes any value to the element
+         * @param elementName element name
+         * @param bindingName binding name, you can access the value from the 
+         * element by this name
+         * @param value value to be passed to the element
+         */
+        setBinding(elementName: string, bindingName: string, value: any): void;
+        
+        /**
+         * Gets any value from the element
+         * @param elementName element name
+         * @param bindingName binding name, you can access the value from the 
+         * element by this name. Some binding names are reserved for additional
+         * element information, e.g. "element_obj" contains pointer to the
+         * current object and "element_rect" contains android.graphics.Rect 
+         * object containing drawing rectangle 
+         * @returns value that was get from the element or null if the element 
+         * doesn't exist
+         */
+        getBinding(elementName: string, bindingName: string): any;
+        
+        /**
+         * Sets "value" binding value for the element. Used to set scales values
+         * @param name element name
+         * @param value value to be set for the element
+         */
+        setScale(name: string, value: number): void;
+
+        /**
+         * @param name element name
+         * @returns "value" binding value, e.g. scale value, or null if no 
+         * element with specified name exist
+         */
+        getValue(name: string): number|null;
+
+        /**
+         * Sets "text" binding value for the element. Used to set element's text
+         * @param name element name
+         * @param value value to be set for the element
+         */
+        setText(name: string, value: string): void;
+
+        /**
+         * 
+         * @param name element name
+         * @returns "text" binding value, usually the text displayed on the 
+         * element, or null if no element with specified name exist
+         */
+        getText(name: string): string|null;
+
+        /**
+         * @param name element name
+         * @returns true if the element is currently touched
+         */
+        isElementTouched(name: string): boolean;
+
+        /**
+         * Forces ui elements of the window to refresh
+         * @param onCurrentThread if true, the elements will be refreshed 
+         * immediately, otherwise refresh event will be posted. Default value 
+         * if false. Ensure you are in the UI thread if you pass true as the 
+         * parameter
+         */
+        invalidateUIElements(onCurrentThread?: boolean): void;
+
+        /**
+         * Forces ui drawables of the window to refresh
+         * @param onCurrentThread if true, the drawables will be refreshed 
+         * immediately, otherwise refresh event will be posted. Default value 
+         * if false. Ensure you are in the UI thread if you pass true as the 
+         * parameter
+         */
+        invalidateUIDrawing(onCurrentThread?: boolean): void;
+
+        /**
+         * Forces ui elements and drawables of the window to refresh
+         * @param onCurrentThread if true, the elements drawables will be refreshed 
+         * immediately, otherwise refresh event will be posted. Default value 
+         * if false. Ensure you are in the UI thread if you pass true as the 
+         * parameter
+         */
+        invalidateUI(onCurrentThread?: boolean): void;
+        
+        /**
+         * @deprecated No longer supported
+         */
+        refreshSlots(): void;
+
+        /**
+         * @deprecated No longer supported
+         */
+        applyChanges(): void;
+
+        /**
+         * If the container is a custom workbench, you can set the slot prefix
+         * via this method call. [[Container.getFieldSlot]] will get field slot
+         * by *prefix + slot* name
+         * @param prefix custom workbench slot prefix
+         */
+        setWbSlotNamePrefix(prefix: string): void;
+
+        /**
+         * @param slot slot index
+         * @returns workbench slot instance by slot index
+         */
+        getFieldSlot(slot: number): UI.Slot;
+
+        /**
+         * @returns js array of all slots
+         */
+        asScriptableField(): UI.Slot[];
+
+    }
+
+
+    interface IWindow {
+        /**
+         * Opens window wihout container. It is usually mor
+         */
+        open(): void;
+
+        /**
+         * Closes window without container. Use only if the window was opened 
+         * without container
+         */
+        close(): void;
+
+        /**
+         * Called up to 66 times a second to update window's content
+         * @param time current time in milliseconds
+         */
+        frame(time: number): void;
+
+        /**
+         * Forces ui elements of the window to refresh
+         * @param onCurrentThread if true, the elements will be refreshed 
+         * immediately, otherwise refresh event will be posted. Default value 
+         * if false. Ensure you are in the UI thread if you pass true as the 
+         * parameter
+         */
+        invalidateElements(onCurrentThread: boolean): void;
+
+        /**
+         * Forces ui drawables of the window to refresh
+         * @param onCurrentThread if true, the drawables will be refreshed 
+         * immediately, otherwise refresh event will be posted. Default value 
+         * if false. Ensure you are in the UI thread if you pass true as the 
+         * parameter
+         */
+        invalidateDrawing(onCurrentThread: boolean): void;
+
+        /**
+         * @returns true if the window is opened, false otherwise
+         */
+        isOpened(): boolean;
+
+        /**
+         * @returns true if the window has an inventory that should be updated
+         */
+        isInventoryNeeded(): boolean;
+
+        /**
+         * @returns true if the window can change its contents position
+         */
+        isDynamic(): boolean;
+
+        /**
+         * Gets all the elements in the window
+         * @returns java.util.HashMap containing string element name as keys and
+         * [[Element]] instances as values
+         */
+        getElements(): java.util.HashMap<string, Element>;
+
+        /**
+         * @returns window's content object (usually specified in the window's 
+         * constructor)
+         */
+        getContent(): WindowContent;
+
+        /**
+         * @returns object containing current style of the window
+         */
+        getStyle(): Style;
+
+        /**
+         * @returns [[Container]] that was used to open this window or null, if
+         * the window wasn't opened in container
+         */
+        getContainer(): Container|null;
+
+        /**
+         * Sets container for the current window. Be careful when calling it 
+         * manually. You should prefer opening the window via 
+         * [[Container.openAs]] call
+         * @param container [[Container]] to be associated with current window
+         * or null to associate no container with current window
+         */
+        setContainer(container: Container|null): void;
+
+        /**
+         * Turns debug mode for the window on and off
+         * @param enabled if true, additional debug information will be drawn on
+         * the window canvas
+         */
+        setDebugEnabled(enabled: boolean): void;
+    }
+
+
+    /**
+     * Represents window of required size that can be opened in container to 
+     * provide any required UI facilities
+     */
+    class Window implements IWindow {
+
+        /**
+         * Constructs new [[Window]] object with specified bounds
+         * @param location object containing window's bounds. Note that the 
+         * bounds change the width of the window, but the full width of the 
+         * window becomes 1000 units.
+         */
+        constructor(location: UI.WindowLocation);
+
+        /**
+         * Constructs new [[Window]] object with specified content
+         * @param content window's content
+         */
+        constructor(content: WindowContent);
+
+        /**
+         * Constructs new empty [[Window]] object
+         */
+        constructor();
+
+        /**
+         * Opens window wihout container. It is usually mor
+         */
+        open(): void;
+
+        /**
+         * Adds another window as adjacent window, so that several windows open
+         * at the same time. This allows to devide window into separate parts 
+         * and treat them separately. 
+         * @param window another window to be added as adjacent
+         */
+        addAdjacentWindow(window: UI.Window): void;
+
+        /**
+         * Removes adjacent window from the adjacent windows list
+         * @param window another window that was added as adjacent
+         */
+        removeAdjacentWindow(window: UI.Window): void;
+
+        /**
+         * Closes window without container. Use only if the window was opened 
+         * without container
+         */
+        close(): void;
+
+        /**
+         * Called up to 66 times a second to update window's content
+         * @param time current time in milliseconds
+         */
+        frame(time: number): void;
+
+        /**
+         * Forces ui elements of the window to refresh
+         * @param onCurrentThread if true, the elements will be refreshed 
+         * immediately, otherwise refresh event will be posted. Default value 
+         * if false. Ensure you are in the UI thread if you pass true as the 
+         * parameter
+         */
+        invalidateElements(onCurrentThread: boolean): void;
+
+        /**
+         * Forces ui drawables of the window to refresh
+         * @param onCurrentThread if true, the drawables will be refreshed 
+         * immediately, otherwise refresh event will be posted. Default value 
+         * if false. Ensure you are in the UI thread if you pass true as the 
+         * parameter
+         */
+        invalidateDrawing(onCurrentThread: boolean): void;
+
+        /**
+         * @returns true if the window is opened, false otherwise
+         */
+        isOpened(): boolean;
+
+        /**
+         * @returns true if the window has an inventory that should be updated
+         */
+        isInventoryNeeded(): boolean;
+
+        /**
+         * @returns true if the window can change its contents position
+         */
+        isDynamic(): boolean;
+
+        /**
+         * Gets all the elements in the window
+         * @returns java.util.HashMap containing string element name as keys and
+         * [[Element]] instances as values
+         */
+        getElements(): java.util.HashMap<string, Element>;
+
+        /**
+         * @returns window's content object (usually specified in the window's 
+         * constructor)
+         */
+        getContent(): WindowContent;
+
+        /**
+         * @returns object containing current style of the window
+         */
+        getStyle(): Style;
+
+        /**
+         * @returns [[Container]] that was used to open this window or null, if
+         * the window wasn't opened in container
+         */
+        getContainer(): Container|null;
+
+        /**
+         * Sets container for the current window. Be careful when calling it 
+         * manually. You should prefer opening the window via 
+         * [[Container.openAs]] call
+         * @param container [[Container]] to be associated with current window
+         * or null to associate no container with current window
+         */
+        setContainer(container: Container|null): void;
+
+        /**
+         * Turns debug mode for the window on and off
+         * @param enabled if true, additional debug information will be drawn on
+         * the window canvas
+         */
+        setDebugEnabled(enabled: boolean): void;
+
+        /**
+         * Specifies whether touch events should be handled by this window or 
+         * passed to underlying windows (to the game). By default all windows 
+         * are touchable
+         * @param touchable pass true if the window should handle touch events, 
+         * false otherwise
+         */
+        setTouchable(touchable: boolean): void;
+
+        /**
+         * @returns true if the window is touchable, false otherwise
+         */
+        isTouchable(): boolean;
+
+        /**
+         * Specifies whether the window should darken and block background. 
+         * Default value is false
+         * @param blockingBackground pass true if you want the window to block 
+         * background
+         */
+        setBlockingBackground(blockingBackground: boolean): void;
+
+        /**
+         * @returns true if window blocks background
+         */
+        isBlockingBackground(): boolean;
+
+        /**
+         * Allows window to be displayed as game overlay without blocking 
+         * Minecraft sounds. Note that this drops window's FPS. Default value is
+         * false
+         * @param inGameOverlay if true, the window is opened in PopupWindow 
+         * to avoid blocking Minecraft sounds
+         */
+        setAsGameOverlay(inGameOverlay: boolean): void;
+
+        /**
+         * @returns true if the window is game overlay, false otherwise
+         */
+        isNotFocusable(): void;
+
+        /**
+         * Specifies the content of the window
+         * @param content content object to be applied to the window
+         */
+        setContent(content: WindowContent): void;
+    
+        /**
+         * @param dynamic specify true, if the window contains dynamic 
+         * (animated) elements, false otherwise. By default all windows are 
+         * dynamic. Make them static for better performance
+         */
+        setDynamic(dynamic: boolean): void;
+
+        /**
+         * @param inventoryNeeded specify true if the window requires player's 
+         * inventoty. Default value is false
+         */
+        setInventoryNeeded(inventoryNeeded: boolean): void;
+
+        /**
+         * @returns window's current location object
+         */
+        getLocation(): WindowLocation;
+
+        /**
+         * @returns unit size (in pixel) in the window's bounds
+         */
+        getScale(): number;
+
+        /**
+         * Overrides style properties of the current style by the values 
+         * specified in the style parameter
+         * @param style js object where keys represent binding names and values
+         * represent texture gui names
+         */
+        setStyle(style: BindingsSet): void;
+
+        /**
+         * Sets new style object as current window's style. If the new style is
+         * a different object then an old one, forces window invalidation
+         * @param style [[Style]] object to be used as style for the window
+         */
+        setStyle(style: Style): void;
+
+        /**
+         * Gets custom property by its name. Custom properties can be used to
+         * store some values containing window's current state. Note that these 
+         * properties are not saved between Inner Core launches
+         * @param name custom property name
+         * @returns value set by [[Window.setProperty]] or null if no value was
+         * specified for this name
+         */
+        getProperty(name: string): any|null;
+        
+        /**
+         * Sets custom property value
+         * @param name custom property name
+         * @param value custom property value
+         */
+        putProperty(name: string, value: any): void;
+
+        /**
+         * Sets any window as current window's parent. If current window closes,
+         * parent window closes too
+         * @param window window to be used as parent window for the current 
+         * window
+         */
+        setParentWindow(window: IWindow): void;
+
+        /**
+         * @returns current window's parent window
+         */
+        getParentWindow(): IWindow;
+
+        /**
+         * Sets listener to be notified about window opening/closing events
+         */
+        setEventListener(listener: WindowEventListener): void;
+
+        /**
+         * Writes debug information about current window to the log
+         */
+        debug(): void;
+    }
+
+
+    /**
+     * Class representing several windows opened at the same. For example, 
+     * [[StandartWindow]] is a window group that consists of several separate
+     * windows
+     */
+    class WindowGroup implements IWindow{
+        /**
+         * Constructs new [[WindowGroup]] instance
+         */
+        constructor();
+
+        /**
+         * Removes window from group by its name
+         * @param name window name
+         */
+        removeWindow(name: string): void;
+
+        /**
+         * Adds window instance with specified name to the group
+         * @param name window name
+         * @param window window to be added to the group
+         */
+        addWindowInstance(name: string, window: Window): void;
+
+        /**
+         * Creates a new window using provided description and adds it to the 
+         * group
+         * @param name window name
+         * @param content window descripion object
+         * @returns created [[Window]] object
+         */
+        addWindow(name: string, content: WindowContent): Window;
+
+        /**
+         * @param name window name
+         * @returns window from the group by its name or null if no window with 
+         * such a name was added
+         */
+        getWindow(name: string): Window|null;
+
+        /**
+         * @param name window name
+         * @returns window's description object if a window with specified name 
+         * exists or null otherwise
+         */
+        getWindowContent(name: string): WindowContent|null;
+
+        /**
+         * Sets content for the window by its name
+         * @param name window name
+         * @param content content pbkect 
+         */
+        setWindowContent(name: string, content: WindowContent): void;
+
+        /**
+         * @returns java.util.Collection object containing all the [[Window]]s 
+         * in the group
+         */
+        getAllWindows(): java.util.Collection<Window>;
+
+        /**
+         * @returns java.util.Collection object containing string names of the 
+         * windows in the group
+         */
+        getWindowNames(): java.util.Collection<string>;
+
+        /**
+         * Forces window refresh by its name
+         * @param name name of the window to refresh
+         */
+        refreshWindow(name: string): void;
+
+        /**
+         * Forces refresh for all windows
+         */
+        refreshAll(): void;
+
+        /**
+         * Moves window with specified name to the top of the group
+         * @param name window name
+         */
+        moveOnTop(name: string): void;
+/**
+         * Opens window wihout container. It is usually mor
+         */
+        open(): void;
+
+        /**
+         * Closes window without container. Use only if the window was opened 
+         * without container
+         */
+        close(): void;
+
+        /**
+         * Called up to 66 times a second to update window's content
+         * @param time current time in milliseconds
+         */
+        frame(time: number): void;
+
+        /**
+         * Forces ui elements of the window to refresh
+         * @param onCurrentThread if true, the elements will be refreshed 
+         * immediately, otherwise refresh event will be posted. Default value 
+         * if false. Ensure you are in the UI thread if you pass true as the 
+         * parameter
+         */
+        invalidateElements(onCurrentThread: boolean): void;
+
+        /**
+         * Forces ui drawables of the window to refresh
+         * @param onCurrentThread if true, the drawables will be refreshed 
+         * immediately, otherwise refresh event will be posted. Default value 
+         * if false. Ensure you are in the UI thread if you pass true as the 
+         * parameter
+         */
+        invalidateDrawing(onCurrentThread: boolean): void;
+
+        /**
+         * @returns true if the window is opened, false otherwise
+         */
+        isOpened(): boolean;
+
+        /**
+         * @returns true if the window has an inventory that should be updated
+         */
+        isInventoryNeeded(): boolean;
+
+        /**
+         * @returns true if the window can change its contents position
+         */
+        isDynamic(): boolean;
+
+        /**
+         * Gets all the elements in the window
+         * @returns java.util.HashMap containing string element name as keys and
+         * [[Element]] instances as values
+         */
+        getElements(): java.util.HashMap<string, Element>;
+
+        /**
+         * @returns window's content object (usually specified in the window's 
+         * constructor)
+         */
+        getContent(): WindowContent;
+
+        /**
+         * @returns object containing current style of the window
+         */
+        getStyle(): Style;
+
+        /**
+         * @returns [[Container]] that was used to open this window or null, if
+         * the window wasn't opened in container
+         */
+        getContainer(): Container|null;
+
+        /**
+         * Sets container for the current window. Be careful when calling it 
+         * manually. You should prefer opening the window via 
+         * [[Container.openAs]] call
+         * @param container [[Container]] to be associated with current window
+         * or null to associate no container with current window
+         */
+        setContainer(container: Container|null): void;
+
+        /**
+         * Turns debug mode for the window on and off
+         * @param enabled if true, additional debug information will be drawn on
+         * the window canvas
+         */
+        setDebugEnabled(enabled: boolean): void;
+    }
+
+
+    /**
+     * Class used to create standart ui for the mod's machines. 
+     * [[StandartWindow]] is a [[WindowGroup]] that has three windows with names
+     * *"main"*, *"inventory"* and *"header"*. They represent custom window 
+     * contents, player's inventoty and winow's header respectively
+     */
+    class StandartWindow extends WindowGroup {
+        /**
+         * Constructs new [[StandartWindow]] with specified content. 
+         * Content is applied to the main window, header and inventory remain
+         * the same
+         * @param content object containing window description
+         */
+        constructor(content: WindowContent);
+    }
+
+
+    // class AdaptiveWindow extends WindowGroup {
+    //     /**
+    //      * Constructs a new empty [[AdaptiveWindow]]
+    //      */
+    //     constructor();
+
+    //     /**
+    //      * Constructs new [[AdaptiveWindow]] with specified content
+    //      * @param content object containing window description
+    //      */
+    //     constructor(content: WindowContent);
+        
+    //     /**
+    //      * Sets style profile for the current [[AdaptiveWindow]]
+    //      * @param profile 0 for classic profile, 1 for default profile
+    //      */
+    //     setProfile(profile: number): void;
+
+    //     /**
+    //      * Forces [[AdaptiveWindow]] to be displayed using some profile
+    //      * @param profile 0 for classic profile, 1 for default profile or -1 not
+    //      * to force any profile. By default forced profile is -1
+    //      */
+    //     setForcedProfile(profile: number): void;
+    // }
+
+
+    /**
+     * Class used to create windows with multiple tabs
+     */
+    class TabbedWindow extends WindowGroup {
+        /**
+         * Constructs new [[TabbedWindow]] with specified location
+         * @param location location to be used for the tabbed window
+         */
+        constructor(location: WindowLocation);
+
+        /**
+         * Constructs new [[TabbedWindow]] with specified content
+         * @param content object containing window description
+         */
+        constructor(content: WindowContent);
+
+        /**
+         * Sets window location (bounds) to draw window within
+         * @param location location to be used for the tabbed window
+         */
+        setLocation(location: WindowLocation): void;
+
+        /**
+         * @returns tab content window width in units
+         */
+        getInnerWindowWidth(): number;
+
+        /**
+         * @returns tab content window height in units
+         */
+        getInnerWindowHeight(): number;
+
+        /**
+         * @returns tab selector window width in units
+         */
+        getWindowTabSize(): number;
+
+        /**
+         * @returns tab selector window width in global units
+         */
+        getGlobalTabSize(): number;
+
+        /**
+         * Sets content of the tab
+         * @param index index of the tab. There are 12 tabs available, from 0 to
+         * 11. The location of the tabs is as follows:
+         * ```0    6
+         * 1    7
+         * 2    8
+         * 3    9
+         * 4    10
+         * 5    11
+         * ```
+         * @param tabOverlay content of the tab selector
+         * @param tabContent content of the window to be created for the tab
+         * @param isAlwaysSelected if true, tab is always displayed as selected.
+         * Default value is false
+         */
+        setTab(index: number, tabOverlay: UIElementSet, tabContent: WindowContent, isAlwaysSelected?: boolean): void;
+
+        /**
+         * Creates fake tab with no content
+         * @param index index of the tab, see [[TabbedWindow.setTab]] for 
+         * details
+         * @param tabOverlay content of the tab selector
+         */
+        setFakeTab(index: number, tabOverlay: UIElementSet): void;
+
+        /**
+         * @param index index of the tab
+         * @returns [[Window]] instance created for the specified tab or null if
+         * no window was created for specified window
+         */
+        getWindowForTab(index: number): Window|null;
+        
+        /**
+         * Specifies whether the window should darken and block background. 
+         * Default value is false
+         * @param blockingBackground pass true if you want the window to block 
+         * background
+         */
+        setBlockingBackground(blockingBackground: boolean): void;
+
+        /**
+         * @returns current default tab index. If no default tab was specified 
+         * via [[TabbedWindow.setDefaultTab]], the first tab added becomes 
+         * default
+         */
+        getDefaultTab(): number;
+
+        /**
+         * Sets default tab index
+         * @param tab index of the tab to be opened by default
+         */
+        setDefaultTab(tab: number): number;
+        
+        /**
+         * Overrides style properties of the current style by the values 
+         * specified in the style parameter
+         * @param style js object where keys represent binding names and values
+         * represent texture gui names
+         */
+        setStyle(style: BindingsSet): void;
+
+        /**
+         * Sets new style object as current window's style. If the new style is
+         * a different object then an old one, forces window invalidation
+         * @param style [[Style]] object to be used as style for the window
+         */
+        setStyle(style: Style): void;
+    }
+
+
+    /**
+     * Class representing font used in the UI
+     */
+    class Font {
+        /**
+         * Aligns text to the start of the element (left for English locale)
+         */
+        static ALIGN_DEFAULT: number;
+
+        /**
+         * Aligns text to the center of the element
+         */
+        static ALIGN_CENTER: number;
+
+        /**
+         * Aligns text to the end of the element (right for English locale)
+         */
+        static ALIGN_END: number;
+
+        /**
+         * Constructs new instance of the font with specified parameters
+         * @param color font color, android integer color value (produced by
+         * android.graphics.Color)
+         * @param size font size
+         * @param shadow shadow offset
+         */
+        constructor(color: number, size: number, shadow: number);
+
+        /**
+         * Constructs new instance of the font with specified parameters
+         * @param params parameters of the font
+         */
+        constructor(params: FontParams);
+
+        /**
+         * Draws text on the canvas using created font
+         * @param canvas android.graphics.Canvas instance to draw the text on
+         * @param x x coordinate of the text in pixels
+         * @param y x coordinate of the text in pixels
+         * @param text text string to draw
+         * @param scale additional scale to apply to the text
+         */
+        drawText(canvas: android.graphics.Canvas, x: number, y: number, text: string, scale: number): void;
+
+        /**
+         * Calculates bounds of the text given text position, text string and 
+         * additional scale
+         * @returns android.graphics.Rect object containing calculated bounds of 
+         * the text
+         */
+        getBounds(text: string, x: number, y: number, scale: number): android.graphics.Rect;
+
+        /**
+         * Calculates text width given text string and additional scale
+         * @returns width of the specified string when painted with specified 
+         * scale
+         */
+        getTextWidth(text: string, scale: number): number;
+
+        /**
+         * Calculates text height given text string and additional scale
+         * @returns height of the specified string when painted with specified 
+         * scale
+         */
+        getTextHeight(text: string, scale: number): number;
+
+        /**
+         * Converts current [[Font]] object to scriptable font description
+         */
+        asScriptable(): FontParams;
+
+        /**
+         * Sets listener to be notified about window opening/closing events
+         */
+        setEventListener(listener: WindowEventListener): void;
+
+        /**
+         * Sets listener to be notified about tab with specidied index 
+         * opening/closing events
+         * @param tab tab index
+         * @param listener object to be notified about the events
+         */
+        setTabEventListener(tab: number, listener: WindowEventListener): void;
+    }
+
+
+    /**
+     * Object used to handle windows opening and closing events
+     */
+    interface WindowEventListener {
+        /**
+         * Called when the window is opened
+         * @param window current [[Window]] object
+         */
+        onOpen: (window: Window) => void,
+        /**
+         * Called when the window is closed
+         * @param window current [[Window]] object
+         */
+        onClose: (window: Window) => void
+    }
+
+
+    /**
+     * Class used to visualize configuration file contents in a simple way
+     */
+    class ConfigVisualizer {
+        /**
+         * Constructs new [[ConfigVisualizer]] instance with default elements 
+         * names prefix (*config_vis*)
+         * @param config configuration file to be loaded
+         */
+        constructor(config: Config);
+
+        /**
+         * Constructs new [[ConfigVisualizer]] instance with specified elements 
+         * names prefix
+         * @param config configuration file to be loaded
+         * @param prefix elements names prefix used for this visualizer
+         */
+        constructor(config: Config, prefix: string);
+
+        /**
+         * Removes all elements with current element name prefix. In other 
+         * words, removes all elements that were created by this 
+         * [[ConfigVisualizer]] instance
+         * @param elements target [[WindowContent.elements]] section
+         */
+        clearVisualContent(elements: UIElementSet): void;
+
+        /**
+         * Creates elements in the window to visualize configuration file
+         * @param elements target [[WindowContent.elements]] section
+         * @param pos top left position of the first element. Default position 
+         * is (0, 0, 0)
+         */
+        createVisualContent(elements: UIElementSet, pos?: {x?: number, y?: number, z?: number}): void;
+    }
+
+
+    /**
+     * Namespace containing method to get [[FrameTexture]] instances
+     */
+    namespace FrameTextureSource {
+        /**
+         * 
+         * @param name gui texture name of the frame
+         */
+        function get(name: string): FrameTexture;
+    }
+
+
+    /**
+     * Object used to manipulate frame textures. Frame texture allows to 
+     */
+    interface FrameTexture {
+        /**
+         * Expands side of the texture by specified amount of pixels
+         * @param side side of the texture, one of the 
+         * [[FrameTexture.SIDE_LEFT]], [[FrameTexture.SIDE_RIGHT]], 
+         * [[FrameTexture.SIDE_UP]], [[FrameTexture.SIDE_DOWN]] constants
+         * @returns expanded android.graphics.Bitmap instance with the frame
+         */
+        expandSide(side: number, pixels: number): android.graphics.Bitmap;
+
+        /**
+         * Expands texture to the specified side, filling the middle with 
+         * specified color
+         * @param color integer color value produced by android.graphics.Color 
+         * class
+         * @param sides array of booleans marking whether the side should be 
+         * expanded or not. The order of the sides is
+         * [[FrameTexture.SIDE_LEFT]], [[FrameTexture.SIDE_RIGHT]], 
+         * [[FrameTexture.SIDE_UP]], [[FrameTexture.SIDE_DOWN]]
+         * @returns expanded android.graphics.Bitmap instance with the frame
+         */
+        expand(width: number, height: number, color: number, sides: native.Array<boolean>): android.graphics.Bitmap;
+
+        /**
+         * Expands texture to the specified side, filling the middle with 
+         * specified color
+         * @param scale scale of the created bitmap
+         * @param color integer color value produced by android.graphics.Color 
+         * class
+         * @param sides array of booleans marking whether the side should be 
+         * expanded or not. See FrameTexture.expand parameters for details. 
+         * Default behavior is to scale all sides
+         * @returns expanded and scaled android.graphics.Bitmap instance with
+         */
+        expandAndScale(width: number, height: number, scale: number, color: number, sides?: native.Array<boolean>): android.graphics.Bitmap;
+
+        /**
+         * @returns original frame texture source stored in 
+         * android.graphics.Bitmap instance
+         */
+        getSource(): android.graphics.Bitmap;
+
+        /**
+         * @param side side of the texture, one of the 
+         * [[FrameTexture.SIDE_LEFT]], [[FrameTexture.SIDE_RIGHT]], 
+         * [[FrameTexture.SIDE_UP]], [[FrameTexture.SIDE_DOWN]] constants
+         * @returns texture side source extracted from the original frame 
+         * texture source stored in android.graphics.Bitmap instance
+         */
+        getSideSource(side: number): android.graphics.Bitmap;
+
+        /**
+         * @returns android.graphics.Color integer color value of the central
+         * pixel of the source texture
+         */
+        getCentralColor(): number;
+    }
+
+    /**
+     * Namespace containing methods used to get and add gui textures
+     */
+    namespace TextureSource {
+        /**
+         * @param name gui texture name
+         * @returns android.graphics.Bitmap instance with the ui texture, if it 
+         * was loaded, with "*missing_texture*" texture otherwise
+         */
+        function get(name: string): android.graphics.Bitmap;
+
+        /**
+         * 
+         * @param name gui texture name
+         * @returns android.graphics.Bitmap instance with the ui texture, if it 
+         * was loaded, null otherwise
+         */
+        function getNullable(name: string): android.graphics.Bitmap|null;
+
+        /**
+         * Adds any bitmap as a gui texture with specified name
+         * @param name gui texture name
+         * @param bitmap android.graphics.Bitmap instance to be used as
+         * gui texture
+         */
+        function put(name: string, bitmap: android.graphics.Bitmap): void;
+    }
+
+    namespace FrameTexture {
+        /**
+         * Specifies left side of the frame
+         */
+        const SIDE_LEFT: number;
+
+        /**
+         * Specifies right side of the frame
+         */
+        const SIDE_RIGHT: number;
+
+        /**
+         * Specifies top side of the frame
+         */
+        const SIDE_UP: number;
+
+        /**
+         * Specifies bottom side of the frame
+         */
+        const SIDE_DOWN: number; 
+    }
+
+    /**
+     * Same as [[UI.getScreenHeight]]
+     */
+    function getScreenRelativeHeight(): number;
+
+    /**
+     * @returns screen height in units
+     */
+    function getScreenHeight(): number;
+
+    /**
+     * @returns current android.app.Activity instance that can be used as 
+     * android.content.Context wherever required
+     */
+    function getContext(): android.app.Activity;
+
+    /**
+     * Object containing font parameters. If no color, size and shadow are 
+     * specified, default values are ignored and white font with text size 20,
+     * white color and 0.45 shadow is created
+     */
+    interface FontParams {
+
+        /**
+         * Font color, android integer color value (produced by
+         * android.graphics.Color). Default value is black
+         */
+        color?: number,
+
+        /**
+         * Font size. Default value is 20
+         */
+        size?: number,
+
+        /**
+         * Font shadow offset. Default value is 0, witch produces no shadow
+         */
+        shadow?: number,
+
+        /**
+         * Font alignment, one of the [[Font.ALIGN_DEFAULT]],
+         * [[Font.ALIGN_CENTER]], [[Font.ALIGN_END]] constants
+         */
+        alignment?: number,
+
+        /**
+         * Same as [[FontParams.alignment]]
+         */
+        align?: number,
+
+        /**
+         * If true, the font is bold, false otherwise. Default value is false
+         */
+        bold?: boolean,
+
+        /**
+         * If true, the font is italic, false otherwise. Default value is false
+         */
+        cursive?: boolean,
+        
+        /**
+         * If true, the font is undelined, false otherwise. Default value is false
+         */
+        underline?: boolean
+    }
+
+
+    /**
+     * Object representing window location used in window content object and 
+     * [[WindowLocation]] constructor
+     */
+    interface WindowLocationParams {
+        /**
+         * X coordinate of the window in units, 0 by default
+         */
+        x?: number,
+
+        /**
+         * Y coordinate of the window in units, 0 by default
+         */
+        y?: number,
+
+        /**
+         * Width of the window in units, by default calculated to match right
+         * screen bound
+         */
+        width?: number,
+
+        /**
+         * Height of the window in units, by default calculated to match bottom
+         * screen bound
+         */
+        height?: number,
+
+        /**
+         * Paddings are distances from the window bounds to the elements in the
+         * window
+         */
+        padding?: {
+            top?: number,
+            bottom?: number,
+            left?: number,
+            right?: number
+        },
+
+        /**
+         * Defines scrollable window size along the X axis
+         */
+        scrollX?: number,
+
+        /**
+         * Defines scrollable window size along the Y axis
+         */
+        scrollY?: number,
+    }
+
+
+    /**
+     * Class representing window's location. All coordinates are defined in 
+     * units (given screen's widht is 1000 units)
+     */
+    class WindowLocation {
+        /**
+         * Constructs new [[WindowLocation]] instance with default position and 
+         * size (fullscreen window)
+         */
+        constructor();
+
+        /**
+         * Constructs new [[WindowLocation]] instance with specified parameters
+         * @param params 
+         */
+        constructor(params: WindowLocationParams);
+
+        /**
+         * Sets scrollable window size. Should be greater then window 
+         * width/height for the changes to take effect
+         * @param x scrollable window size along the X axis
+         * @param y scrollable window size along the Y axis
+         */
+        setScroll(x: number, y: number): void;
+
+        /**
+         * Sets the size of the window 
+         * @param x window's width
+         * @param y window's height
+         */
+        setSize(x: number, y: number): void;
+
+        /**
+         * @returns window location as a js object. Note that paddings are not 
+         * included into the object
+         */
+        asScriptable(): WindowLocationParams;
+
+        /**
+         * Creates a copy of current [[WindowLocation]] object
+         * @returns newly created copy of the object
+         */
+        copy(): WindowLocation;
+
+        /**
+         * Sets window location parameters
+         * @param x X coordinate of the window
+         * @param y Y coordinate of the window
+         * @param width width of the window
+         * @param height height of the window
+         */
+        set(x: number, y: number, width: number, height: number): void;
+
+        /**
+         * Sets window location parameters from another [[WindowLocation]]. 
+         * Note that paddings are not copied
+         * instance
+         * @param location another [[WindowLocation]] instance to copy 
+         * parameters from
+         */
+        set(location: WindowLocation): void;
+
+        /**
+         * Sets window's scroll size to the windows size to remove scroll
+         */
+        removeScroll(): void;
+
+        /**
+         * Constant used to represent top padding
+         */
+        PADDING_TOP: number;
+
+        /**
+         * Constant used to represent bottom padding
+         */
+        PADDING_BOTTOM: number;
+
+        /**
+         * Constant used to represent left padding
+         */
+        PADDING_LEFT: number;
+
+        /**
+         * Constant used to represent right padding
+         */
+        PADDING_RIGHT: number;
+
+        /**
+         * Sets padding of the window
+         * @param padding one of the [[WindowLocation.PADDING_TOP]], 
+         * [[WindowLocation.PADDING_BOTTOM]], [[WindowLocation.PADDING_LEFT]],
+         * [[WindowLocation.PADDING_RIGHT]] constants
+         * @param value value of the padding to be assigned to appropriate 
+         * window bound
+         */
+        setPadding(padding: number, value: number): void;
+
+        /**
+         * Sets the four paddings of the window for the appropriate bounds
+         */
+        setPadding(top: number, bottom: number, left: number, right: number): void;
+
+        /**
+         * @returns unit size (in pixels) in the fullscreen context (*screen width / 1000*)
+         */
+        getScale(): number;
+
+        /**
+         * @returns unit size (in pixels) in the window's bounds
+         */
+        getDrawingScale(): number;
+
+        /**
+         * @returns window's rectangle in the android.graphics.Rect object
+         */
+        getRect(): android.graphics.Rect;
+
+        /**
+         * Sets window's Z index. Z index determines how the window will be 
+         * displayed when several windows are open
+         * @param z window Z index
+         */
+        setZ(z: number): void;
+
+        /**
+         * @returns window's width in units (always 1000 by definition of the 
+         * unit)
+         */
+        getWindowWidth(): number;
+    
+        /**
+         * @returns window's height in units
+         */
+        getWindowHeight(): number;
+
+        /**
+         * Transforms dimension in fullscreen units to the dimension within
+         * window's bounds
+         * @param val value to be transformed
+         */
+        globalToWindow(val: number): number;
+
+        /**
+         * Transforms dimension within window's bounds to the dimension in 
+         * fullscreen units
+         * @param val value to be transformed
+         */
+        windowToGlobal(val: number): number;
+    }
+
+
+    /**
+     * Class representing static or animated texture
+     */
+    class Texture {
+        /**
+         * Constructs new static [[Texture]] with specified bitmap
+         * @param bitmap android.graphics.Bitmap instance
+         */
+        constructor(bitmap: android.graphics.Bitmap);
+
+        /**
+         * Constructs new animated [[Texture]] with specified frames
+         * @param bitmaps an array of android.graphics.Bitmap instances to be 
+         * used as animation frames
+         */
+        constructor(bitmaps: native.Array<android.graphics.Bitmap>);
+
+        /**
+         * Constructs new static or animated [[Texture]] with specified frames
+         * @param obj texture name or array of texture names for animated 
+         * textures. Accespts raw gui textures names and style bindings 
+         * (formatted as "style:binding_name"). 
+         * @param style [[Style]] object to look for style bindings. If not 
+         * specified, default style is used
+         */
+        constructor(obj: string|string[], style?: Style);
+
+        /**
+         * Sets texture offsets in pixels from the upper left bound of the 
+         * bitmap
+         */
+        readOffset(offset: {x: number, y: number}): void;
+
+        /**
+         * @returns frame number of the animation corresponding to current 
+         * system time
+         */
+        getFrame(): number;
+
+        /**
+         * @param frame frame number
+         * @returns android.graphics.bitmap object containing animation frame 
+         * for the corresponding frame number
+         */
+        getBitmap(frame: number): android.graphics.Bitmap;
+
+        /**
+         * @returns width of the texture in pixels
+         */
+        getWidth(): number;
+
+        /**
+         * @returns height of the texture in pixels
+         */
+        getHeight(): number;
+
+        /**
+         * Resizes all the frames of the texture to the specified size
+         * @param x 
+         * @param y 
+         */
+        resizeAll(x: number, y: number): void;
+
+        /**
+         * Resizes all the frames by constant scale multiplier
+         * @param scale scale to modify the frames by
+         */
+        rescaleAll(scale: number): void;
+
+        /**
+         * Resizes all the frames to match the first one
+         */
+        fitAllToOneSize(): void;
+        
+        /**
+         * Releases all allocated resources, should be called when the texture 
+         * is not longer needed 
+         */
+        release(): void;
+    }
+
+    
+    /**
+     * Object representing window's slot
+     */
+    interface Slot {
+        id: number,
+        count: number,
+        data: number,
+        extra: ItemInstance
+    }
+
+    /**
+     * Java object representing window's slot with some additional useful 
+     * methods
+     */
+    interface FullSlot extends Slot {
+        /**
+         * Sets the contents of the slot. Extra value is null by default
+         */
+        set(id: number, count: number, data: number): void,
+
+        /**
+         * Sets the contents of the slot with extra value
+         * @param extra item extra value. Note that it should be an instance of
+         * ItemExtra and not its numeric id
+         */
+        set(id: number, count: number, data: number, extra: ItemExtra): void,
+
+        /**
+         * Puts any property to the js object that is wrapped by [[FullSlot]] 
+         * java object
+         * @param name property name
+         * @param property property value
+         */
+        put(name: string, value: any): void,
+
+        /**
+         * Gets integer value from the js object by its name
+         * @param name property name
+         * @returns property value or -1 if no value was provided
+         */
+        getInt(name: string): number,
+
+        /**
+         * Validates slot contents. If the data value is less then 0, it becomes
+         * 0, if id is 0 or count is less then or equals to zero, slot is reset 
+         * to an empty one
+         */
+        validate(): void,
+
+        /**
+         * Drops slot's contents on the specified coordinates and clears the 
+         * slot
+         */
+        drop(x: number, y: number, z: number): void,
+
+        /**
+         * @returns underlying Slot instance
+         */
+        getTarget(): Slot,
+
+        /**
+         * @returns item id
+         */
+        getId(): number,
+
+        /**
+         * @returns item count
+         */
+        getCount(): number,
+
+        /**
+         * @returns item data value
+         */
+        getData(): number,
+
+        /**
+         * @returns item extra's numeric id
+         */
+        getExtraValue(): number,
+
+        /**
+         * @returns item extra object
+         */
+        getExtra(): ItemExtra,
+        
+        /**
+         * @returns new [[FullSlot]] instance created from the current one
+         */
+        save(): FullSlot
+    }
+
+    interface Element {
+        /**
+         * Creates a new [[Texture]] instance with specified [[Style]] applied.
+         * See [[Texture.constructor]] for parameters description
+         */
+        createTexture(texture: android.graphics.Bitmap|string|string[]): Texture;
+
+        /**
+         * Sets element's position in the window's unit coordinates
+         * @param x x position
+         * @param y y position
+         */
+        setPosition(x: number, y: number): void;
+
+        /**
+         * Sets element's size in the window's unit coordinates
+         * @param width element's width 
+         * @param height element's height
+         */
+        setSize(width: number, height: number): void;
+
+        /**
+         * Passes any value to the element
+         * @param bindingName binding name, you can access the value from the 
+         * element by this name
+         * @param value value to be passed to the element
+         */
+        setBinding(bindingName: string, value: any): void;
+
+        /**
+         * Gets any value from the element
+         * @param bindingName binding name, you can access the value from the 
+         * element by this name. Some binding names are reserved for additional
+         * element information, e.g. "element_obj" contains pointer to the
+         * current object and "element_rect" contains android.graphics.Rect 
+         * object containing drawing rectangle 
+         * @returns value that was get from the element or null if the element 
+         * doesn't exist
+         */
+        getBinding(bindingName: string): any;
+
+    }
+
+    /**
+     * Object representing window style. Window styles allows to customize the 
+     * way your windows look like
+     */
+    interface Style {
+        /**
+         * Default windows style
+         */
+        DEFAULT: UI.Style,
+
+        /**
+         * Classic (0.16.*-like) windows style
+         */
+        CLASSIC: UI.Style
+
+        /**
+         * Adds gui texture name to use for the specified window part
+         * @param name binding name
+         * @param value gui texture name
+         */
+        addBinding(name: string, value: string): void;
+
+        /**
+         * Gets texture binding bt its name. Searches first in the additional 
+         * styles, then in the current style, then in all its parents
+         * @param name binding name
+         * @param fallback value to return on binding failure
+         * @returns gui texture name if current object, additional styles or one 
+         * of the parents contains such a binding name, fallback otherwise. 
+         */
+        getBinding(name: string, fallback: string): string;
+
+        /**
+         * Adds an additional style object to the current style
+         * @param style additional style object to be added
+         */
+        addStyle(style: UI.Style): void;
+
+        /**
+         * @returns a copy of the current style. Only style bindings of the 
+         * current style are copied, no parent/additional styles are copied
+         */
+        copy(): UI.Style;
+
+        /**
+         * Specifies parent style object for the current style
+         * @param style style to be set as parent
+         */
+        inherit(style: UI.Style): void;
+
+        /**
+         * Adds all values from the js object as bindings
+         * @param style js object where keys represent binding names and values
+         * represent texture gui names
+         */
+        addAllBindings(style: BindingsSet): void;
+
+        /**
+         * @returns java.util.Collection<String> containing all binding names
+         * from the current style object
+         */
+        getAllBindingNames(): java.util.Collection<string>;
+
+        /**
+         * If name is a style value (starts with "style:"), returns 
+         * corresponding gui texture name, else returns input string
+         * @param name style value or bitmap name
+         */
+        getBitmapName(name: string): string;
+    }
+
+    /**
+     * Specifies contents and additional parameters for all types of windows
+     */
+    interface WindowContent {
+        /**
+         * Specifies window's location, used for [[Window]], [[TabbedWindow]]
+         * and [[StandartWindow]]
+         */
+        location?: WindowLocationParams,
+
+        /**
+         * Specifies window's style, an object containing keys as style binding 
+         * names and values as gui texture names correspinding to the binding
+         */
+        style?: BindingsSet,
+
+        /**
+         * If [[WindowContent.style]] is not specified, this argument is used 
+         * instead
+         */
+        params?: BindingsSet,
+
+        /**
+         * Used for [[StandartWindow]]s. Specifies additional parameters for 
+         * standart windows
+         */
+        standart?: {
+            /**
+             * Specifies minimum contents window height. If actual height is 
+             * less then desired, scrolling is used
+             */
+            minHeight?: number,
+
+            /**
+             * Specifies background properties
+             */
+            background?: {
+                /**
+                 * If true, default window is created
+                 */
+                standart?: boolean,
+
+                /**
+                 * Background color integer value, produced by 
+                 * android.graphics.Color class. Default is white
+                 */
+                color?: number,
+
+                /**
+                 * Background bitmap texture name. If the bitmap's size doesn't 
+                 * match the screen size, bitmap will be streched to fit
+                 */
+                bitmap?: string,
+
+                /**
+                 * Specifies window's frame parameters
+                 */
+                frame?: {
+                    /**
+                     * Frame bitmap scale. Default value is 3
+                     */
+                    scale?: number,
+
+                    /**
+                     * Frame bitmap gui texture name. Defaults to *"frame"* 
+                     * style binding or, if not specified, to 
+                     * *"default_frame_8"* gui texture
+                     */
+                    bitmap?: string
+                }
+            }
+
+            /**
+             * Specifies additional parameters for standart window's header
+             */
+            header?: {
+                /**
+                 * Specifies whether the header should have shadow or not. If 
+                 * true, the shadow is not displayed. Default is false
+                 */
+                hideShadow?: boolean,
+
+                /**
+                 * Specifies header height in units. Defaults to 80
+                 */
+                height?: number,
+
+                /**
+                 * If [[height]] is not specified, used to specify header height
+                 * in units
+                 */
+                width?: number,
+
+                /**
+                 * Frame bitmap gui texture name. Defaults to *"headerFrame"* 
+                 * style binding or, if not specified, to 
+                 * *"default_frame_7"* gui texture
+                 */
+                frame?: string,
+
+                /**
+                 * Header background color integer value, produced by 
+                 * android.graphics.Color class. Default is 
+                 * *Color.rgb(0x72, 0x6a, 0x70)*
+                 */
+                color?: number,
+
+                /**
+                 * Specifies header text styles and value
+                 */
+                text?: {
+                    /**
+                     * Specifies header text. Defaults to *"No Title"*
+                     */
+                    text?: string,
+
+                    /**
+                     * Specifies font params for the header text. Only 
+                     * [[FontParams.size]], [[FontParams.color]] and
+                     * [[FontParams.shadow]] properties are used
+                     */
+                    font?: FontParams,
+
+                    /**
+                     * If [[font]] is not specified, used as [[FontParams.size]]
+                     * value
+                     */
+                    size?: number,
+
+                    /**
+                     * If [[font]] is not specified, used as [[FontParams.color]]
+                     * value
+                     */
+                    color?: number,
+
+                    /**
+                     * If [[font]] is not specified, used as [[FontParams.shadow]]
+                     * value
+                     */
+                    shadow?: number
+                },
+
+                /**
+                 * If true, close button is not displayed. Defaults to false
+                 */
+                hideButton?: boolean
+            },
+
+            /**
+             * Specifies parameters for standart inventory window
+             */
+            inventory?: {
+                /**
+                 * Inventory width in units. Defaults to 300 units
+                 */
+                width?: number,
+
+                /**
+                 * Specifies additional padding for the inventory in units. 
+                 * Defaults to 20 units
+                 */
+                padding?: number
+            }
+        }
+
+        /**
+         * Array of [[DrawingElement]] instances to be used as drawing 
+         * components for the window
+         */
+        drawing?: DrawingElement[],
+
+        /**
+         * Object containing keys as gui elements names and [[UIElements]] 
+         * instances as values. Gui elements are interactive components that are
+         * used to create interfaces functionality
+         */
+        elements: UIElementSet,
+    }
+
+    interface DrawingElement {
+
+    }
+
+    interface UIElement {
+
+    }
+
+
+    /**
+     * Object containing ui elements with key as the name and value as the 
+     * [[UIElement]] instance to be used
+     */
+    interface UIElementSet { 
+        [key: string]: UIElement
+    }
+
+
+    /**
+     * Object containing binding names as keys and string values as gui textures
+     * names
+     */
+    interface BindingsSet {
+        [key: string]: string
+    }
+}
 /**
  * Module used to create and manage Updatables. Updatables provide the proper
  * way to manage objects that update their state every tick. Updatables may not 
@@ -4104,7 +7772,7 @@ declare namespace Updatable {
      * @returns java.util.ArrayList instance containing all defined 
      * [[Updatable]] objects
      */
-    function getAll(): jobject;
+    function getAll(): java.util.ArrayList<Updatable>;
 
     /**
      * @returns current thread tick number
@@ -5279,7 +8947,7 @@ declare enum VanillaTileID{
 /**
  * Java object of the mod, contains some useful values and methonds
  */
-declare var __mod__: jobject;
+declare var __mod__: java.lang.Object;
 
 /**
  * Mod name
@@ -5482,7 +9150,7 @@ declare namespace World {
      * id
      * @returns created drop entity id
      */
-    function drop(x: number, y: number, z: number, id: number, count: number, data: number, extra?: number|ItemExtra): number;
+    function drop(x: number, y: number, z: number, id: number, count: number, data: number, extra?: ItemExtra): number;
 
     /**
      * Creates an explosion on the sepcified coordinates
@@ -5536,7 +9204,7 @@ declare namespace World {
     /**
      * Plays standart Minecraft sound on the specified coordinates
      * @param name sound name
-     * @param volume sound volume from 0 to 100
+     * @param volume sound volume from 0 to 1
      * @param pitch sound pitch, from 0 to 1, 0.5 is default value
      */
     function playSound(x: number, y: number, z: number, name: string, volume: number, pitch: number): void;
@@ -5544,8 +9212,27 @@ declare namespace World {
     /**
      * Plays standart Minecraft sound from the specified entity
      * @param name sound name
-     * @param volume sound volume from 0 to 100
+     * @param volume sound volume from 0 to 1
      * @param pitch sound pitch, from 0 to 1, 0.5 is default value
      */
     function playSoundAtEntity(entity: number, name: string, volume: number, pitch: number): void;
+
+    /**
+     * Enables "BlockChanged" event for the block id. Event occurs when either
+     * old block or new block is registered using this method
+     * @param id numeric tile id
+     * @param enabled if true, the block will be watched
+     */
+    function setBlockChangeCallbackEnabled(id: number, enabled: boolean): void;
+
+    /**
+     * Enables "BlockChanged" event for specified block ids and registers 
+     * callback function for the ids
+     * @param ids string or numeric tile id, or an array of string and/or 
+     * numeric tile ids
+     * @param callback function that will be called when "BlockChanged" callback 
+     * occurs involving one of the blocks. **Warning!** If both old and new 
+     * blocks are in the ids list, callback funciton will be called twice.
+     */
+    function registerBlockChangeCallback(ids: number|string|(string|number)[], callback: Callback.BlockChangedFunction): void;
 }

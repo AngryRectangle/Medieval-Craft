@@ -2,7 +2,9 @@ IDRegistry.genBlockID("wodenShaft");
 Block.createBlock("wodenShaft", [
 {name: "Woden Shaft", texture: [["shaft", 0]], inCreative: true}
 ]);
+Callback.addCallback('PreLoaded', function () {
 Recipes.addShaped({id: BlockID.wodenShaft, count: 6, data: 0}, ["pip", "gvg", "pip"], ["p", 5,-1,"g",IDData.item.woodenGear_1x,0, "i", 265,0]);
+});
 Block.setBlockShape(BlockID.wodenShaft, {x: 8/16-3/16, y: 8/16-3/16, z: 8/16-3/16}, {x: 8/16+3/16, y: 8/16+3/16, z: 8/16+3/16});
 energyKineticEnergy.registerWire(BlockID.wodenShaft);
 

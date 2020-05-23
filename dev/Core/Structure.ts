@@ -1,4 +1,4 @@
-class Structure{
+/*class Structure{
     public readonly rotated: AdvancedLib.BlockInfo[][];
     name: string;
     public constructor(name:string, blocks:AdvancedLib.BlockInfo[]){
@@ -36,4 +36,4 @@ namespace Structure{
 
         }
     }
-}
+}*/
